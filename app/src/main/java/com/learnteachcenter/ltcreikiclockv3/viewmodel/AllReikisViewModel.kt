@@ -18,7 +18,7 @@ class AllReikisViewModel (private val repository: ReikiRepository = Injection.pr
             repository.reikisListObservable,
             object : Observer<Resource<List<Reiki>>> {
                 override fun onChanged(reikis: Resource<List<Reiki>>?) {
-                    reikisListObservable.setValue(reikis)
+                    reikisListObservable.value = reikis
                 }
             })
     }
@@ -27,5 +27,9 @@ class AllReikisViewModel (private val repository: ReikiRepository = Injection.pr
 
     fun getReikisListObservable(): LiveData<Resource<List<Reiki>>> {
         return reikisListObservable
+    }
+
+    fun deleteAllReikisInDB() {
+        repository.deleteAllReikisInLocalDB()
     }
 }

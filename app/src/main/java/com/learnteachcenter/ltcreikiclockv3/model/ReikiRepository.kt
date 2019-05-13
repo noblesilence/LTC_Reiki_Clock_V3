@@ -21,6 +21,12 @@ class ReikiRepository constructor(
 
     val reikisListObservable = MutableLiveData<Resource<List<Reiki>>>()
 
+    // Create
+    fun addReiki(reiki: Reiki) {
+        reikiDao.insert(reiki)
+    }
+
+    // Read
     fun getReikis() {
         var loadingList: List<Reiki>? = null
         if (reikisListObservable.value != null) {
@@ -31,8 +37,21 @@ class ReikiRepository constructor(
         getReikisFromWeb()
     }
 
-    fun saveReiki(reiki: Reiki) {
-        reikiDao.insert(reiki)
+    // Update
+    fun updateReiki(reiki: Reiki) {
+        // TODO
+    }
+
+    // Delete
+    fun deleteReiki(reiki: Reiki) {
+        // TODO
+    }
+
+    fun deleteAllReikisInLocalDB() {
+        println("deleteAllReikisInLocalDB")
+
+        val deleteReikisTask = DeleteAllReikisInDBTask(this)
+        deleteReikisTask.execute()
     }
 
     private fun getReikisFromWeb() {
@@ -127,6 +146,18 @@ class ReikiRepository constructor(
 
                 repo?.loadAllReikisFromDB()
             }
+        }
+    }
+
+    private class DeleteAllReikisInDBTask
+        internal constructor(repo: ReikiRepository)
+        : AsyncTask<Void, Void, Unit>() {
+
+        private val repoReference: WeakReference<ReikiRepository> = WeakReference(repo)
+
+        override fun doInBackground(vararg params: Void): Unit? {
+            val repo = repoReference.get()
+            return repo?.reikiDao!!.deleteAllReikis()
         }
     }
 

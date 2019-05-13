@@ -12,8 +12,8 @@ interface ReikiDao {
     @Update(onConflict = OnConflictStrategy.IGNORE)
     fun update(reiki: Reiki): Int
 
-    @Delete
-    fun clearReikis(vararg reiki: Reiki)
+    @Query("DELETE FROM reiki_table")
+    fun deleteAllReikis()
 
     @Query("SELECT * FROM reiki_table")
     fun getAllReikis(): List<Reiki>

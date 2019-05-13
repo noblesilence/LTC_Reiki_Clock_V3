@@ -31,7 +31,7 @@ class ReikiViewModel(private val generator: ReikiGenerator = ReikiGenerator(),
     fun saveReiki() {
         updateReiki()
         return if(canSaveReiki()) {
-            repository.saveReiki(reiki)
+            repository.addReiki(reiki)
             saveLiveData.postValue(true)
         } else {
             saveLiveData.postValue(false)
