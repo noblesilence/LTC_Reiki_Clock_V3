@@ -1,6 +1,5 @@
 package com.learnteachcenter.ltcreikiclockv3.model.room
 
-import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import com.learnteachcenter.ltcreikiclockv3.model.Reiki
 
@@ -8,11 +7,14 @@ import com.learnteachcenter.ltcreikiclockv3.model.Reiki
 interface ReikiDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(reiki: Reiki)
+    fun insert(reiki: Reiki): Long
+
+    @Update(onConflict = OnConflictStrategy.IGNORE)
+    fun update(reiki: Reiki): Int
 
     @Delete
     fun clearReikis(vararg reiki: Reiki)
 
     @Query("SELECT * FROM reiki_table")
-    fun getAllReikis(): LiveData<List<Reiki>>
+    fun getAllReikis(): List<Reiki>
 }

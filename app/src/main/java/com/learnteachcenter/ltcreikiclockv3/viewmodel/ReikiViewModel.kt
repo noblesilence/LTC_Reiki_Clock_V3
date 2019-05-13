@@ -7,10 +7,9 @@ import android.databinding.ObservableField
 import com.learnteachcenter.ltcreikiclockv3.model.Reiki
 import com.learnteachcenter.ltcreikiclockv3.model.ReikiGenerator
 import com.learnteachcenter.ltcreikiclockv3.model.ReikiRepository
-import com.learnteachcenter.ltcreikiclockv3.model.room.RoomRepository
 
 class ReikiViewModel(private val generator: ReikiGenerator = ReikiGenerator(),
-                     private val repository: ReikiRepository = RoomRepository()) : ViewModel() {
+                     private val repository: ReikiRepository = ReikiRepository()) : ViewModel() {
 
     private val reikiLiveData = MutableLiveData<Reiki>()
     private val saveLiveData = MutableLiveData<Boolean>()
