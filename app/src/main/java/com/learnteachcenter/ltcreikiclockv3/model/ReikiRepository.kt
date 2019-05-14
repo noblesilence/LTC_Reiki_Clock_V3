@@ -19,7 +19,9 @@ class ReikiRepository constructor(
     private val reikiApi: ReikiApi = Injection.provideReikiApi()
 ) {
 
-    val reikisListObservable = MutableLiveData<Resource<List<Reiki>>>()
+    private val TAG = "Reiki"
+
+    val reikisObservable = MutableLiveData<Resource<List<Reiki>>>()
 
     // Create
     fun addReiki(reiki: Reiki) {
@@ -28,34 +30,18 @@ class ReikiRepository constructor(
 
     // Read
     fun getReikis() {
+        Log.d(TAG, "[ReikiRepository] getReikis")
         var loadingList: List<Reiki>? = null
-        if (reikisListObservable.value != null) {
-            loadingList = reikisListObservable.value!!.data
+        if (reikisObservable.value != null) {
+            loadingList = reikisObservable.value!!.data
         }
-        reikisListObservable.value = Resource.loading(loadingList)
+        reikisObservable.value = Resource.loading(loadingList)
         loadAllReikisFromDB()
         getReikisFromWeb()
     }
 
-    // Update
-    fun updateReiki(reiki: Reiki) {
-        // TODO
-    }
-
-    // Delete
-    fun deleteReiki(reiki: Reiki) {
-        // TODO
-    }
-
-    fun deleteAllReikisInLocalDB() {
-        println("deleteAllReikisInLocalDB")
-
-        val deleteReikisTask = DeleteAllReikisInDBTask(this)
-        deleteReikisTask.execute()
-    }
-
     private fun getReikisFromWeb() {
-        println("getReikisFromWeb")
+        Log.d(TAG, "[ReikiRepository] getReikisFromWeb")
         reikiApi.getSampleReikis().enqueue(object : Callback<List<Reiki>> {
             override fun onResponse(call: Call<List<Reiki>>, response: Response<List<Reiki>>) {
                 if (response.isSuccessful) {
@@ -80,7 +66,7 @@ class ReikiRepository constructor(
     }
 
     private fun loadAllReikisFromDB() {
-        println("loadAllReikisFromDB")
+        Log.d(TAG, "[ReikiRepository] loadAllReikisFromDB")
 
         val loadReikisTask: LoadAllReikisFromDBTask = LoadAllReikisFromDBTask(this)
         loadReikisTask.execute()
@@ -167,15 +153,15 @@ class ReikiRepository constructor(
      * @param message optional message for error
      */
     private fun setReikisListObservableData(reikis: List<Reiki>, message: String?) {
-        println("setReikisListObservableData")
+        Log.d(TAG, "[ReikiRepository] setReikisListObservableData")
         var loadingStatus = Status.LOADING
-        if (reikisListObservable.value != null) {
-            loadingStatus = reikisListObservable.value!!.status
+        if (reikisObservable.value != null) {
+            loadingStatus = reikisObservable.value!!.status
         }
         when (loadingStatus) {
-            LOADING -> reikisListObservable.setValue(Resource.loading(reikis))
-            ERROR -> reikisListObservable.setValue(Resource.error(message, reikis))
-            SUCCESS -> reikisListObservable.setValue(Resource.success(reikis))
+            LOADING -> reikisObservable.setValue(Resource.loading(reikis))
+            ERROR -> reikisObservable.setValue(Resource.error(message, reikis))
+            SUCCESS -> reikisObservable.setValue(Resource.success(reikis))
         }
     }
 
@@ -185,17 +171,25 @@ class ReikiRepository constructor(
      * @param message optional message for error
      */
     private fun setReikisListObservableStatus(status: Status, message: String?) {
-        println("setReikisListObservableStatus")
+        Log.d(TAG, "[ReikiRepository] setReikisListObservableStatus")
         var loadingList: List<Reiki>? = null
-        if (reikisListObservable.value != null) {
-            loadingList = reikisListObservable.value!!.data
+        if (reikisObservable.value != null) {
+            loadingList = reikisObservable.value!!.data
         }
         when (status) {
-            ERROR -> reikisListObservable.value = Resource.error(message, loadingList)
-            LOADING -> reikisListObservable.value = Resource.loading(loadingList)
+            ERROR -> reikisObservable.value = Resource.error(message, loadingList)
+            LOADING -> reikisObservable.value = Resource.loading(loadingList)
             SUCCESS -> if (loadingList != null) {
-                reikisListObservable.value = Resource.success(loadingList)
+                reikisObservable.value = Resource.success(loadingList)
             }
         }
+    }
+
+    /* Function for testing only. Remove later */
+    fun deleteAllReikisInLocalDB() {
+        println("deleteAllReikisInLocalDB")
+
+        val deleteReikisTask = DeleteAllReikisInDBTask(this)
+        deleteReikisTask.execute()
     }
 }

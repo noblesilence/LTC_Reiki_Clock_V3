@@ -6,8 +6,10 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.model.Reiki
@@ -20,6 +22,8 @@ import kotlinx.android.synthetic.main.content_all_reikis.*
 
 class AllReikisActivity : AppCompatActivity() {
 
+    private val TAG = "Reiki"
+
     private lateinit var viewModel: AllReikisViewModel
 
     private val adapter = ReikiAdapter(mutableListOf())
@@ -27,28 +31,34 @@ class AllReikisActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_reikis)
-        setSupportActionBar(toolbar)
 
-        viewModel = ViewModelProviders.of(this).get(AllReikisViewModel::class.java)
+        setSupportActionBar(toolbar)
 
         reikisRecyclerView.layoutManager = LinearLayoutManager(this)
         reikisRecyclerView.adapter = adapter
 
-        viewModel.getReikisListObservable().observe(this, Observer<Resource<List<Reiki>>> { resource ->
-            if(resource?.status == Status.SUCCESS && resource.data != null) {
+        viewModel = ViewModelProviders.of(this).get(AllReikisViewModel::class.java)
+        viewModel.getReikisObservable().observe(this, Observer<Resource<List<Reiki>>> { resource ->
+            if(resource?.data != null) {
                 adapter.updateReikis(resource.data)
-                println("Success loading reikis")
-            } else if(resource?.status == Status.LOADING) {
-                println("Loading reikis...")
+                progressBar.visibility = View.GONE
+                errorTextView.visibility = View.GONE
+                retryButton.visibility = View.GONE
             }
             else {
                 println("Error getting reikis")
                 if(resource?.status == Status.ERROR) {
                     Toast.makeText(this, getString(R.string.error_retrieving_reikis), Toast.LENGTH_SHORT).show()
+                    progressBar.visibility = View.GONE
                 }
             }
         })
         viewModel.getReikis()
+
+        retryButton.setOnClickListener {
+            Log.d(TAG, "Should retry API call")
+            viewModel.getReikis()
+        }
 
         fab.setOnClickListener {
             startActivity(Intent(this, ReikiActivity::class.java))

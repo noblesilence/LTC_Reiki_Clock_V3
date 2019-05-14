@@ -10,9 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object Injection {
-    fun provideRepository(): ReikiRepository {
-        return ReikiRepository()
-    }
+    fun provideRepository(): ReikiRepository = ReikiRepository()
 
     fun provideReikiDao(): ReikiDao = ReikiApplication.database.reikiDao()
 
