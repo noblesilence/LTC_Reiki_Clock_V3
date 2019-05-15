@@ -14,6 +14,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.lang.ref.WeakReference
 
+// https://medium.com/@thanasakis/restful-api-consuming-on-android-using-retrofit-and-architecture-components-livedata-room-and-59e3b064f94
+
 class ReikiRepository constructor(
     private val reikiDao: ReikiDao = Injection.provideReikiDao(),
     private val reikiApi: ReikiApi = Injection.provideReikiApi()
@@ -149,7 +151,7 @@ class ReikiRepository constructor(
 
     /**
      * This method changes the observable's LiveData data without changing the status
-     * @param mRecipesList the data that need to be updated
+     * @param reikis the data that need to be updated
      * @param message optional message for error
      */
     private fun setReikisListObservableData(reikis: List<Reiki>, message: String?) {

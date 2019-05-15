@@ -15,6 +15,7 @@ import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.model.Reiki
 import com.learnteachcenter.ltcreikiclockv3.model.basic.Status
 import com.learnteachcenter.ltcreikiclockv3.model.basic.Resource
+import com.learnteachcenter.ltcreikiclockv3.network.NetworkUtil
 import com.learnteachcenter.ltcreikiclockv3.view.reiki.ReikiActivity
 import com.learnteachcenter.ltcreikiclockv3.viewmodel.AllReikisViewModel
 import kotlinx.android.synthetic.main.activity_all_reikis.*
@@ -60,9 +61,15 @@ class AllReikisActivity : AppCompatActivity() {
             viewModel.getReikis()
         }
 
-        fab.setOnClickListener {
-            startActivity(Intent(this, ReikiActivity::class.java))
+        // Show/hide Add button based on internet connectivity
+        if(NetworkUtil.isConnected(this)) {
+            fab.setOnClickListener {
+                startActivity(Intent(this, ReikiActivity::class.java))
+            }
+        } else {
+            fab.hide()
         }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
