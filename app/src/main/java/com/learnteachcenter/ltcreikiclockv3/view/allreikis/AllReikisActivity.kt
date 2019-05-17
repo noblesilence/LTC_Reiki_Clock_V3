@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.se.omapi.Session
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.Menu
@@ -15,6 +16,7 @@ import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.model.Reiki
 import com.learnteachcenter.ltcreikiclockv3.model.basic.Status
 import com.learnteachcenter.ltcreikiclockv3.model.basic.Resource
+import com.learnteachcenter.ltcreikiclockv3.model.session.SessionManager
 import com.learnteachcenter.ltcreikiclockv3.network.NetworkUtil
 import com.learnteachcenter.ltcreikiclockv3.view.reiki.ReikiActivity
 import com.learnteachcenter.ltcreikiclockv3.viewmodel.AllReikisViewModel
@@ -82,6 +84,11 @@ class AllReikisActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_clear_all -> {
                 viewModel.deleteAllReikisInDB()
+                true
+            }
+            R.id.action_logout -> {
+                val session = SessionManager(this)
+                session.logoutUser()
                 true
             }
             else -> super.onOptionsItemSelected(item)

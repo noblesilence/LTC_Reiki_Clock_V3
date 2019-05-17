@@ -13,6 +13,7 @@
     <string name="link_to_signup">No account yet? Create one</string>
     <string name="link_to_login">Already have an account? Log in</string>
     <string name="login">Log In</string>
+    <string name="logout">Log Out</string>
     <string name="lbl_name">Name</string>
     <string name="lbl_email">Email</string>
     <string name="lbl_password">Password</string>

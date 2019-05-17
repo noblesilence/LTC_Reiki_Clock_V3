@@ -7,4 +7,8 @@
     android:orderInCategory="100"
     android:title="@string/clear_all_reikis"
     app:showAsAction="never" />
+  <item
+    android:id="@+id/action_logout"
+    android:title="@string/logout" />
+
 </menu>
