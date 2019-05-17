@@ -7,7 +7,7 @@ import android.arch.lifecycle.ViewModel
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.model.Reiki
 import com.learnteachcenter.ltcreikiclockv3.model.ReikiRepository
-import com.learnteachcenter.ltcreikiclockv3.model.basic.Resource
+import com.learnteachcenter.ltcreikiclockv3.model.remote.Resource
 
 class AllReikisViewModel (private val repository: ReikiRepository = Injection.provideRepository()) : ViewModel() {
 

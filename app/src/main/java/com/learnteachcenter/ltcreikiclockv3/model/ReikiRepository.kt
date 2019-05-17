@@ -4,9 +4,11 @@ import android.arch.lifecycle.MutableLiveData
 import android.os.AsyncTask
 import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
-import com.learnteachcenter.ltcreikiclockv3.model.basic.Resource
-import com.learnteachcenter.ltcreikiclockv3.model.basic.Status
-import com.learnteachcenter.ltcreikiclockv3.model.basic.Status.*
+import com.learnteachcenter.ltcreikiclockv3.model.authentication.LoginResponse
+import com.learnteachcenter.ltcreikiclockv3.model.authentication.User
+import com.learnteachcenter.ltcreikiclockv3.model.remote.Resource
+import com.learnteachcenter.ltcreikiclockv3.model.remote.Status
+import com.learnteachcenter.ltcreikiclockv3.model.remote.Status.*
 import com.learnteachcenter.ltcreikiclockv3.model.remote.ReikiApi
 import com.learnteachcenter.ltcreikiclockv3.model.room.ReikiDao
 import retrofit2.Call
@@ -163,7 +165,7 @@ class ReikiRepository constructor(
 
     private fun getReikisFromWeb() {
         Log.d(TAG, "[ReikiRepository] getReikisFromWeb")
-        reikiApi.getSampleReikis().enqueue(object : Callback<List<Reiki>> {
+        reikiApi.getReikis().enqueue(object : Callback<List<Reiki>> {
             override fun onResponse(call: Call<List<Reiki>>, response: Response<List<Reiki>>) {
                 if (response.isSuccessful) {
                     setReikisListObservableStatus(SUCCESS, null)

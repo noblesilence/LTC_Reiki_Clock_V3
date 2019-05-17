@@ -1,4 +1,4 @@
-package com.learnteachcenter.ltcreikiclockv3.model.basic
+package com.learnteachcenter.ltcreikiclockv3.model.remote
 
 /**
  * Created by 3piCerberus on 24/04/2018.

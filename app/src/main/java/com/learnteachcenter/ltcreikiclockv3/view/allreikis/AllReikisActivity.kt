@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.se.omapi.Session
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.Menu
@@ -13,11 +12,12 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.learnteachcenter.ltcreikiclockv3.R
+import com.learnteachcenter.ltcreikiclockv3.model.authentication.AuthenticationPrefs
 import com.learnteachcenter.ltcreikiclockv3.model.Reiki
-import com.learnteachcenter.ltcreikiclockv3.model.basic.Status
-import com.learnteachcenter.ltcreikiclockv3.model.basic.Resource
-import com.learnteachcenter.ltcreikiclockv3.model.session.SessionManager
+import com.learnteachcenter.ltcreikiclockv3.model.remote.Status
+import com.learnteachcenter.ltcreikiclockv3.model.remote.Resource
 import com.learnteachcenter.ltcreikiclockv3.network.NetworkUtil
+import com.learnteachcenter.ltcreikiclockv3.view.login.LoginActivity
 import com.learnteachcenter.ltcreikiclockv3.view.reiki.ReikiActivity
 import com.learnteachcenter.ltcreikiclockv3.viewmodel.AllReikisViewModel
 import kotlinx.android.synthetic.main.activity_all_reikis.*
@@ -87,8 +87,9 @@ class AllReikisActivity : AppCompatActivity() {
                 true
             }
             R.id.action_logout -> {
-                val session = SessionManager(this)
-                session.logoutUser()
+                AuthenticationPrefs.clearAuthToken()
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
                 true
             }
             else -> super.onOptionsItemSelected(item)

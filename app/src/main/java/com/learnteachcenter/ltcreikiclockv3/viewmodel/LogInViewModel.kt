@@ -6,9 +6,9 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
-import com.learnteachcenter.ltcreikiclockv3.model.LoginResponse
+import com.learnteachcenter.ltcreikiclockv3.model.authentication.LoginResponse
 import com.learnteachcenter.ltcreikiclockv3.model.ReikiRepository
-import com.learnteachcenter.ltcreikiclockv3.model.basic.Resource
+import com.learnteachcenter.ltcreikiclockv3.model.remote.Resource
 
 class LogInViewModel (private val repository: ReikiRepository
                       = Injection.provideRepository()) : ViewModel() {

@@ -1,6 +1,7 @@
 package com.learnteachcenter.ltcreikiclockv3.app
 
 import com.learnteachcenter.ltcreikiclockv3.BuildConfig
+import com.learnteachcenter.ltcreikiclockv3.model.authentication.AuthenticationPrefs
 import com.learnteachcenter.ltcreikiclockv3.model.ReikiRepository
 import com.learnteachcenter.ltcreikiclockv3.model.remote.ReikiApi
 import com.learnteachcenter.ltcreikiclockv3.model.room.ReikiDao
@@ -40,6 +41,12 @@ object Injection {
     private fun provideOkHttpClient(): OkHttpClient {
         val httpClient = OkHttpClient.Builder()
         httpClient.addInterceptor(provideLoggingInterceptor())
+
+        httpClient.addInterceptor { chain ->
+            val request = chain.request().newBuilder().addHeader("Authorization", AuthenticationPrefs.getAuthToken()).build()
+            chain.proceed(request)
+        }
+
         return httpClient.build()
     }
 }
