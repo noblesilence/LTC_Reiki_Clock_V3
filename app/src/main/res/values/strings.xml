@@ -8,4 +8,19 @@
     <string name="error_saving_reiki">Error saving Reiki</string>
     <string name="music">Music</string>
     <string name="clear_all_reikis">Clear All Reikis</string>
+    <string name="logo_description">LTC Reiki Clock Logo</string>
+    <string name="lbl_signup">Sign Up</string>
+    <string name="link_to_signup">No account yet? Create one</string>
+    <string name="link_to_login">Already have an account? Log in</string>
+    <string name="login">Log In</string>
+    <string name="lbl_name">Name</string>
+    <string name="lbl_email">Email</string>
+    <string name="lbl_password">Password</string>
+    <string name="lbl_confirm_password">Confirm Password</string>
+    <string name="enter_valid_name">Enter your name</string>
+    <string name="enter_email">Enter email</string>
+    <string name="enter_password">Enter password</string>
+    <string name="enter_valid_password">Enter valid password</string>
+    <string name="enter_valid_email">Enter valid email</string>
+    <string name="error_mismatch_passwords">The 2 passwords must be the same.</string>
 </resources>
