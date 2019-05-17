@@ -4,7 +4,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.os.AsyncTask
 import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
-import com.learnteachcenter.ltcreikiclockv3.model.authentication.SessionManager
 import com.learnteachcenter.ltcreikiclockv3.model.basic.Resource
 import com.learnteachcenter.ltcreikiclockv3.model.basic.Status
 import com.learnteachcenter.ltcreikiclockv3.model.basic.Status.*
@@ -14,8 +13,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.ref.WeakReference
-import android.widget.Toast
-import android.R.string
 import org.json.JSONObject
 
 
@@ -30,24 +27,27 @@ class ReikiRepository constructor(
 
     private val TAG = "Reiki"
 
-    val registerUserObservable = MutableLiveData<Resource<User>>()
-
+    val signUpObservable = MutableLiveData<Resource<User>>()
+    val logInObservable = MutableLiveData<Resource<LoginResponse>>()
     val reikisObservable = MutableLiveData<Resource<List<Reiki>>>()
 
-    fun registerUser(user: User) {
-        reikiApi.registerUser(
+    /**
+     * SIGN UP
+     */
+    fun signUp(user: User) {
+        reikiApi.signUp(
             user.name,
             user.email,
             user.password,
             user.password2).enqueue(object: Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 if(response.isSuccessful) {
-                    setRegisterUserObservableData(response.body()!!, "")
-                    setRegisterUserObservableStatus(SUCCESS, "")
+                    setSignUpObservableData(response.body()!!, "")
+                    setSignUpObservableStatus(SUCCESS, "")
                     Log.d(TAG, "[ReikiRepository] Success registration")
                 } else {
                     val jObjError = JSONObject(response.errorBody()?.string())
-                    setRegisterUserObservableStatus(ERROR,
+                    setSignUpObservableStatus(ERROR,
                         response.code().toString() + " " + jObjError)
 
                     Log.d(TAG, "[ReikiRepository] Error message from the API: " + response.code().toString() + " " + jObjError)
@@ -56,49 +56,93 @@ class ReikiRepository constructor(
 
             override fun onFailure(call: Call<User>, t: Throwable) {
                 Log.d(TAG, t.message)
-                setRegisterUserObservableStatus(ERROR, t.message!!)
+                setSignUpObservableStatus(ERROR, t.message!!)
             }
         })
     }
 
-    /**
-     * This method changes the observable's LiveData data without changing the status
-     * @param User the data that need to be updated
-     * @param message optional message for error
-     */
-    fun setRegisterUserObservableData(user: User, message: String) {
+    fun setSignUpObservableData(user: User, message: String) {
         var loadingStatus = LOADING
-        if (registerUserObservable.value != null) {
-            loadingStatus = registerUserObservable.value!!.status
+        if (signUpObservable.value != null) {
+            loadingStatus = signUpObservable.value!!.status
         }
         when (loadingStatus) {
-            LOADING -> registerUserObservable.setValue(Resource.loading(user))
-            SUCCESS -> registerUserObservable.setValue(Resource.success(user))
-            ERROR -> registerUserObservable.setValue(Resource.error(user, message))
+            LOADING -> signUpObservable.setValue(Resource.loading(user))
+            SUCCESS -> signUpObservable.setValue(Resource.success(user))
+            ERROR -> signUpObservable.setValue(Resource.error(user, message))
+        }
+    }
+
+    private fun setSignUpObservableStatus(status: Status, message: String) {
+
+        var loadingUser: User? = null
+        if(signUpObservable.value != null) {
+            loadingUser = signUpObservable.value?.data
+        }
+        when(status) {
+            LOADING -> signUpObservable.value = Resource.loading(loadingUser)
+            SUCCESS -> {
+                if(loadingUser != null) {
+                    signUpObservable.value = Resource.success(loadingUser)
+                }
+            }
+            ERROR -> signUpObservable.value = Resource.error(loadingUser, message)
         }
     }
 
     /**
-     * This method changes the observable's LiveData data without changing the status
-     * @param user the data that need to be updated
-     * @param message optional message for error
+     * LOGIN
      */
-    private fun setRegisterUserObservableStatus(status: Status, message: String) {
+    fun logIn(email: String, password: String) {
+        reikiApi.logIn(email, password).enqueue(object: Callback<LoginResponse> {
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                if(response.isSuccessful) {
+                    setLogInObservableData(response.body()!!, "")
+                    setLogInObservableStatus(SUCCESS, "")
+                } else {
+                    val jObjError = JSONObject(response.errorBody()?.string())
+                    setLogInObservableStatus(ERROR, jObjError.toString())
 
-        var loadingUser: User? = null
-        if(registerUserObservable.value != null) {
-            loadingUser = registerUserObservable.value?.data
-        }
-        when(status) {
-            LOADING -> registerUserObservable.value = Resource.loading(loadingUser)
-            SUCCESS -> {
-                if(loadingUser != null) {
-                    registerUserObservable.value = Resource.success(loadingUser)
+                    Log.d(TAG,
+                        "[ReikiRepository] Error logging in: Status $response.code().toString() $jObjError")
                 }
             }
-            ERROR -> registerUserObservable.value = Resource.error(loadingUser, message)
+
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                Log.d(TAG, t.message)
+                setLogInObservableStatus(ERROR, t.message!!)
+            }
+        })
+    }
+
+    fun setLogInObservableData(loginResponse: LoginResponse, message: String) {
+        var loadingStatus = LOADING
+        if(logInObservable.value != null) {
+            loadingStatus = logInObservable.value!!.status
+        }
+        when(loadingStatus) {
+            LOADING -> logInObservable.value = Resource.loading(loginResponse)
+            SUCCESS -> logInObservable.value = Resource.success(loginResponse)
+            ERROR -> logInObservable.value = Resource.error(loginResponse, message)
         }
     }
+
+    fun setLogInObservableStatus(status: Status, message: String) {
+        var loadingLoginResponse: LoginResponse? = null
+        if(logInObservable.value != null) {
+            loadingLoginResponse = logInObservable.value?.data
+        }
+        when(status) {
+            LOADING -> logInObservable.value = Resource.loading(loadingLoginResponse)
+            SUCCESS -> {
+                if(loadingLoginResponse != null) {
+                    logInObservable.value = Resource.success(loadingLoginResponse)
+                }
+            }
+            ERROR -> logInObservable.value = Resource.error(loadingLoginResponse, message)
+        }
+    }
+
 
     // Create
     fun addReiki(reiki: Reiki) {

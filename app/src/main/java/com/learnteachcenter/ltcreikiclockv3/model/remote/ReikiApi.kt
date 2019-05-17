@@ -1,5 +1,6 @@
 package com.learnteachcenter.ltcreikiclockv3.model.remote
 
+import com.learnteachcenter.ltcreikiclockv3.model.LoginResponse
 import com.learnteachcenter.ltcreikiclockv3.model.Reiki
 import com.learnteachcenter.ltcreikiclockv3.model.User
 import retrofit2.Call
@@ -14,10 +15,17 @@ interface ReikiApi {
 
     @FormUrlEncoded
     @POST("users/register")
-    fun registerUser(
+    fun signUp(
         @Field("name") name: String,
         @Field("email") email: String,
         @Field("password") password: String,
         @Field("password2") password2: String
     ): Call<User>
+
+    @FormUrlEncoded
+    @POST("users/login")
+    fun logIn(
+        @Field("email") email: String,
+        @Field("password") password: String
+    ): Call<LoginResponse>
 }
