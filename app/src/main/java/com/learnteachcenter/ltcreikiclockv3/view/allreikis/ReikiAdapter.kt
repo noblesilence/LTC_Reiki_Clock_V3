@@ -5,19 +5,20 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.learnteachcenter.ltcreikiclockv3.R
-import com.learnteachcenter.ltcreikiclockv3.app.ReikiApplication
 import com.learnteachcenter.ltcreikiclockv3.app.inflate
 import com.learnteachcenter.ltcreikiclockv3.model.Reiki
 import kotlinx.android.synthetic.main.list_item_reiki.view.*
 
-class ReikiAdapter(private val reikis: MutableList<Reiki>)
+// https://www.andreasjakl.com/recyclerview-kotlin-style-click-listener-android/
+
+class ReikiAdapter(private val reikis: MutableList<Reiki>, val clickListener: (Reiki) -> Unit)
     : RecyclerView.Adapter<ReikiAdapter.ViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(parent.inflate(R.layout.list_item_reiki))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(reikis[position])
+        holder.bind(reikis[position], clickListener)
     }
 
     override fun getItemCount(): Int = reikis.size
@@ -28,23 +29,16 @@ class ReikiAdapter(private val reikis: MutableList<Reiki>)
         notifyDataSetChanged()
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
-        View.OnClickListener {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private lateinit var reiki: Reiki
 
-        override fun onClick(v: View?) {
-            startPositionListActivity(reiki, v)
-        }
-
-        fun bind(reiki: Reiki) {
+        fun bind(reiki: Reiki, clickListener: (Reiki) -> Unit) {
             this.reiki = reiki
-
-            println("title: ${reiki.title}")
-            println("description: ${reiki.description}")
 
             itemView.title.text = reiki.title
             itemView.description.text = reiki.description
+            itemView.setOnClickListener { clickListener(reiki) }
         }
     }
 }

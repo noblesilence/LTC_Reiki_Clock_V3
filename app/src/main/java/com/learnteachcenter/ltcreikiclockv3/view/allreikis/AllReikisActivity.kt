@@ -35,7 +35,7 @@ class AllReikisActivity : AppCompatActivity() {
 
     private lateinit var viewModel: AllReikisViewModel
 
-    private val adapter = ReikiAdapter(mutableListOf())
+    private val adapter = ReikiAdapter(mutableListOf(), { reiki: Reiki -> reikiItemClicked(reiki) })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,6 +80,17 @@ class AllReikisActivity : AppCompatActivity() {
 
     }
 
+    fun reikiItemClicked(reiki: Reiki) {
+        Toast.makeText(this, "Clicked: ${reiki.title}", Toast.LENGTH_LONG).show()
+
+//        val i = Intent(this, AllPositionsActivity::class.java)
+//        i.putExtra(IntentExtraNames.EXTRA_REIKI_TITLE, reiki.title)
+//        i.putExtra(IntentExtraNames.EXTRA_REIKI_DESCRIPTION, reiki.description)
+//        i.putExtra(IntentExtraNames.EXTRA_REIKI_PLAY_MUSIC, reiki.playMusic)
+//
+//        startActivity(i)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -100,15 +111,5 @@ class AllReikisActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    // Start PositionListActivity based on the given Reiki ID
-    public fun startAllPositionsActivity(reiki: Reiki, viewRoot: View) {
-        val i = Intent(this, AllPositionsActivity::class.java)
-        i.putExtra(IntentExtraNames.EXTRA_REIKI_TITLE, reiki.title)
-        i.putExtra(IntentExtraNames.EXTRA_REIKI_DESCRIPTION, reiki.description)
-        i.putExtra(IntentExtraNames.EXTRA_REIKI_PLAY_MUSIC, reiki.playMusic)
-
-        startActivity(i)
     }
 }
