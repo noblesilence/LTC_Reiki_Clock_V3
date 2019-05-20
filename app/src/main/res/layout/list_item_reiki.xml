@@ -1,32 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
                                              android:layout_width="match_parent"
                                              android:layout_height="wrap_content"
                                              xmlns:tools="http://schemas.android.com/tools"
                                              android:orientation="vertical">
 
-    <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_16"
-            android:layout_marginStart="@dimen/dp_16"
-            android:layout_marginLeft="@dimen/dp_16"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            tools:text="Reiki Name" />
+    <LinearLayout
+        android:id="@+id/group_reiki_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="50dp"
+        android:layout_marginRight="50dp"
+        android:orientation="vertical"
+    >
+        <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginStart="@dimen/dp_16"
+                android:layout_marginLeft="@dimen/dp_16"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:text="Reiki Name" />
 
-    <TextView
-            android:id="@+id/description"
+        <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_8"
+                android:layout_marginLeft="@dimen/dp_16"
+                android:layout_marginStart="@dimen/dp_16"
+                android:layout_marginEnd="48dp"
+                android:layout_marginRight="48dp"
+                android:textSize="18sp"
+                tools:text="Description" />
+    </LinearLayout>
+
+    <ImageView
+            android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_8"
-            android:layout_marginLeft="@dimen/dp_16"
-            android:layout_marginStart="@dimen/dp_16"
-            android:layout_marginEnd="48dp"
-            android:layout_marginRight="48dp"
-            android:textSize="18sp"
-            tools:text="999" />
-</LinearLayout>
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/to_position_list"
+            android:gravity="center_horizontal|end"
+            android:src="@drawable/ic_chevron_right_black_24dp"
+            android:tint="@color/colorSecondaryDark"/>
+
+    <ProgressBar
+            android:id="@+id/pro_item_reiki"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:background="@color/colorPrimaryDark"
+            android:visibility="gone"/>
+</RelativeLayout>

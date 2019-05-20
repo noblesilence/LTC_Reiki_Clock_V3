@@ -1,9 +1,11 @@
 package com.learnteachcenter.ltcreikiclockv3.view.allreikis
 
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.learnteachcenter.ltcreikiclockv3.R
+import com.learnteachcenter.ltcreikiclockv3.app.ReikiApplication
 import com.learnteachcenter.ltcreikiclockv3.app.inflate
 import com.learnteachcenter.ltcreikiclockv3.model.Reiki
 import kotlinx.android.synthetic.main.list_item_reiki.view.*
@@ -14,7 +16,7 @@ class ReikiAdapter(private val reikis: MutableList<Reiki>)
         return ViewHolder(parent.inflate(R.layout.list_item_reiki))
     }
 
-    override fun onBindViewHolder(holder: ReikiAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(reikis[position])
     }
 
@@ -26,9 +28,14 @@ class ReikiAdapter(private val reikis: MutableList<Reiki>)
         notifyDataSetChanged()
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
 
         private lateinit var reiki: Reiki
+
+        override fun onClick(v: View?) {
+            startPositionListActivity(reiki, v)
+        }
 
         fun bind(reiki: Reiki) {
             this.reiki = reiki

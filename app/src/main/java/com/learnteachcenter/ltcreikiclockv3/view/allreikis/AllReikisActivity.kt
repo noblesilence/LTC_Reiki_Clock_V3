@@ -6,22 +6,28 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import com.learnteachcenter.ltcreikiclockv3.R
+import com.learnteachcenter.ltcreikiclockv3.app.inflate
 import com.learnteachcenter.ltcreikiclockv3.model.authentication.AuthenticationPrefs
 import com.learnteachcenter.ltcreikiclockv3.model.Reiki
 import com.learnteachcenter.ltcreikiclockv3.model.remote.Status
 import com.learnteachcenter.ltcreikiclockv3.model.remote.Resource
 import com.learnteachcenter.ltcreikiclockv3.network.NetworkUtil
+import com.learnteachcenter.ltcreikiclockv3.utils.IntentExtraNames
+import com.learnteachcenter.ltcreikiclockv3.view.allpositions.AllPositionsActivity
 import com.learnteachcenter.ltcreikiclockv3.view.login.LoginActivity
 import com.learnteachcenter.ltcreikiclockv3.view.reiki.ReikiActivity
 import com.learnteachcenter.ltcreikiclockv3.viewmodel.AllReikisViewModel
 import kotlinx.android.synthetic.main.activity_all_reikis.*
 import kotlinx.android.synthetic.main.content_all_reikis.*
+import kotlinx.android.synthetic.main.list_item_reiki.view.*
 
 class AllReikisActivity : AppCompatActivity() {
 
@@ -94,5 +100,15 @@ class AllReikisActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    // Start PositionListActivity based on the given Reiki ID
+    public fun startAllPositionsActivity(reiki: Reiki, viewRoot: View) {
+        val i = Intent(this, AllPositionsActivity::class.java)
+        i.putExtra(IntentExtraNames.EXTRA_REIKI_TITLE, reiki.title)
+        i.putExtra(IntentExtraNames.EXTRA_REIKI_DESCRIPTION, reiki.description)
+        i.putExtra(IntentExtraNames.EXTRA_REIKI_PLAY_MUSIC, reiki.playMusic)
+
+        startActivity(i)
     }
 }
