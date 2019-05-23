@@ -9,7 +9,8 @@ import com.learnteachcenter.ltcreikiclockv3.model.Reiki
 import com.learnteachcenter.ltcreikiclockv3.model.ReikiRepository
 import com.learnteachcenter.ltcreikiclockv3.model.remote.Resource
 
-class AllReikisViewModel (private val repository: ReikiRepository = Injection.provideRepository()) : ViewModel() {
+class AllReikisViewModel (private val repository: ReikiRepository = Injection.provideRepository())
+    : ViewModel() {
 
     val reikisObservable: MediatorLiveData<Resource<List<Reiki>>> = MediatorLiveData<Resource<List<Reiki>>>()
 

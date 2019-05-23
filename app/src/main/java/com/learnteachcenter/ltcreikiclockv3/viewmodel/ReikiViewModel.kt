@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableField
+import com.learnteachcenter.ltcreikiclockv3.model.Position
 import com.learnteachcenter.ltcreikiclockv3.model.Reiki
 import com.learnteachcenter.ltcreikiclockv3.model.ReikiGenerator
 import com.learnteachcenter.ltcreikiclockv3.model.ReikiRepository
@@ -17,6 +18,7 @@ class ReikiViewModel(private val generator: ReikiGenerator = ReikiGenerator(),
     fun getReikiLiveData(): LiveData<Reiki> = reikiLiveData
     fun getSaveLiveData(): LiveData<Boolean> = saveLiveData
 
+    var id = ObservableField<String>("")
     var title = ObservableField<String>("")
     var description = ObservableField<String>("")
     var playMusic = true
@@ -24,7 +26,13 @@ class ReikiViewModel(private val generator: ReikiGenerator = ReikiGenerator(),
     lateinit var reiki: Reiki
 
     fun updateReiki() {
-        reiki = generator.generateReiki(title.get() ?: "", description.get() ?: "", playMusic)
+        reiki = generator.generateReiki(
+            id.get() ?: "",
+            title.get() ?: "",
+            description.get() ?: "",
+            playMusic,
+            emptyList()
+            )
         reikiLiveData.postValue(reiki)
     }
 
@@ -38,7 +46,7 @@ class ReikiViewModel(private val generator: ReikiGenerator = ReikiGenerator(),
         }
     }
 
-    fun canSaveReiki(): Boolean {
+    private fun canSaveReiki(): Boolean {
         val title = this.title.get()
         title?.let {
             return title.isNotEmpty()

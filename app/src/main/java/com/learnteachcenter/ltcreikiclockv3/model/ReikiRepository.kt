@@ -1,5 +1,6 @@
 package com.learnteachcenter.ltcreikiclockv3.model
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.os.AsyncTask
 import android.util.Log
@@ -163,6 +164,10 @@ class ReikiRepository constructor(
         getReikisFromWeb()
     }
 
+    fun getPositions(reikiId: String): LiveData<List<Position>> {
+        return reikiDao.getPositions(reikiId)
+    }
+
     private fun getReikisFromWeb() {
         Log.d(TAG, "[ReikiRepository] getReikisFromWeb")
         reikiApi.getReikis().enqueue(object : Callback<List<Reiki>> {
@@ -210,7 +215,7 @@ class ReikiRepository constructor(
 
         override fun doInBackground(vararg params: Void?): List<Reiki> {
             val repo = repoReference.get()
-            return repo?.reikiDao!!.getAllReikis()
+            return repo?.reikiDao!!.getReikis()
         }
 
         override fun onPostExecute(results: List<Reiki>?) {

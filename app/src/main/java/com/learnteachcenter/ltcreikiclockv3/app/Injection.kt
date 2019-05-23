@@ -9,6 +9,10 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import com.google.gson.GsonBuilder
+import com.google.gson.Gson
+
+
 
 object Injection {
     fun provideRepository(): ReikiRepository = ReikiRepository()
@@ -20,9 +24,11 @@ object Injection {
     }
 
     private fun provideRetrofit(): Retrofit {
+        val gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
+
         return Retrofit.Builder()
             .baseUrl(BuildConfig.URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .client(provideOkHttpClient())
             .build()
     }
