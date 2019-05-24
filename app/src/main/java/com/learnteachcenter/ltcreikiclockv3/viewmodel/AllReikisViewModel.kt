@@ -12,16 +12,12 @@ import com.learnteachcenter.ltcreikiclockv3.model.remote.Resource
 class AllReikisViewModel (private val repository: ReikiRepository = Injection.provideRepository())
     : ViewModel() {
 
-    val reikisObservable: MediatorLiveData<Resource<List<Reiki>>> = MediatorLiveData<Resource<List<Reiki>>>()
+    val reikisObservable = MediatorLiveData<Resource<List<Reiki>>>()
 
     init {
-        reikisObservable.addSource(
-            repository.reikisObservable,
-            object : Observer<Resource<List<Reiki>>> {
-                override fun onChanged(reikis: Resource<List<Reiki>>?) {
-                    reikisObservable.value = reikis
-                }
-            })
+        reikisObservable.addSource(repository.reikisObservable) { reikis ->
+            reikisObservable.value = reikis
+        }
     }
 
     fun getReikis() = repository.getReikis()

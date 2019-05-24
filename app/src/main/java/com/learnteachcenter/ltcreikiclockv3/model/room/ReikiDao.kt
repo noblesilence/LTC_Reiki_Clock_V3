@@ -14,12 +14,18 @@ interface ReikiDao {
     @Query("SELECT * FROM reikis")
     fun getReikis(): List<Reiki>
 
-    @Update(onConflict = OnConflictStrategy.IGNORE)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     fun update(reiki: Reiki): Int
 
     @Query("DELETE FROM reikis")
     fun deleteAllReikis()
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(position: Position): Long
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun update(position: Position): Int
+
     @Query("SELECT * FROM positions WHERE reikiId = :reikiId ORDER BY seqNo")
-    fun getPositions(reikiId: String): LiveData<List<Position>>
+    fun getPositions(reikiId: String): List<Position>
 }

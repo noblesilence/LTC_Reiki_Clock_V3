@@ -1,6 +1,5 @@
 package com.learnteachcenter.ltcreikiclockv3.model
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.os.AsyncTask
 import android.util.Log
@@ -33,6 +32,7 @@ class ReikiRepository constructor(
     val signUpObservable = MutableLiveData<Resource<User>>()
     val logInObservable = MutableLiveData<Resource<LoginResponse>>()
     val reikisObservable = MutableLiveData<Resource<List<Reiki>>>()
+    val positionsObservable = MutableLiveData<Resource<List<Position>>>()
 
     /**
      * SIGN UP
@@ -154,7 +154,6 @@ class ReikiRepository constructor(
 
     // Read
     fun getReikis() {
-        Log.d(TAG, "[ReikiRepository] getReikis")
         var loadingList: List<Reiki>? = null
         if (reikisObservable.value != null) {
             loadingList = reikisObservable.value!!.data
@@ -164,51 +163,13 @@ class ReikiRepository constructor(
         getReikisFromWeb()
     }
 
-    fun getPositions(reikiId: String): LiveData<List<Position>> {
-        return reikiDao.getPositions(reikiId)
-    }
-
-    private fun getReikisFromWeb() {
-        Log.d(TAG, "[ReikiRepository] getReikisFromWeb")
-        reikiApi.getReikis().enqueue(object : Callback<List<Reiki>> {
-            override fun onResponse(call: Call<List<Reiki>>, response: Response<List<Reiki>>) {
-                if (response.isSuccessful) {
-                    setReikisListObservableStatus(SUCCESS, null)
-                    addReikisToDB(response.body())
-                } else {
-                    // error case
-                    setReikisListObservableStatus(ERROR, response.code().toString())
-                    when (response.code()) {
-                        404 -> println("not found")
-                        500 -> println("server unavailable")
-                        else -> println("unknown error")
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<List<Reiki>>, t: Throwable) {
-                Log.d("Reiki", t.message)
-                setReikisListObservableStatus(ERROR, t.message)
-            }
-        })
-    }
-
     private fun loadAllReikisFromDB() {
-        Log.d(TAG, "[ReikiRepository] loadAllReikisFromDB")
-
-        val loadReikisTask = LoadAllReikisFromDBTask(this)
+        val loadReikisTask = LoadReikisFromDBTask(this)
         loadReikisTask.execute()
     }
 
-    private fun addReikisToDB(items: List<Reiki>?) {
-        println("addReikisToDB")
-
-        val addReikisTask = AddReikisToDBTask(this)
-        addReikisTask.execute(items)
-    }
-
-    private class LoadAllReikisFromDBTask
-        internal constructor(repo: ReikiRepository)
+    private class LoadReikisFromDBTask
+    internal constructor(repo: ReikiRepository)
         : AsyncTask<Void, Void, List<Reiki>>() {
 
         private val repoReference: WeakReference<ReikiRepository> = WeakReference(repo)
@@ -222,9 +183,90 @@ class ReikiRepository constructor(
             // check if there are data in the db
             if(results != null && results.isNotEmpty()) {
                 val repo = repoReference.get()
-                repo?.setReikisListObservableData(results, null)
+                repo?.setReikisObservableData(results, null)
             }
         }
+    }
+
+    private fun getReikisFromWeb() {
+        reikiApi.getReikis().enqueue(object : Callback<List<Reiki>> {
+            override fun onResponse(call: Call<List<Reiki>>, response: Response<List<Reiki>>) {
+                if (response.isSuccessful) {
+                    setReikisObservableStatus(SUCCESS, null)
+                    addReikisToDB(response.body())
+                } else {
+                    // error case
+                    setReikisObservableStatus(ERROR, response.code().toString())
+                    when (response.code()) {
+                        404 -> println("not found")
+                        500 -> println("server unavailable")
+                        else -> println("unknown error")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<List<Reiki>>, t: Throwable) {
+                Log.d("Reiki", t.message)
+                setReikisObservableStatus(ERROR, t.message)
+            }
+        })
+    }
+
+    // TODO: don't know why have to set data and status separately
+
+    /**
+     * This method changes the observable's LiveData data without changing the status
+     * @param reikis the data that need to be updated
+     * @param message optional message for error
+     */
+    private fun setReikisObservableData(reikis: List<Reiki>, message: String?) {
+        var loadingStatus = LOADING
+        if (reikisObservable.value != null) {
+            loadingStatus = reikisObservable.value!!.status
+        }
+        when (loadingStatus) {
+            LOADING -> reikisObservable.value = Resource.loading(reikis)
+            ERROR -> reikisObservable.value = Resource.error(reikis, message)
+            SUCCESS -> reikisObservable.value = Resource.success(reikis)
+        }
+    }
+
+    /**
+     * This method changes the observable's LiveData status without changing the data
+     * @param status The new status of LiveData
+     * @param message optional message for error
+     */
+    private fun setReikisObservableStatus(status: Status, message: String?) {
+        var loadingList: List<Reiki>? = null
+        if (reikisObservable.value != null) {
+            loadingList = reikisObservable.value!!.data
+        }
+        when (status) {
+            LOADING -> reikisObservable.value = Resource.loading(loadingList)
+            SUCCESS -> if (loadingList != null) {
+                reikisObservable.value = Resource.success(loadingList)
+            }
+            ERROR -> reikisObservable.value = Resource.error(loadingList, message)
+        }
+    }
+
+    fun getPositions(reikiId: String) {
+        var loadingList: List<Position>? = null
+        if(positionsObservable.value != null) {
+            loadingList = positionsObservable.value!!.data
+        }
+        positionsObservable.value = Resource.loading(loadingList)
+        loadPositionsFromDB(reikiId)
+    }
+
+    private fun loadPositionsFromDB(reikiId: String) {
+        val loadPositionsTask = LoadPositionsFromDBTask(this)
+        loadPositionsTask.execute(reikiId)
+    }
+
+    private fun addReikisToDB(items: List<Reiki>?) {
+        val addReikisTask = AddReikisToDBTask(this)
+        addReikisTask.execute(items)
     }
 
     private class AddReikisToDBTask
@@ -232,6 +274,8 @@ class ReikiRepository constructor(
         : AsyncTask<List<Reiki>, Void, Boolean>() {
 
         private val repoReference: WeakReference<ReikiRepository> = WeakReference(repo)
+
+        private val TAG = "Reiki"
 
         override fun doInBackground(vararg reikis: List<Reiki>): Boolean? {
 
@@ -250,6 +294,15 @@ class ReikiRepository constructor(
                     needsUpdate = true
                 }
 
+                // Set reikiId in each Position
+                for(position in item.positions) {
+                    position.reikiId = item.id
+
+                    val positionInserted = repo.reikiDao.insert(position)
+                    if(positionInserted == -1L) {
+                        repo.reikiDao.update(position)
+                    }
+                }
             }
             return needsUpdate
         }
@@ -275,48 +328,45 @@ class ReikiRepository constructor(
         }
     }
 
-    /**
-     * This method changes the observable's LiveData data without changing the status
-     * @param reikis the data that need to be updated
-     * @param message optional message for error
-     */
-    private fun setReikisListObservableData(reikis: List<Reiki>, message: String?) {
-        Log.d(TAG, "[ReikiRepository] setReikisListObservableData")
-        var loadingStatus = LOADING
-        if (reikisObservable.value != null) {
-            loadingStatus = reikisObservable.value!!.status
+    private class LoadPositionsFromDBTask
+        internal constructor(repo: ReikiRepository)
+        : AsyncTask<String, Void, List<Position>>() {
+
+        private val repoReference: WeakReference<ReikiRepository> = WeakReference(repo)
+
+        override fun doInBackground(vararg params: String): List<Position> {
+            val repo = repoReference.get()
+            return repo?.reikiDao!!.getPositions(params[0])
         }
-        when (loadingStatus) {
-            LOADING -> reikisObservable.setValue(Resource.loading(reikis))
-            ERROR -> reikisObservable.setValue(Resource.error(reikis, message))
-            SUCCESS -> reikisObservable.setValue(Resource.success(reikis))
+
+        override fun onPostExecute(result: List<Position>?) {
+            if(result != null && result.isNotEmpty()) {
+                val repo = repoReference.get()
+                repo?.setPositionsObservableData(result, null)
+            }
         }
     }
 
     /**
-     * This method changes the observable's LiveData status without changing the data
-     * @param status The new status of LiveData
+     * This method changes the Positions observable's LiveData data
+     * without changing the status
+     * @param positions the data that need to be updated
      * @param message optional message for error
      */
-    private fun setReikisListObservableStatus(status: Status, message: String?) {
-        Log.d(TAG, "[ReikiRepository] setReikisListObservableStatus")
-        var loadingList: List<Reiki>? = null
-        if (reikisObservable.value != null) {
-            loadingList = reikisObservable.value!!.data
+    private fun setPositionsObservableData(positions: List<Position>, message: String?) {
+        var loadingStatus = LOADING
+        if(positionsObservable.value != null) {
+            loadingStatus = positionsObservable.value!!.status
         }
-        when (status) {
-            ERROR -> reikisObservable.value = Resource.error(loadingList, message)
-            LOADING -> reikisObservable.value = Resource.loading(loadingList)
-            SUCCESS -> if (loadingList != null) {
-                reikisObservable.value = Resource.success(loadingList)
-            }
+        when(loadingStatus) {
+            LOADING -> positionsObservable.value = Resource.loading(positions)
+            SUCCESS -> positionsObservable.value = Resource.loading(positions)
+            ERROR -> positionsObservable.value = Resource.error(positions, message)
         }
     }
 
     /* Function for testing only. Remove later */
     fun deleteAllReikisInLocalDB() {
-        println("deleteAllReikisInLocalDB")
-
         val deleteReikisTask = DeleteAllReikisInDBTask(this)
         deleteReikisTask.execute()
     }
