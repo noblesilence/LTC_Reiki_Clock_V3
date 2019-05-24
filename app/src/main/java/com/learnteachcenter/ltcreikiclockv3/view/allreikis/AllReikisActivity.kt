@@ -35,7 +35,9 @@ class AllReikisActivity : AppCompatActivity() {
 
     private lateinit var viewModel: AllReikisViewModel
 
-    private val adapter = ReikiAdapter(mutableListOf(), { reiki: Reiki -> reikiItemClicked(reiki) })
+    private val adapter = ReikiAdapter(mutableListOf()) {  reiki: Reiki ->
+            reikiItemClicked(reiki)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

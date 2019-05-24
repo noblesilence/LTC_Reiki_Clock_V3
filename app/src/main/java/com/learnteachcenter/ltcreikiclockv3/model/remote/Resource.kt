@@ -1,6 +1,6 @@
 package com.learnteachcenter.ltcreikiclockv3.model.remote
 
-class Resource<T> private constructor(val status: Status, val data: T?, val message: String?) {
+class Resource<T> private constructor(val status: Status, val data: T?, val error: Error?) {
     companion object {
 
         fun <T> loading(data: T?): Resource<T> {
@@ -11,7 +11,7 @@ class Resource<T> private constructor(val status: Status, val data: T?, val mess
             )
         }
 
-        fun <T> success(data: T): Resource<T> {
+        fun <T> success(data: T?): Resource<T> {
             return Resource(
                 Status.SUCCESS,
                 data,
@@ -19,11 +19,11 @@ class Resource<T> private constructor(val status: Status, val data: T?, val mess
             )
         }
 
-        fun <T> error(data: T?, msg: String?): Resource<T> {
+        fun <T> error(data: T?, error: Error?): Resource<T> {
             return Resource(
                 Status.ERROR,
                 data,
-                msg
+                error
             )
         }
 
