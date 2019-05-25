@@ -1,39 +1,34 @@
 package com.learnteachcenter.ltcreikiclockv3.view.allreikis
 
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.Toast
 import com.learnteachcenter.ltcreikiclockv3.R
-import com.learnteachcenter.ltcreikiclockv3.app.inflate
 import com.learnteachcenter.ltcreikiclockv3.model.authentication.AuthenticationPrefs
 import com.learnteachcenter.ltcreikiclockv3.model.Reiki
-import com.learnteachcenter.ltcreikiclockv3.model.remote.Status
-import com.learnteachcenter.ltcreikiclockv3.model.remote.Resource
-import com.learnteachcenter.ltcreikiclockv3.network.NetworkUtil
+import com.learnteachcenter.ltcreikiclockv3.utils.NetworkUtil
 import com.learnteachcenter.ltcreikiclockv3.utils.IntentExtraNames
+import com.learnteachcenter.ltcreikiclockv3.utils.ResourceObserver
 import com.learnteachcenter.ltcreikiclockv3.view.allpositions.AllPositionsActivity
 import com.learnteachcenter.ltcreikiclockv3.view.login.LoginActivity
 import com.learnteachcenter.ltcreikiclockv3.view.reiki.ReikiActivity
-import com.learnteachcenter.ltcreikiclockv3.viewmodel.AllReikisViewModel
+import com.learnteachcenter.ltcreikiclockv3.viewmodel.ReikisViewModel
 import kotlinx.android.synthetic.main.activity_all_reikis.*
 import kotlinx.android.synthetic.main.content_all_reikis.*
-import kotlinx.android.synthetic.main.list_item_reiki.view.*
 
-class AllReikisActivity : AppCompatActivity() {
+class ReikisActivity : AppCompatActivity() {
 
     private val TAG = "Reiki"
 
-    private lateinit var viewModel: AllReikisViewModel
+    private lateinit var viewModel: ReikisViewModel
 
     private val adapter = ReikiAdapter(mutableListOf()) {  reiki: Reiki ->
             reikiItemClicked(reiki)
@@ -48,30 +43,20 @@ class AllReikisActivity : AppCompatActivity() {
         reikisRecyclerView.layoutManager = LinearLayoutManager(this)
         reikisRecyclerView.adapter = adapter
 
-        viewModel = ViewModelProviders.of(this).get(AllReikisViewModel::class.java)
-        viewModel.getReikisObservable().observe(this, Observer<Resource<List<Reiki>>> { resource ->
-            if(resource?.data != null) {
-                adapter.updateReikis(resource.data)
-                progressBar.visibility = View.GONE
-                errorTextView.visibility = View.GONE
-                retryButton.visibility = View.GONE
-            }
-            else {
-                println("Error getting reikis")
-                if(resource?.status == Status.ERROR) {
-                    Toast.makeText(this, getString(R.string.error_retrieving_reikis), Toast.LENGTH_SHORT).show()
-                    progressBar.visibility = View.GONE
-                }
-            }
-        })
-        viewModel.getReikis()
+        viewModel = ViewModelProviders.of(this).get(ReikisViewModel::class.java)
+        viewModel.reikis.observe(this, ResourceObserver("ReikisActivity",
+            hideLoading = ::hideLoading,
+            showLoading = ::showLoading,
+            onSuccess = ::showReikis,
+            onError = ::showErrorMessage)
+        )
 
         retryButton.setOnClickListener {
             Log.d(TAG, "Should retry API call")
-            viewModel.getReikis()
         }
 
         // Show/hide Add button based on internet connectivity
+
         if(NetworkUtil.isConnected(this)) {
             fab.setOnClickListener {
                 startActivity(Intent(this, ReikiActivity::class.java))
@@ -80,6 +65,22 @@ class AllReikisActivity : AppCompatActivity() {
             fab.hide()
         }
 
+    }
+
+    private fun showReikis(reikis: List<Reiki>) {
+        // TODO: show Reikis in recycler view
+    }
+
+    private fun showErrorMessage(error: String) {
+        Log.d(TAG, "Error getting reikis: $error")
+    }
+
+    private fun showLoading() {
+        progressBar.visibility = VISIBLE
+    }
+
+    private fun hideLoading() {
+        progressBar.visibility = GONE
     }
 
     fun reikiItemClicked(reiki: Reiki) {
@@ -103,7 +104,7 @@ class AllReikisActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_clear_all -> {
-                viewModel.deleteAllReikisInDB()
+//                viewModel.deleteAllReikisInDB()
                 true
             }
             R.id.action_logout -> {

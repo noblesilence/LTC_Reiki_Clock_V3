@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".view.allreikis.AllReikisActivity"
+                android:name=".view.allreikis.ReikisActivity"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

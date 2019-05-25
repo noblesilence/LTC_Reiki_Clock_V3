@@ -1,5 +1,7 @@
 package com.learnteachcenter.ltcreikiclockv3.app
 
+import android.app.Application
+import android.content.Context
 import com.learnteachcenter.ltcreikiclockv3.BuildConfig
 import com.learnteachcenter.ltcreikiclockv3.model.authentication.AuthenticationPrefs
 import com.learnteachcenter.ltcreikiclockv3.model.ReikiRepository
@@ -10,8 +12,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import com.google.gson.GsonBuilder
-import com.google.gson.Gson
-
+import com.learnteachcenter.ltcreikiclockv3.utils.AppExecutors
 
 
 object Injection {
@@ -21,6 +22,13 @@ object Injection {
 
     fun provideReikiApi(): ReikiApi {
         return provideRetrofit().create(ReikiApi::class.java)
+    }
+
+    fun provideAppExecutors() = AppExecutors()
+
+    fun provideContext(): Context {
+        val app: Application = ReikiApplication()
+        return app.applicationContext
     }
 
     private fun provideRetrofit(): Retrofit {
@@ -49,7 +57,7 @@ object Injection {
         httpClient.addInterceptor(provideLoggingInterceptor())
 
         httpClient.addInterceptor { chain ->
-            val request = chain.request().newBuilder().addHeader("Authorization", AuthenticationPrefs.getAuthToken()).build()
+            val request = chain.request().newBuilder().addHeader("Authorization", AuthenticationPrefs.getAuthToken()!!).build()
             chain.proceed(request)
         }
 

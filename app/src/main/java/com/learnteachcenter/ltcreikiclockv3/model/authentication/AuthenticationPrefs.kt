@@ -18,21 +18,21 @@ object AuthenticationPrefs {
         editor.putString(KEY_AUTH_TOKEN, token).apply()
     }
 
-    fun getAuthToken(): String = sharedPrefs().getString(
+    fun getAuthToken(): String? = sharedPrefs().getString(
         KEY_AUTH_TOKEN, "")
 
     fun clearAuthToken() = sharedPrefs().edit().remove(
         KEY_AUTH_TOKEN
     ).apply()
 
-    fun isAuthenticated() = !getAuthToken().isBlank()
+    fun isAuthenticated() = !getAuthToken()!!.isBlank()
 
     fun saveUsername(username: String) {
         val editor = sharedPrefs().edit()
         editor.putString(KEY_USERNAME, username).apply()
     }
 
-    fun getUsername(): String = sharedPrefs().getString(
+    fun getUsername(): String? = sharedPrefs().getString(
         KEY_USERNAME, "Reiki User")
 
     fun clearUsername() = sharedPrefs().edit().remove(
@@ -44,7 +44,7 @@ object AuthenticationPrefs {
         editor.putString(KEY_EMAIL, email).apply()
     }
 
-    fun getEmail(): String = sharedPrefs().getString(
+    fun getEmail(): String? = sharedPrefs().getString(
         KEY_EMAIL, "")
 
     fun clearEmail() = sharedPrefs().edit().remove(

@@ -9,10 +9,10 @@ import com.learnteachcenter.ltcreikiclockv3.model.Reiki
 interface ReikiDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(reiki: Reiki): Long
+    fun insertReiki(reiki: Reiki): Long
 
     @Query("SELECT * FROM reikis")
-    fun getReikis(): List<Reiki>
+    fun getReikis(): LiveData<List<Reiki>>
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun update(reiki: Reiki): Int
@@ -21,7 +21,7 @@ interface ReikiDao {
     fun deleteAllReikis()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(position: Position): Long
+    fun insertPosition(position: Position): Long
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun update(position: Position): Int
