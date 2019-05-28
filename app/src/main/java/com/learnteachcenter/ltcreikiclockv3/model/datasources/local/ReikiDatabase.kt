@@ -1,9 +1,9 @@
-package com.learnteachcenter.ltcreikiclockv3.model.room
+package com.learnteachcenter.ltcreikiclockv3.model.datasources.local
 
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
-import com.learnteachcenter.ltcreikiclockv3.model.Position
-import com.learnteachcenter.ltcreikiclockv3.model.Reiki
+import com.learnteachcenter.ltcreikiclockv3.model.reikis.Position
+import com.learnteachcenter.ltcreikiclockv3.model.reikis.Reiki
 
 // TODO: export schema: https://developer.android.com/training/data-storage/room/migrating-db-versions.html#top_of_page
 

@@ -1,4 +1,4 @@
-package com.learnteachcenter.ltcreikiclockv3.model
+package com.learnteachcenter.ltcreikiclockv3.model.reikis
 
 class ReikiGenerator {
     fun generateReiki(

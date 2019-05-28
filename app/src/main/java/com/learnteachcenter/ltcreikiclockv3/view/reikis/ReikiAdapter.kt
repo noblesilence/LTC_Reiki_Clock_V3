@@ -1,12 +1,11 @@
-package com.learnteachcenter.ltcreikiclockv3.view.allreikis
+package com.learnteachcenter.ltcreikiclockv3.view.reikis
 
-import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.app.inflate
-import com.learnteachcenter.ltcreikiclockv3.model.Reiki
+import com.learnteachcenter.ltcreikiclockv3.model.reikis.Reiki
 import kotlinx.android.synthetic.main.list_item_reiki.view.*
 
 // https://www.andreasjakl.com/recyclerview-kotlin-style-click-listener-android/
@@ -23,7 +22,7 @@ class ReikiAdapter(private val reikis: MutableList<Reiki>, val clickListener: (R
 
     override fun getItemCount(): Int = reikis.size
 
-    fun updateReikis(reikis: List<Reiki>) {
+    fun setReikis(reikis: List<Reiki>) {
         this.reikis.clear()
         this.reikis.addAll(reikis)
         notifyDataSetChanged()

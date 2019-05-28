@@ -1,4 +1,4 @@
-package com.learnteachcenter.ltcreikiclockv3.utils
+package com.learnteachcenter.ltcreikiclockv3.app
 
 object IntentExtraNames {
     val NEW_REIKI_SEQNO = "NEW_REIKI_SEQNO"

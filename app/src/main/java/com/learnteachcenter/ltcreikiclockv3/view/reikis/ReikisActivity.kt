@@ -1,4 +1,4 @@
-package com.learnteachcenter.ltcreikiclockv3.view.allreikis
+package com.learnteachcenter.ltcreikiclockv3.view.reikis
 
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
@@ -13,10 +13,10 @@ import android.view.View.VISIBLE
 import android.widget.Toast
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.model.authentication.AuthenticationPrefs
-import com.learnteachcenter.ltcreikiclockv3.model.Reiki
-import com.learnteachcenter.ltcreikiclockv3.utils.NetworkUtil
-import com.learnteachcenter.ltcreikiclockv3.utils.IntentExtraNames
-import com.learnteachcenter.ltcreikiclockv3.utils.ResourceObserver
+import com.learnteachcenter.ltcreikiclockv3.model.reikis.Reiki
+import com.learnteachcenter.ltcreikiclockv3.app.NetworkUtil
+import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
+import com.learnteachcenter.ltcreikiclockv3.model.datasources.remote.ResourceObserver
 import com.learnteachcenter.ltcreikiclockv3.view.allpositions.AllPositionsActivity
 import com.learnteachcenter.ltcreikiclockv3.view.login.LoginActivity
 import com.learnteachcenter.ltcreikiclockv3.view.reiki.ReikiActivity
@@ -37,26 +37,19 @@ class ReikisActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_reikis)
-
         setSupportActionBar(toolbar)
 
-        reikisRecyclerView.layoutManager = LinearLayoutManager(this)
-        reikisRecyclerView.adapter = adapter
-
         viewModel = ViewModelProviders.of(this).get(ReikisViewModel::class.java)
-        viewModel.reikis.observe(this, ResourceObserver("ReikisActivity",
-            hideLoading = ::hideLoading,
-            showLoading = ::showLoading,
-            onSuccess = ::showReikis,
-            onError = ::showErrorMessage)
-        )
 
+        initRecyclerView()
+        subscribeObservers()
+
+        // Retry button
         retryButton.setOnClickListener {
             Log.d(TAG, "Should retry API call")
         }
 
         // Show/hide Add button based on internet connectivity
-
         if(NetworkUtil.isConnected(this)) {
             fab.setOnClickListener {
                 startActivity(Intent(this, ReikiActivity::class.java))
@@ -64,11 +57,26 @@ class ReikisActivity : AppCompatActivity() {
         } else {
             fab.hide()
         }
+    }
 
+    private fun initRecyclerView() {
+        reikisRecyclerView.layoutManager = LinearLayoutManager(this)
+        reikisRecyclerView.adapter = adapter
+    }
+
+    private fun subscribeObservers(){
+        viewModel.reikis.observe(this, ResourceObserver(
+            "ReikisActivity",
+            hideLoading = ::hideLoading,
+            showLoading = ::showLoading,
+            onSuccess = ::showReikis,
+            onError = ::showErrorMessage
+        )
+        )
     }
 
     private fun showReikis(reikis: List<Reiki>) {
-        // TODO: show Reikis in recycler view
+        adapter.setReikis(reikis)
     }
 
     private fun showErrorMessage(error: String) {

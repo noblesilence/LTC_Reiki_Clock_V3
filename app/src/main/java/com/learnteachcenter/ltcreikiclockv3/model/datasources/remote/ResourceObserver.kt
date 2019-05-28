@@ -1,9 +1,7 @@
-package com.learnteachcenter.ltcreikiclockv3.utils
+package com.learnteachcenter.ltcreikiclockv3.model.datasources.remote
 
 import android.arch.lifecycle.Observer
 import android.util.Log
-import com.learnteachcenter.ltcreikiclockv3.model.remote.Resource
-import com.learnteachcenter.ltcreikiclockv3.model.remote.Status
 
 class ResourceObserver<T>(private val tag: String,
                           private val hideLoading: () -> Unit,
@@ -13,21 +11,21 @@ class ResourceObserver<T>(private val tag: String,
 
     override fun onChanged(resource: Resource<T>?) {
         when(resource?.status) {
-            Status.SUCCESS -> {
+            Resource.Status.SUCCESS -> {
                 hideLoading()
                 if(resource.data != null) {
                     Log.d(tag, "observer -> SUCCESS, ${resource.data} items")
                     onSuccess(resource.data)
                 }
             }
-            Status.ERROR -> {
+            Resource.Status.ERROR -> {
                 hideLoading()
-                if(resource.error != null) {
-                    Log.d(tag, "observer -> ERROR, ${resource.error}")
-                    onError(resource.error.message)
+                if(resource.message != null) {
+                    Log.d(tag, "observer -> ERROR, ${resource.message}")
+                    onError(resource.message)
                 }
             }
-            Status.LOADING -> {
+            Resource.Status.LOADING -> {
                 showLoading()
                 Log.d(tag, "observer -> LOADING")
             }

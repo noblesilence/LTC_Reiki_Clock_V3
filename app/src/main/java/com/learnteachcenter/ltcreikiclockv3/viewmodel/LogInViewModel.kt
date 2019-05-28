@@ -7,11 +7,11 @@ import android.arch.lifecycle.ViewModel
 import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.model.authentication.LoginResponse
-import com.learnteachcenter.ltcreikiclockv3.model.ReikiRepository
-import com.learnteachcenter.ltcreikiclockv3.model.remote.Resource
+import com.learnteachcenter.ltcreikiclockv3.model.authentication.UserRepository
+import com.learnteachcenter.ltcreikiclockv3.model.datasources.remote.Resource
 
-class LogInViewModel (private val repository: ReikiRepository
-                      = Injection.provideRepository()) : ViewModel() {
+class LogInViewModel (private val repository: UserRepository
+                      = Injection.provideUserRepository()) : ViewModel() {
     val TAG = "Reiki"
     val loginObservable = MediatorLiveData<Resource<LoginResponse>> ()
 
@@ -20,11 +20,10 @@ class LogInViewModel (private val repository: ReikiRepository
             repository.logInObservable,
             object: Observer<Resource<LoginResponse>> {
                 override fun onChanged(loginResponse: Resource<LoginResponse>?) {
-                    Log.d(TAG, "[LogInViewModel] onChanged, success: $loginResponse?.success, token: $loginResponse?.token")
-                    loginObservable.value = loginResponse
+                    Log.d(TAG, "[LogInViewModel] onChanged, success: $loginResponse?.data.success, token: $loginResponse?.data.token")
+                    loginObservable.value = loginResponse.data
                 }
-            }
-        )
+            })
     }
 
     fun logIn(email: String, password: String) = repository.logIn(email, password)

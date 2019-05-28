@@ -1,7 +1,8 @@
-package com.learnteachcenter.ltcreikiclockv3.model.remote
+package com.learnteachcenter.ltcreikiclockv3.model.datasources.remote
 
+import android.arch.lifecycle.LiveData
 import com.learnteachcenter.ltcreikiclockv3.model.authentication.LoginResponse
-import com.learnteachcenter.ltcreikiclockv3.model.Reiki
+import com.learnteachcenter.ltcreikiclockv3.model.reikis.Reiki
 import com.learnteachcenter.ltcreikiclockv3.model.authentication.User
 import retrofit2.Call
 import retrofit2.http.Field
@@ -10,8 +11,6 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface ReikiApi {
-    @GET("reikis/sample")
-    fun getSampleReikis(): Call<List<Reiki>>
 
     @FormUrlEncoded
     @POST("users/register")
@@ -30,5 +29,8 @@ interface ReikiApi {
     ): Call<LoginResponse>
 
     @GET("reikis")
-    fun getReikis(): Call<List<Reiki>>
+    fun getReikis(): LiveData<ApiResponse<ReikisResponse>>
+
+//    @GET("reikis/sample")
+//    fun getSampleReikis(): Call<List<Reiki>>
 }

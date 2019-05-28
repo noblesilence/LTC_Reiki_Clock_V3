@@ -1,9 +1,9 @@
-package com.learnteachcenter.ltcreikiclockv3.model.room
+package com.learnteachcenter.ltcreikiclockv3.model.datasources.local
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
-import com.learnteachcenter.ltcreikiclockv3.model.Position
-import com.learnteachcenter.ltcreikiclockv3.model.Reiki
+import com.learnteachcenter.ltcreikiclockv3.model.reikis.Position
+import com.learnteachcenter.ltcreikiclockv3.model.reikis.Reiki
 
 @Dao
 interface ReikiDao {
