@@ -1,20 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
+        android:id="@+id/root_fragment_position_list"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorTransparentBlack"
         tools:context=".view.allpositions.AllPositionsActivity">
-    <TextView
-            android:id="@+id/tv_ad_text"
+
+    <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+        <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="0dp"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:elevation="6dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_stop"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginBottom="16dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_stop_black_24dp"
+            android:tint="@android:color/white"
+            app:backgroundTint="@color/colorAccent"
+            app:elevation="6dp"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/fab_play_pause"
+            app:rippleColor="@color/colorTransparentBlack"/>
+
+    <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_play_pause"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginBottom="16dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_play_arrow_black_24dp"
+            android:tint="@android:color/white"
+            app:backgroundTint="@color/colorAccent"
+            app:elevation="6dp"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/fab_stop"
+            app:layout_constraintRight_toLeftOf="@id/fab_add"
+            app:rippleColor="@color/colorTransparentBlack"/>
+
+    <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:text="All Positions"
-            android:textAlignment="textEnd"
-            android:textColor="@color/colorPrimary"/>
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/ic_add_black_24dp"
+            app:backgroundTint="@color/colorAccent"
+            android:tint="@android:color/white"
+            app:elevation="6dp"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/fab_play_pause"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:rippleColor="@color/colorTransparentBlack"/>
+
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/positionsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@id/fab_play_pause"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="parent"        />
+
+    <TextView
+            android:id="@+id/lbl_position_prompt"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="@string/prompt_new_position"
+            android:textColor="@color/ALPHA_WHITE"
+            android:fontFamily="sans-serif-medium"
+            android:background="@color/colorPrimaryLight"
+            android:textSize="34sp"
+            android:gravity="center"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="parent"
+            tools:layout_constraintTop_creator="1"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintBottom_creator="1"
+            tools:layout_constraintLeft_creator="1" />
+
 </android.support.constraint.ConstraintLayout>

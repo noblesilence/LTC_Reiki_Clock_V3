@@ -14,8 +14,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".view.allpositions.AllPositionsActivity">
-        </activity>
+
         <activity android:name=".view.signup.SignUpActivity">
         </activity>
         <activity android:name=".view.login.LoginActivity">
@@ -30,13 +29,17 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".view.reikis.ReikisActivity"
+                android:name=".view.allreikis.AllReikisActivity"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity
+                android:name=".view.allpositions.AllPositionsActivity"
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity android:name=".view.reiki.ReikiActivity">
         </activity>

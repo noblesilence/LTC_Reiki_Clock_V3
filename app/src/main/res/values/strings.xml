@@ -2,6 +2,9 @@
     <string name="app_name">LTC Reiki Clock V3</string>
     <string name="save">Save</string>
     <string name="reiki_saved">Reiki saved!</string>
+    <string name="reiki_play_pause_button">Play/Pause Reiki</string>
+    <string name="position_duration">Duration (mm:ss)</string>
+    <string name="prompt_new_position">Hit + to proceed</string>
     <string name="error_no_internet">No Internet access</string>
     <string name="retry">Retry</string>
     <string name="error_retrieving_reikis">Error retrieving Reikis</string>

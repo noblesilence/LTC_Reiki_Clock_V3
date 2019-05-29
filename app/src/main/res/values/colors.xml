@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
-    <color name="colorWhite">#ffffff</color>
+    <color name="colorPrimary">#5c6bc0</color>
+    <color name="colorPrimaryLight">#8e99f3</color>
+    <color name="colorPrimaryDark">#26418f</color>
+
+    <color name="colorSecondary">#ec407a</color>
+    <color name="colorSecondaryLight">#ff77a9</color>
     <color name="colorSecondaryDark">#b4004e</color>
+
+    <color name="colorAccent">#f06292</color>
+    <color name="colorHighlight">#fce4ec</color>
+
+    <color name="colorText">#667991</color>
+    <color name="colorTextLight">#5f6364</color>
+    <color name="colorGray">#605f5f</color>
+
+    <!-- 52 = 32%, hex to alpha -->
+    <color name="colorTransparentBlack">#00000000</color>
+    <color name="colorTransparentWhite">#5affffff</color>
+    <color name="colorWhite">#ffffff</color>
+
+    <color name="ALPHA_WHITE">#b3ffffff</color>
 </resources>
