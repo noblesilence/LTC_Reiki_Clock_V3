@@ -13,6 +13,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import com.google.gson.GsonBuilder
 import com.learnteachcenter.ltcreikiclockv3.model.authentication.UserRepository
+import com.learnteachcenter.ltcreikiclockv3.model.datasources.remote.LiveDataCallAdapterFactory
 
 
 object Injection {
@@ -38,8 +39,9 @@ object Injection {
 
         return Retrofit.Builder()
             .baseUrl(BuildConfig.URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
             .client(provideOkHttpClient())
+            .addCallAdapterFactory(LiveDataCallAdapterFactory())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
 

@@ -32,6 +32,7 @@ object ReikiRepository {
                 reikis?.forEach {reiki ->
                     reikiDao.insertReiki(reiki)
                     reiki.positions.forEach { pos ->
+                        pos.reikiId = reiki.id
                         reikiDao.insertPosition(pos)
                     }
                 }
