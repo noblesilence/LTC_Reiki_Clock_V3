@@ -12,11 +12,11 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
 import com.learnteachcenter.ltcreikiclockv3.R
-import com.learnteachcenter.ltcreikiclockv3.model.authentication.AuthenticationPrefs
-import com.learnteachcenter.ltcreikiclockv3.model.reikis.Reiki
-import com.learnteachcenter.ltcreikiclockv3.app.NetworkUtil
-import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
-import com.learnteachcenter.ltcreikiclockv3.model.datasources.remote.ResourceObserver
+import com.learnteachcenter.ltcreikiclockv3.persistence.AuthenticationPrefs
+import com.learnteachcenter.ltcreikiclockv3.model.Reiki
+import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil
+import com.learnteachcenter.ltcreikiclockv3.util.IntentExtraNames
+import com.learnteachcenter.ltcreikiclockv3.util.ResourceObserver
 import com.learnteachcenter.ltcreikiclockv3.view.allpositions.AllPositionsActivity
 import com.learnteachcenter.ltcreikiclockv3.view.login.LoginActivity
 import com.learnteachcenter.ltcreikiclockv3.view.reiki.ReikiActivity

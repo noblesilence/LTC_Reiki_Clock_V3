@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.app.inflate
-import com.learnteachcenter.ltcreikiclockv3.model.reikis.Reiki
+import com.learnteachcenter.ltcreikiclockv3.model.Reiki
 import kotlinx.android.synthetic.main.list_item_reiki.view.*
 
 // https://www.andreasjakl.com/recyclerview-kotlin-style-click-listener-android/

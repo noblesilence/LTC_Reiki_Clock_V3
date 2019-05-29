@@ -5,10 +5,10 @@ import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.util.Log
-import com.learnteachcenter.ltcreikiclockv3.app.Injection
-import com.learnteachcenter.ltcreikiclockv3.model.authentication.LoginResponse
-import com.learnteachcenter.ltcreikiclockv3.model.authentication.UserRepository
-import com.learnteachcenter.ltcreikiclockv3.model.datasources.remote.Resource
+import com.learnteachcenter.ltcreikiclockv3.util.Injection
+import com.learnteachcenter.ltcreikiclockv3.api.responses.LoginResponse
+import com.learnteachcenter.ltcreikiclockv3.repository.UserRepository
+import com.learnteachcenter.ltcreikiclockv3.util.Resource
 
 class LogInViewModel (private val repository: UserRepository
                       = Injection.provideUserRepository()) : ViewModel() {

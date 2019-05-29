@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.R
-import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
+import com.learnteachcenter.ltcreikiclockv3.util.IntentExtraNames
 
 class AllPositionsActivity : AppCompatActivity() {
 

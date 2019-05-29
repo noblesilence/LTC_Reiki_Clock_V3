@@ -3,7 +3,7 @@ package com.learnteachcenter.ltcreikiclockv3.app
 import android.app.Application
 import android.arch.persistence.room.Room
 import android.content.Context
-import com.learnteachcenter.ltcreikiclockv3.model.datasources.local.ReikiDatabase
+import com.learnteachcenter.ltcreikiclockv3.persistence.ReikiDatabase
 
 class ReikiApplication : Application() {
 
