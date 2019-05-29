@@ -1,6 +1,7 @@
 package com.learnteachcenter.ltcreikiclockv3.model.authentication
 
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Observer
 import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.model.datasources.remote.ReikiApi
