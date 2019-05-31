@@ -69,14 +69,14 @@ class AllPositionsActivity : AppCompatActivity() {
         viewModel.positions.observe(this, Observer<List<Position>> {
             adapter.setPositions(it)
         })
-        viewModel.secondsRemaining.observe(this, Observer<Long> {
-            Log.d("Reiki", "[AllPositionsActivity] Seconds remaining: $it")
+        viewModel.timeLeftObservable.observe(this, Observer<String> {
+            Log.d("Reiki", "Time remaining: $it")
         })
-        viewModel.timerState.observe(this, Observer {
+        viewModel.timerStateObservable.observe(this, Observer {
             timerState = it!!
             Log.d("Reiki", "Timer state is $timerState")
         })
-        viewModel.currentPosition.observe(this, Observer {
+        viewModel.currentPositionObservable.observe(this, Observer {
             currentPosition = it!!
             // TODO: use this current position value to highlight the current Position
         })
@@ -92,33 +92,61 @@ class AllPositionsActivity : AppCompatActivity() {
                     viewModel.initTimer(currentPosition)
                     viewModel.startTimer()
 
-                    fab_play_pause.setImageResource(R.drawable.ic_pause)
+                    changeToPauseButton()
 
                     Log.d("Reiki", "Timer started")
                 }
                 TimerState.Running -> {
                     viewModel.pauseTimer()
 
-                    fab_play_pause.setImageResource(R.drawable.ic_play_arrow)
+                    changeToPlayButton()
 
                     Log.d("Reiki", "Timer paused")
                 }
                 TimerState.Paused -> {
                     viewModel.startTimer()
 
-                    fab_play_pause.setImageResource(R.drawable.ic_pause)
+                    changeToPauseButton()
 
                     Log.d("Reiki", "Timer started")
                 }
             }
+
+            hideAddButton()
         }
 
         fab_stop.setOnClickListener {
             viewModel.stopTimer()
 
-            fab_play_pause.setImageResource(R.drawable.ic_play_arrow)
+            changeToPlayButton()
+            showAddButton()
 
             Log.d("Reiki", "Timer stopped")
         }
+
+        fab_add.setOnClickListener {
+            onAddClick()
+            Log.d("Reiki", "Add Position clicked")
+        }
+    }
+
+    private fun onAddClick() {
+
+    }
+
+    private fun changeToPlayButton() {
+        fab_play_pause.setImageResource(R.drawable.ic_play_arrow)
+    }
+
+    private fun changeToPauseButton() {
+        fab_play_pause.setImageResource(R.drawable.ic_pause)
+    }
+
+    private fun showAddButton() {
+        fab_add.alpha = 1F
+    }
+
+    private fun hideAddButton() {
+        fab_add.alpha = 0F
     }
 }

@@ -9,8 +9,9 @@ import com.learnteachcenter.ltcreikiclockv3.model.Position
 import com.learnteachcenter.ltcreikiclockv3.repository.ReikiRepository
 import com.learnteachcenter.ltcreikiclockv3.util.Injection
 import com.learnteachcenter.ltcreikiclockv3.util.TimeFormatter
+import kotlin.concurrent.timer
 
-class AllPositionsViewModel (reikiId: String) : ViewModel() {
+class AllPositionsViewModel (val reikiId: String) : ViewModel() {
 
     // Positions
 
@@ -23,42 +24,84 @@ class AllPositionsViewModel (reikiId: String) : ViewModel() {
         Stopped, Paused, Running
     }
 
-    // Observables
-    var currentPosition = MutableLiveData<Int>().apply { value = 0 }
-    var timerState = MutableLiveData<TimerState>().apply { value = TimerState.Stopped }
-    var secondsRemaining = MutableLiveData<Long>().apply { value = 0 }
-
-    // Timer internals
+    // Timer variables
     private lateinit var countDownTimer: CountDownTimer
+    private var currentPosition: Int = 0
+    private var timerState = TimerState.Stopped
+    private var secondsLeft = 0L
+
+    // Observables
+    var currentPositionObservable = MutableLiveData<Int>().apply { value = currentPosition }
+    var timerStateObservable = MutableLiveData<TimerState>().apply { value = timerState}
+    var timeLeftObservable = MutableLiveData<String>()
+
+    // Timer methods
 
     fun initTimer(currentPosition: Int) {
         val countDownTime = positions.value?.get(currentPosition)?.duration
-        secondsRemaining.value = TimeFormatter.getSeconds(countDownTime!!)
+        secondsLeft = TimeFormatter.getSeconds(countDownTime!!)
+        timeLeftObservable.value = TimeFormatter.getMinutesSeconds(secondsLeft)
     }
 
     fun startTimer() {
-        countDownTimer = object: CountDownTimer(secondsRemaining.value!! * 1000,
+        startCountDown(secondsLeft)
+
+        timerState = TimerState.Running
+        timerStateObservable.value = timerState
+    }
+
+    fun startCountDown(timerDuration: Long) {
+        countDownTimer = object: CountDownTimer(timerDuration * 1000,
             1000) {
 
             override fun onTick(millisUntilFinished: Long) {
-                secondsRemaining.value = millisUntilFinished / 1000
+                secondsLeft = millisUntilFinished / 1000
+                timeLeftObservable.value = TimeFormatter.getMinutesSeconds(secondsLeft)
             }
 
             override fun onFinish() {
                 Log.d("Reiki", "Timer finished")
+
+                onCountDownFinish()
             }
         }.start()
+    }
 
-        timerState.value = TimerState.Running
+    fun onCountDownFinish() {
+
+        val lastIndex = positions.value?.size!! - 1
+
+        if( currentPosition < lastIndex) {
+
+            currentPosition++
+            currentPositionObservable.value = currentPosition
+
+            val countDownTime = positions.value?.get(currentPosition)?.duration
+
+            secondsLeft = TimeFormatter.getSeconds(countDownTime!!)
+            timeLeftObservable.value = TimeFormatter.getMinutesSeconds(secondsLeft)
+
+            startCountDown(secondsLeft)
+        }
+        else {
+            timerState = TimerState.Stopped
+            timerStateObservable.value = timerState
+        }
     }
 
     fun stopTimer() {
         countDownTimer.cancel()
-        timerState.value = TimerState.Stopped
+
+        currentPosition = 0
+        currentPositionObservable.value = currentPosition
+
+        timerState = TimerState.Stopped
+        timerStateObservable.value = timerState
     }
 
     fun pauseTimer() {
         countDownTimer.cancel()
-        timerState.value = TimerState.Paused
+        timerState = TimerState.Paused
+        timerStateObservable.value = timerState
     }
 }

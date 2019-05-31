@@ -12,11 +12,11 @@ object TimeFormatter {
         var minutesStr = minutes.toString()
         var secondsStr = seconds.toString()
 
-        if(minutes < 9) {
+        if(minutes < 10) {
             minutesStr = "0" + minutesStr
         }
 
-        if(seconds < 9) {
+        if(seconds < 10) {
             secondsStr = "0" + secondsStr
         }
 
