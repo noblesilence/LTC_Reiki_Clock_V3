@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModel
 import android.os.CountDownTimer
 import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.model.Position
+import com.learnteachcenter.ltcreikiclockv3.model.ReikiSession
 import com.learnteachcenter.ltcreikiclockv3.repository.ReikiRepository
 import com.learnteachcenter.ltcreikiclockv3.util.Injection
 import com.learnteachcenter.ltcreikiclockv3.util.TimeFormatter
@@ -18,90 +19,31 @@ class AllPositionsViewModel (val reikiId: String) : ViewModel() {
     private val repository: ReikiRepository = Injection.provideReikiRepository()
     var positions: LiveData<List<Position>> = repository.getPositions(reikiId)
 
-    // Timer
+    // Reiki Session
+    lateinit var reikiSession: ReikiSession
 
-    enum class TimerState  {
-        Stopped, Paused, Running
+    fun initSession(positions: List<Position>) {
+        reikiSession = ReikiSession(positions)
     }
 
-    // Timer variables
-    private lateinit var countDownTimer: CountDownTimer
-    private var currentPosition: Int = 0
-    private var timerState = TimerState.Stopped
-    private var secondsLeft = 0L
-
-    // Observables
-    var currentPositionObservable = MutableLiveData<Int>().apply { value = currentPosition }
-    var timerStateObservable = MutableLiveData<TimerState>().apply { value = timerState}
-    var timeLeftObservable = MutableLiveData<String>()
-
-    // Timer methods
-
-    fun initTimer(currentPosition: Int) {
-        val countDownTime = positions.value?.get(currentPosition)?.duration
-        secondsLeft = TimeFormatter.getSeconds(countDownTime!!)
-        timeLeftObservable.value = TimeFormatter.getMinutesSeconds(secondsLeft)
+    fun startSession(positionIndex: Int) {
+        reikiSession.start(positionIndex)
     }
 
-    fun startTimer() {
-        startCountDown(secondsLeft)
+    fun pauseSession() {
+        Log.d("Reiki", "Pause Reiki session")
 
-        timerState = TimerState.Running
-        timerStateObservable.value = timerState
+        reikiSession.pause()
     }
 
-    fun startCountDown(timerDuration: Long) {
-        countDownTimer = object: CountDownTimer(timerDuration * 1000,
-            1000) {
+    fun resumeSession() {
 
-            override fun onTick(millisUntilFinished: Long) {
-                secondsLeft = millisUntilFinished / 1000
-                timeLeftObservable.value = TimeFormatter.getMinutesSeconds(secondsLeft)
-            }
-
-            override fun onFinish() {
-                Log.d("Reiki", "Timer finished")
-
-                onCountDownFinish()
-            }
-        }.start()
+        reikiSession.resume()
     }
 
-    fun onCountDownFinish() {
+    fun stopSession() {
+        Log.d("Reiki", "Stop Reiki session")
 
-        val lastIndex = positions.value?.size!! - 1
-
-        if( currentPosition < lastIndex) {
-
-            currentPosition++
-            currentPositionObservable.value = currentPosition
-
-            val countDownTime = positions.value?.get(currentPosition)?.duration
-
-            secondsLeft = TimeFormatter.getSeconds(countDownTime!!)
-            timeLeftObservable.value = TimeFormatter.getMinutesSeconds(secondsLeft)
-
-            startCountDown(secondsLeft)
-        }
-        else {
-            timerState = TimerState.Stopped
-            timerStateObservable.value = timerState
-        }
-    }
-
-    fun stopTimer() {
-        countDownTimer.cancel()
-
-        currentPosition = 0
-        currentPositionObservable.value = currentPosition
-
-        timerState = TimerState.Stopped
-        timerStateObservable.value = timerState
-    }
-
-    fun pauseTimer() {
-        countDownTimer.cancel()
-        timerState = TimerState.Paused
-        timerStateObservable.value = timerState
+        reikiSession.stop()
     }
 }

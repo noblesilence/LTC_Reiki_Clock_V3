@@ -8,10 +8,11 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.model.Position
+import com.learnteachcenter.ltcreikiclockv3.model.ReikiSession
+import com.learnteachcenter.ltcreikiclockv3.model.ReikiSession.TimerState
 import com.learnteachcenter.ltcreikiclockv3.util.IntentExtraNames
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil
 import com.learnteachcenter.ltcreikiclockv3.viewmodel.AllPositionsViewModel
-import com.learnteachcenter.ltcreikiclockv3.viewmodel.AllPositionsViewModel.TimerState
 import com.learnteachcenter.ltcreikiclockv3.viewmodel.AllPositionsViewModelFactory
 import kotlinx.android.synthetic.main.activity_all_positions.*
 
@@ -22,7 +23,7 @@ class AllPositionsActivity : AppCompatActivity() {
     private lateinit var reikiId: String
     private lateinit var reikiTitle: String
 
-    private lateinit var timerState: TimerState
+    private lateinit var timerState: ReikiSession.TimerState
     private var currentPosition: Int = 0
 
     private lateinit var viewModel: AllPositionsViewModel
@@ -46,8 +47,7 @@ class AllPositionsActivity : AppCompatActivity() {
                 .get(AllPositionsViewModel::class.java)
 
             initRecyclerView()
-            subscribeObservers()
-            setUpListeners()
+            subscribeToPositions()
 
             // Show/hide Add button based on internet connectivity
             if(NetworkUtil.isConnected(this)) {
@@ -65,18 +65,24 @@ class AllPositionsActivity : AppCompatActivity() {
         positionsRecyclerView.adapter = adapter
     }
 
-    private fun subscribeObservers() {
+    private fun subscribeToPositions() {
         viewModel.positions.observe(this, Observer<List<Position>> {
             adapter.setPositions(it)
+            viewModel.initSession(it!!)
+            subscribeToReikiSession()
+            setUpListeners()
         })
-        viewModel.timeLeftObservable.observe(this, Observer<String> {
+    }
+
+    private fun subscribeToReikiSession() {
+        viewModel.reikiSession.timeLeftObservable.observe(this, Observer<String> {
             Log.d("Reiki", "Time remaining: $it")
         })
-        viewModel.timerStateObservable.observe(this, Observer {
+        viewModel.reikiSession.timerStateObservable.observe(this, Observer {
             timerState = it!!
             Log.d("Reiki", "Timer state is $timerState")
         })
-        viewModel.currentPositionObservable.observe(this, Observer {
+        viewModel.reikiSession.currentIndexObservable.observe(this, Observer {
             currentPosition = it!!
             // TODO: use this current position value to highlight the current Position
         })
@@ -89,22 +95,21 @@ class AllPositionsActivity : AppCompatActivity() {
 
             when(timerState) {
                 TimerState.Stopped -> {
-                    viewModel.initTimer(currentPosition)
-                    viewModel.startTimer()
+                    viewModel.startSession(0)
 
                     changeToPauseButton()
 
                     Log.d("Reiki", "Timer started")
                 }
                 TimerState.Running -> {
-                    viewModel.pauseTimer()
+                    viewModel.pauseSession()
 
                     changeToPlayButton()
 
                     Log.d("Reiki", "Timer paused")
                 }
                 TimerState.Paused -> {
-                    viewModel.startTimer()
+                    viewModel.resumeSession()
 
                     changeToPauseButton()
 
@@ -116,7 +121,7 @@ class AllPositionsActivity : AppCompatActivity() {
         }
 
         fab_stop.setOnClickListener {
-            viewModel.stopTimer()
+            viewModel.stopSession()
 
             changeToPlayButton()
             showAddButton()
