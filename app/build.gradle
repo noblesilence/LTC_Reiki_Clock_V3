@@ -20,10 +20,10 @@ android {
                 arg("room.schemaLocation", "$projectDir/schemas".toString())
             }
         }
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         debug {
-//            buildConfigField 'String', 'URL', '"https://ov0feyufo0.execute-api.us-east-1.amazonaws.com/latest/api/"'
             buildConfigField 'String', 'URL', '"http://192.168.1.52:5000/api/"'
         }
         release {
@@ -64,5 +64,3 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
-
-android.defaultConfig.vectorDrawables.useSupportLibrary = true
