@@ -15,12 +15,12 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
 
-        <activity android:name=".view.signup.SignUpActivity">
+        <activity android:name="com.learnteachcenter.ltcreikiclockv3.signup.SignUpActivity">
         </activity>
-        <activity android:name=".view.login.LoginActivity">
+        <activity android:name="com.learnteachcenter.ltcreikiclockv3.login.LoginActivity">
         </activity>
         <activity
-                android:name=".view.splash.SplashActivity"
+                android:name="com.learnteachcenter.ltcreikiclockv3.splash.SplashActivity"
                 android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".view.allreikis.AllReikisActivity"
+                android:name="com.learnteachcenter.ltcreikiclockv3.reiki.all.AllReikisActivity"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -38,10 +38,10 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".view.allpositions.AllPositionsActivity"
+                android:name="com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSessionActivity"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".view.reiki.ReikiActivity">
+        <activity android:name=".reiki.one.ReikiActivity">
         </activity>
     </application>
 

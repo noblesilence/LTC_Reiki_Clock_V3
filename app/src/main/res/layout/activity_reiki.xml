@@ -4,12 +4,12 @@
     <data>
         <variable
                 name="viewmodel"
-                type="com.learnteachcenter.ltcreikiclockv3.viewmodel.ReikiViewModel"/>
+                type="com.learnteachcenter.ltcreikiclockv3.reiki.one.ReikiViewModel"/>
     </data>
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".view.reiki.ReikiActivity">
+            tools:context=".reiki.one.ReikiActivity">
 
         <EditText
                 android:layout_width="353dp"

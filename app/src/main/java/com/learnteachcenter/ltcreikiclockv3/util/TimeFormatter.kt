@@ -6,9 +6,9 @@ import java.lang.Exception
 object TimeFormatter {
 
     // Convert from Seconds to Minutes:Seconds
-    fun getMinutesSeconds(seconds: Long): String {
-        val minutes = seconds / 60
-        val seconds = seconds % 60
+    fun getMinutesSeconds(s: Long): String {
+        val minutes = s / 60
+        val seconds = s % 60
         var minutesStr = minutes.toString()
         var secondsStr = seconds.toString()
 
