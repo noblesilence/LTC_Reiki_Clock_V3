@@ -6,24 +6,26 @@ import android.arch.lifecycle.ViewModel
 import android.os.CountDownTimer
 import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.model.Position
+import com.learnteachcenter.ltcreikiclockv3.model.Reiki
+import com.learnteachcenter.ltcreikiclockv3.model.ReikiAndAllPositions
 import com.learnteachcenter.ltcreikiclockv3.model.ReikiSession
 import com.learnteachcenter.ltcreikiclockv3.repository.ReikiRepository
 import com.learnteachcenter.ltcreikiclockv3.util.Injection
 import com.learnteachcenter.ltcreikiclockv3.util.TimeFormatter
 import kotlin.concurrent.timer
 
-class AllPositionsViewModel (val reikiId: String) : ViewModel() {
+class AllPositionsViewModel (private val reikiId: String) : ViewModel() {
 
     // Positions
 
     private val repository: ReikiRepository = Injection.provideReikiRepository()
-    var positions: LiveData<List<Position>> = repository.getPositions(reikiId)
+    var reikiAndAllPositions: LiveData<ReikiAndAllPositions> = repository.getReiki(reikiId)
 
     // Reiki Session
     lateinit var reikiSession: ReikiSession
 
-    fun initSession(positions: List<Position>) {
-        reikiSession = ReikiSession(positions)
+    fun initSession(reiki: ReikiAndAllPositions) {
+        reikiSession = ReikiSession(reiki)
     }
 
     fun startSession(positionIndex: Int) {
