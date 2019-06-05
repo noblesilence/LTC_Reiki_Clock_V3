@@ -21,6 +21,7 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
     private lateinit var countDownTimer: CountDownTimer
     private var state = STOPPED
     private var secondsLeft = 0L
+    private var secondsFinishing = 3
 
     override var stateObservable = MutableLiveData<ReikiSession.State>().apply() { value = state }
     override var currentIndexObservable = MutableLiveData<Int>().apply() { value = currentIndex }
@@ -92,6 +93,8 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
 
     private fun onCountDownFinish() {
 
+        playReminderSound()
+
         val lastIndex = reikiAndAllPositions.positions.size - 1
 
         if(currentIndex < lastIndex) {
@@ -110,6 +113,30 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
         else {
             state = STOPPED
             stateObservable.value = state
+
+            fadeAndStopBackgroundSound()
+        }
+    }
+
+    private fun fadeAndStopBackgroundSound() {
+        if(reikiAndAllPositions.reiki!!.playMusic) {
+
+            object: CountDownTimer(4000, 1000) {
+
+                override fun onTick(millisUntilFinished: Long) {
+
+                    if(bgMusicPlayer != null) {
+                        val v = secondsFinishing / 4F
+                        bgMusicPlayer?.setVolume(v, v)
+                        secondsFinishing--
+                    }
+                }
+
+                override fun onFinish() {
+                    this.cancel()
+                    stopBackgroundSound()
+                }
+            }.start()
         }
     }
 
@@ -160,5 +187,13 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
 
             Log.d("Reiki", "[ReikiSession] stopBackgroundSound")
         }
+    }
+
+    /**
+     * Method to play Reminder Sound
+     */
+    private fun playReminderSound() {
+        val mpReminderSound = MediaPlayer.create(context, R.raw.reminder_sound)
+        mpReminderSound.start()
     }
 }

@@ -23,8 +23,6 @@ interface ReikiSession {
 
     fun stop()
 
-    // Session enum class
-
     enum class State {
         STOPPED, PAUSED, RUNNING
     }
