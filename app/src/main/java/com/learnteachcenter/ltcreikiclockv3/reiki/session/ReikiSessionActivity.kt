@@ -31,6 +31,9 @@ class ReikiSessionActivity : AppCompatActivity() {
     private val adapter = PositionsAdapter(mutableListOf())
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        Log.wtf(TAG, "[ReikiSessionActivity] onCreate")
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_positions)
         setSupportActionBar(toolbar)
@@ -38,6 +41,9 @@ class ReikiSessionActivity : AppCompatActivity() {
         val i = intent
 
         if(i.hasExtra(IntentExtraNames.EXTRA_REIKI_ID)) {
+
+            Log.wtf(TAG, "[ReikiSessionActivity] EXTRA REIKI ID")
+
             reikiId = i.getStringExtra(IntentExtraNames.EXTRA_REIKI_ID)
             reikiTitle = i.getStringExtra(IntentExtraNames.EXTRA_REIKI_TITLE)
 
@@ -65,6 +71,8 @@ class ReikiSessionActivity : AppCompatActivity() {
     private fun initRecyclerView() {
         positionsRecyclerView.layoutManager = LinearLayoutManager(this)
         positionsRecyclerView.adapter = adapter
+
+        Log.wtf(TAG, "initRecyclerView")
     }
 
     private fun subscribeToReikiAndAllPositions() {
@@ -73,6 +81,8 @@ class ReikiSessionActivity : AppCompatActivity() {
             viewModel.initSession(it!!)
             subscribeToReikiSession()
             setUpListeners()
+
+            Log.wtf(TAG, "subscribeToReikiAndAllPositions")
         })
     }
 

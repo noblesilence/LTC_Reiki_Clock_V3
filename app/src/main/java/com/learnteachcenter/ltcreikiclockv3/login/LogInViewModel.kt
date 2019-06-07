@@ -22,16 +22,16 @@ class LogInViewModel (private val repository: UserRepository
                 override fun onChanged(loginResponse: Resource<LoginResponse>?) {
                     when (loginResponse?.status) {
                         Resource.Status.SUCCESS -> {
-                            Log.d(TAG, "[LogInViewModel] Login response status is SUCCESS.")
+                            Log.wtf(TAG, "[LogInViewModel] Login response status is SUCCESS.")
                         }
                         Resource.Status.LOADING -> {
-                            Log.d(TAG, "[LogInViewModel] Login response status is LOADING.")
+                            Log.wtf(TAG, "[LogInViewModel] Login response status is LOADING.")
                         }
                         Resource.Status.ERROR -> {
-                            Log.d(TAG, "[LogInViewModel] Login response status is ERROR.")
+                            Log.wtf(TAG, "[LogInViewModel] Login response status is ERROR.")
                         }
                     }
-                    Log.d(TAG, "[LogInViewModel] onChanged, success: ${loginResponse?.data?.success}, token: ${loginResponse?.data?.token}")
+                    Log.wtf(TAG, "[LogInViewModel] onChanged, success: ${loginResponse?.data?.success}, token: ${loginResponse?.data?.token}")
                     loginObservable.value = loginResponse
                 }
             })

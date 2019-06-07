@@ -114,6 +114,11 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
             state = STOPPED
             stateObservable.value = state
 
+            timeLeftObservable.value = reikiAndAllPositions.positions.get(currentIndex).duration
+
+            currentIndex = -1
+            currentIndexObservable.value = currentIndex
+
             fadeAndStopBackgroundSound()
         }
     }
