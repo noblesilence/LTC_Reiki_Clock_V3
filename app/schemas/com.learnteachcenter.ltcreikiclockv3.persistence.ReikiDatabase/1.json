@@ -1,0 +1,125 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "cf5240694192c64ba3014f9ff77c2383",
+    "entities": [
+      {
+        "tableName": "reikis",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `playMusic` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "playMusic",
+            "columnName": "playMusic",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_reikis_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "createSql": "CREATE  INDEX `index_reikis_id` ON `${TABLE_NAME}` (`id`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "positions",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`positionId` TEXT NOT NULL, `seqNo` INTEGER NOT NULL, `reikiId` TEXT NOT NULL, `title` TEXT NOT NULL, `duration` TEXT NOT NULL, PRIMARY KEY(`positionId`), FOREIGN KEY(`reikiId`) REFERENCES `reikis`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "positionId",
+            "columnName": "positionId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "seqNo",
+            "columnName": "seqNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reikiId",
+            "columnName": "reikiId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "duration",
+            "columnName": "duration",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "positionId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_positions_reikiId",
+            "unique": false,
+            "columnNames": [
+              "reikiId"
+            ],
+            "createSql": "CREATE  INDEX `index_positions_reikiId` ON `${TABLE_NAME}` (`reikiId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "reikis",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "reikiId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"cf5240694192c64ba3014f9ff77c2383\")"
+    ]
+  }
+}

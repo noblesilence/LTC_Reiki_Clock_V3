@@ -4,7 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.repositories.ReikiRepository
-import com.learnteachcenter.ltcreikiclockv3.util.Injection
+import com.learnteachcenter.ltcreikiclockv3.app.Injection
 
 class ReikiSessionViewModel (private val reikiId: String) : ViewModel() {
 

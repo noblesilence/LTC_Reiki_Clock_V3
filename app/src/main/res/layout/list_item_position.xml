@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout android:id="@+id/root_position_item"
+                                             xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content"
+                                             android:paddingTop="5sp"
+                                             android:paddingBottom="5sp"
+                                             android:divider="@drawable/divider"
+                                             android:orientation="horizontal"
+                                             android:showDividers="end">
+
+    <ImageButton
+            android:id="@+id/icon_play_pause"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:background="?attr/selectableItemBackground"
+            android:tint="@color/colorSecondary"
+            android:padding="16dp"
+            app:srcCompat="@drawable/ic_play_circle"
+            android:contentDescription="@string/reiki_play_pause_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+            android:id="@+id/lbl_position_seq_no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5sp"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif"
+            android:gravity="center_vertical|start"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/title"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/icon_play_pause"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1. "/>
+
+    <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5sp"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif"
+            android:gravity="center_vertical|start"
+            android:maxLines="4"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/duration"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/lbl_position_seq_no"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Solar Plexus"/>
+
+    <TextView
+            android:id="@+id/duration"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
+            android:drawableLeft="@drawable/ic_alarm_black_24dp"
+            android:drawableStart="@drawable/ic_alarm_black_24dp"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical|end"
+            android:text="@string/position_duration"
+            android:textSize="16sp"
+            android:textColor="@color/colorGray"
+            android:fontFamily="sans-serif"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>

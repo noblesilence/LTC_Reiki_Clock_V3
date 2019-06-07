@@ -4,7 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableField
-import com.learnteachcenter.ltcreikiclockv3.util.Injection
+import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.repositories.ReikiRepository
 
 class ReikiViewModel(private val generator: ReikiGenerator = ReikiGenerator(),

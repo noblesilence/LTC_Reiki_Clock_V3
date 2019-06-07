@@ -15,9 +15,9 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
 
-        <activity android:name="com.learnteachcenter.ltcreikiclockv3.signup.SignUpActivity">
+        <activity android:name="com.learnteachcenter.ltcreikiclockv3.authentication.signup.SignUpActivity">
         </activity>
-        <activity android:name="com.learnteachcenter.ltcreikiclockv3.login.LoginActivity">
+        <activity android:name="com.learnteachcenter.ltcreikiclockv3.authentication.login.LoginActivity">
         </activity>
         <activity
                 android:name="com.learnteachcenter.ltcreikiclockv3.splash.SplashActivity"

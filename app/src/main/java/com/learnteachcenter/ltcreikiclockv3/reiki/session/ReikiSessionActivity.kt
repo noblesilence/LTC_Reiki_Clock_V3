@@ -10,7 +10,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.State
-import com.learnteachcenter.ltcreikiclockv3.util.IntentExtraNames
+import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil
 import kotlinx.android.synthetic.main.activity_all_positions.*
 import kotlinx.android.synthetic.main.list_item_position.view.*
