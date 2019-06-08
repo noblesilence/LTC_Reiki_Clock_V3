@@ -2,7 +2,6 @@ package com.learnteachcenter.ltcreikiclockv3.reiki.session
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -10,6 +9,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.State
+import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.ReikiSessionEvent.NONE
+import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.ReikiSessionEvent.STATE_CHANGED
+import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.ReikiSessionEvent.INDEX_CHANGED
+import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.ReikiSessionEvent.TIME_LEFT_CHANGED
 import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil
 import kotlinx.android.synthetic.main.activity_all_positions.*
@@ -21,18 +24,12 @@ class ReikiSessionActivity : AppCompatActivity() {
 
     private lateinit var reikiId: String
     private lateinit var reikiTitle: String
-
-    private lateinit var timerState: ReikiSession.State
-    private var currentPosIndex: Int = -1
-    private var previousPosIndex: Int = -1
-
     private lateinit var viewModel: ReikiSessionViewModel
-
     private val adapter = PositionsAdapter(mutableListOf())
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        Log.wtf(TAG, "[ReikiSessionActivity] onCreate")
+        Log.wtf(TAG, "\n[ReikiSessionActivity] onCreate")
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_positions)
@@ -49,10 +46,7 @@ class ReikiSessionActivity : AppCompatActivity() {
 
             supportActionBar?.title = reikiTitle
 
-            viewModel = ViewModelProviders.of(this,
-                ReikiSessionViewModelFactory(reikiId)
-            )
-                .get(ReikiSessionViewModel::class.java)
+            viewModel = ViewModelProviders.of(this, ReikiSessionViewModelFactory(reikiId)).get(ReikiSessionViewModel::class.java)
 
             initRecyclerView()
             subscribeToReikiAndAllPositions()
@@ -87,109 +81,90 @@ class ReikiSessionActivity : AppCompatActivity() {
     }
 
     private fun subscribeToReikiSession() {
-        viewModel.reikiSession.timeLeftObservable.observe(this, Observer<String> {
 
-            try {
-                val holder: PositionsAdapter.ViewHolder =
-                    positionsRecyclerView.findViewHolderForAdapterPosition(currentPosIndex)
-                            as PositionsAdapter.ViewHolder
+        Log.wtf(TAG, "[ReikiSessionActivity] subscribeToReikiSession()")
 
-                holder.itemView.duration.text = it
+        val reikiSession: ReikiSession? = viewModel.getReikiSession()
+
+        /**
+         * Reiki Session state changed due to
+         *  1. Play clicked
+         *  2. Pause clicked
+         *  3. Stop clicked
+         *  4. Session ends
+         *
+         */
+
+        reikiSession?.eventLiveData?.observe(this, Observer {
+            when(it) {
+                STATE_CHANGED -> {
+                    when(reikiSession.getState()) {
+                        State.STOPPED -> {
+                            // Update Buttons
+                            changeToPlayButton()
+                            fab_add.alpha = 1F
+                            fab_stop.alpha = 0F
+
+                            val previousIndex = reikiSession.getPreviousIndex()
+                            val previousDuration = reikiSession.getPreviousDuration()
+
+                            unhighlightItem(previousIndex, previousDuration)
+                        }
+                        State.RUNNING -> {
+                            // Update Buttons
+                            changeToPauseButton()
+                            fab_add.alpha = 0F
+                            fab_stop.alpha = 1F
+
+                            val currentIndex: Int = reikiSession.getCurrentIndex()
+                            val currentDuration: String = reikiSession.getTimeLeft()
+
+                            highlightItem(currentIndex, currentDuration)
+                        }
+                        State.PAUSED -> {
+                            // Update buttons
+                            changeToPlayButton()
+                            fab_add.alpha = 0F
+                            fab_stop.alpha = 1F
+
+                            val currentIndex = reikiSession.getCurrentIndex()
+                            val currentDuration = reikiSession.getTimeLeft()
+
+                            highlightItem(currentIndex, currentDuration)
+                        }
+                    }
+                }
+
+                INDEX_CHANGED -> {
+                    // Highlight next, unhighlight current
+                    val previousIndex = reikiSession.getPreviousIndex()
+                    val previousDuration = reikiSession.getPreviousDuration()
+                    val currentIndex = reikiSession.getCurrentIndex()
+                    val currentDuration = reikiSession.getTimeLeft()
+
+                    unhighlightItem(previousIndex, previousDuration)
+                    highlightItem(currentIndex, currentDuration)
+                }
+
+                TIME_LEFT_CHANGED -> {
+                    val currentIndex = reikiSession.getCurrentIndex()
+                    val currentDuration = reikiSession.getTimeLeft()
+
+                    highlightItem(currentIndex, currentDuration)
+                }
+
+                NONE -> {
+                    // Do nothing
+                }
             }
-            catch(exception: Exception) {}
-
-            Log.d("Reiki", "Time remaining: $it")
-
         })
-        viewModel.reikiSession.stateObservable.observe(this, Observer {
-
-            timerState = it!!
-            updateUI()
-
-            Log.d("Reiki", "Timer state is $timerState")
-        })
-        viewModel.reikiSession.currentIndexObservable.observe(this, Observer {
-
-            previousPosIndex = currentPosIndex
-            currentPosIndex = it!!
-            resetPreviousPositionUI(previousPosIndex)
-
-            updatePositionUI(
-                currentPosIndex,
-                true,
-                ContextCompat.getColor(this, R.color.colorHighlight),
-                ContextCompat.getDrawable(this, R.drawable.ic_pause),
-                null
-            )
-
-            Log.d("Reiki", "CurrentPosIndex is $currentPosIndex, Previous is $previousPosIndex")
-        })
-    }
-
-    private fun updateUI() {
-        when(timerState) {
-            State.STOPPED -> {
-                resetPreviousPositionUI(previousPosIndex)
-                changeToPlayButton()
-                showAddButton()
-            }
-            State.RUNNING -> {
-                changeToPauseButton()
-                hideAddButton()
-            }
-            State.PAUSED -> {
-                changeToPlayButton()
-                hideAddButton()
-            }
-        }
-    }
-
-    private fun resetPreviousPositionUI(position: Int) {
-        // Reset background color and image of previous Position item
-        updatePositionUI(
-            position,
-            true,
-            0,
-            ContextCompat.getDrawable(this, R.drawable.ic_play_circle), null
-        )
-    }
-
-    /**
-     * Set View for each Position, which is a RecyclerView item
-     * @param position  Position to set view
-     * @param color     color to set
-     * @param image     play/pause image to set
-     * @param duration  duration text to set
-     */
-    private fun updatePositionUI(position: Int, changeColor: Boolean, color: Int, image: Drawable?, duration: String?) {
-
-        // Getting a RecyclerView item, which is out of view, will throw NullPointerException.
-        // So, use try/catch
-        try {
-            val holder: PositionsAdapter.ViewHolder =
-                positionsRecyclerView.findViewHolderForAdapterPosition(position) as PositionsAdapter.ViewHolder
-
-            if (changeColor) {
-                holder.itemView.setBackgroundColor(color)
-            }
-
-            if (image != null) {
-                holder.itemView.icon_play_pause.setImageDrawable(image)
-            }
-
-            if (duration != null) {
-                holder.itemView.duration.text = duration
-            }
-        } catch (ex: Exception) {
-            Log.wtf("DEBUG", "Exception in updatePositionUI: $ex")
-        }
     }
 
     private fun setUpListeners() {
 
         fab_play_pause.setOnClickListener {
 
-            when(timerState) {
+            when(viewModel.getReikiSession()?.getState()) {
                 State.STOPPED -> {
                     viewModel.startSession(0)
                 }
@@ -201,7 +176,7 @@ class ReikiSessionActivity : AppCompatActivity() {
                 }
             }
 
-            hideAddButton()
+            fab_add.alpha = 0F
         }
 
         fab_stop.setOnClickListener {
@@ -217,19 +192,45 @@ class ReikiSessionActivity : AppCompatActivity() {
 
     }
 
+    private fun highlightItem(itemIndex: Int, itemDuration: String) {
+        val color = ContextCompat.getColor(this, R.color.colorHighlight)
+        val image = ContextCompat.getDrawable(this, R.drawable.ic_pause)!!
+
+        try {
+            val holder: PositionsAdapter.ViewHolder =
+                positionsRecyclerView.findViewHolderForAdapterPosition(itemIndex)
+                        as PositionsAdapter.ViewHolder
+
+            holder.itemView.setBackgroundColor(color)
+            holder.itemView.icon_play_pause.setImageDrawable(image)
+            holder.itemView.duration.text = itemDuration
+        } catch(exception: Exception) {
+            Log.wtf("Reiki", "[ReikiSessionActivity] highlightItem -> Exception: $exception")
+        }
+    }
+
+    private fun unhighlightItem(itemIndex: Int, itemDuration: String) {
+        val color = 0
+        val image = ContextCompat.getDrawable(this, R.drawable.ic_play_circle)!!
+
+        try {
+            val holder: PositionsAdapter.ViewHolder =
+                positionsRecyclerView.findViewHolderForAdapterPosition(itemIndex)
+                        as PositionsAdapter.ViewHolder
+
+            holder.itemView.setBackgroundColor(color)
+            holder.itemView.icon_play_pause.setImageDrawable(image)
+            holder.itemView.duration.text = itemDuration
+        } catch(exception: Exception) {
+            Log.wtf("Reiki", "[ReikiSessionActivity] highlightItem -> Exception: $exception")
+        }
+    }
+
     private fun changeToPlayButton() {
         fab_play_pause.setImageResource(R.drawable.ic_play_arrow)
     }
 
     private fun changeToPauseButton() {
         fab_play_pause.setImageResource(R.drawable.ic_pause)
-    }
-
-    private fun showAddButton() {
-        fab_add.alpha = 1F
-    }
-
-    private fun hideAddButton() {
-        fab_add.alpha = 0F
     }
 }

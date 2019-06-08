@@ -14,10 +14,20 @@ class ReikiSessionViewModel (private val reikiId: String) : ViewModel() {
     var reikiAndAllPositions: LiveData<ReikiAndAllPositions> = repository.getReiki(reikiId)
 
     // Reiki Session
-    lateinit var reikiSession: ReikiSession
+    private lateinit var reikiSession: ReikiSession
+
+    fun getReikiSession(): ReikiSession? {
+      if(::reikiSession.isInitialized) {
+          return reikiSession
+      } else {
+          return null
+      }
+    }
 
     fun initSession(reiki: ReikiAndAllPositions) {
-        reikiSession = ReikiSessionImpl(reiki)
+        if(!::reikiSession.isInitialized) {
+            reikiSession = ReikiSessionImpl(reiki)
+        }
     }
 
     fun startSession(positionIndex: Int) {

@@ -8,6 +8,7 @@ import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.util.TimeFormatter
+import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.ReikiSessionEvent
 import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.State.RUNNING
 import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.State.PAUSED
 import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.State.STOPPED
@@ -17,38 +18,59 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
 ): ReikiSession {
 
     // Private Variables
-    private var currentIndex = -1
-    private lateinit var countDownTimer: CountDownTimer
     private var state = STOPPED
+    private var currentIndex = -1
+    private var previousIndex = -1
+    private var previousDuration: String = "00:00"
+    private var countDownTimer: CountDownTimer? = null
     private var secondsLeft = 0L
     private var secondsFinishing = 3
 
-    override var stateObservable = MutableLiveData<ReikiSession.State>().apply() { value = state }
-    override var currentIndexObservable = MutableLiveData<Int>().apply() { value = currentIndex }
-    override var timeLeftObservable = MutableLiveData<String>().apply() { value = "00:00" }
+    override fun getState() = state
+    override fun getCurrentIndex(): Int = currentIndex
+    override fun getPreviousIndex(): Int = previousIndex
+    override fun getTimeLeft(): String = TimeFormatter.getMinutesSeconds(secondsLeft)
+    override fun getPreviousDuration(): String = previousDuration
+
+    override var eventLiveData = MutableLiveData<ReikiSessionEvent>().apply {
+        value = ReikiSessionEvent.NONE
+    }
+
+//    override var stateObservable = MutableLiveData<State>().apply { value = state }
+//    override var currentIndexObservable = MutableLiveData<Int>().apply { value = currentIndex }
+//    override var timeLeftObservable = MutableLiveData<String>().apply { value = "00:00" }
+
+//    override fun getStateObservable(): LiveData<State> = stateObservable
+//    override fun getCurrentIndexObservable(): LiveData<Int> = currentIndexObservable
+//    override fun getPreviousIndexObservable(): LiveData<Int> = previousIndexObservable
+//    override fun getTimeLeftObservable(): LiveData<String>  = timeLeftObservable
 
     private var bgMusicPlayer: MediaPlayer? = null
 
     // Override methods
     override fun start(index: Int) {
+
+        state = RUNNING
+        previousIndex = currentIndex
         currentIndex = index
-        currentIndexObservable.value = currentIndex
 
         val countDownTime = reikiAndAllPositions.positions.get(currentIndex).duration
         secondsLeft = TimeFormatter.getSeconds(countDownTime)
+        previousDuration = countDownTime
 
         startCountDown(secondsLeft)
         playBackgroundSound()
 
-        state = RUNNING
-        stateObservable.value = state
+        eventLiveData.value = ReikiSessionEvent.STATE_CHANGED
     }
 
     override fun pause() {
-        countDownTimer.cancel()
+        countDownTimer!!.cancel()
         pauseBackgroundSound()
+
         state = PAUSED
-        stateObservable.value = state
+
+        eventLiveData.value = ReikiSessionEvent.STATE_CHANGED
     }
 
     override fun resume() {
@@ -56,21 +78,23 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
         playBackgroundSound()
 
         state = RUNNING
-        stateObservable.value = state
+
+        eventLiveData.value = ReikiSessionEvent.STATE_CHANGED
     }
 
     override fun stop() {
 
-        countDownTimer.cancel()
-        stopBackgroundSound()
+        if(countDownTimer != null) {
+            countDownTimer!!.cancel()
+            stopBackgroundSound()
 
-        timeLeftObservable.value = reikiAndAllPositions.positions.get(currentIndex).duration
+            state = STOPPED
+            previousIndex = currentIndex
+            currentIndex = -1
+            previousDuration =  reikiAndAllPositions.positions.get(previousIndex).duration
 
-        currentIndex = -1
-        currentIndexObservable.value = currentIndex
-
-        state = STOPPED
-        stateObservable.value = state
+            eventLiveData.value = ReikiSessionEvent.STATE_CHANGED
+        }
     }
 
     // Private methods
@@ -80,12 +104,11 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
             1000) {
             override fun onTick(millisUntilFinished: Long) {
                 secondsLeft = millisUntilFinished / 1000
-                timeLeftObservable.value = TimeFormatter.getMinutesSeconds(secondsLeft)
+
+                eventLiveData.value = ReikiSessionEvent.TIME_LEFT_CHANGED
             }
 
             override fun onFinish() {
-                Log.d("Reiki", "Timer finished")
-
                 onCountDownFinish()
             }
         }.start()
@@ -99,27 +122,25 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
 
         if(currentIndex < lastIndex) {
 
-            timeLeftObservable.value = reikiAndAllPositions.positions.get(currentIndex).duration
-
+            previousIndex = currentIndex
             currentIndex++
-            currentIndexObservable.value = currentIndex
 
             val countDownTime = reikiAndAllPositions.positions.get(currentIndex).duration
-
             secondsLeft = TimeFormatter.getSeconds(countDownTime)
+            previousDuration = countDownTime
 
             startCountDown(secondsLeft)
+
+            eventLiveData.value = ReikiSessionEvent.INDEX_CHANGED
         }
         else {
             state = STOPPED
-            stateObservable.value = state
-
-            timeLeftObservable.value = reikiAndAllPositions.positions.get(currentIndex).duration
-
+            previousIndex = currentIndex
             currentIndex = -1
-            currentIndexObservable.value = currentIndex
 
             fadeAndStopBackgroundSound()
+
+            eventLiveData.value = ReikiSessionEvent.STATE_CHANGED
         }
     }
 
@@ -140,6 +161,7 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
                 override fun onFinish() {
                     this.cancel()
                     stopBackgroundSound()
+                    secondsFinishing = 3
                 }
             }.start()
         }
