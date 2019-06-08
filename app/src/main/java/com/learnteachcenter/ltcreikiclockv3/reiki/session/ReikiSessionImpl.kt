@@ -22,9 +22,10 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
     private var currentIndex = -1
     private var previousIndex = -1
     private var previousDuration: String = "00:00"
-    private var countDownTimer: CountDownTimer? = null
     private var secondsLeft = 0L
     private var secondsFinishing = 3
+    private var countDownTimer: CountDownTimer? = null
+    private var bgMusicPlayer: MediaPlayer? = null
 
     override fun getState() = state
     override fun getCurrentIndex(): Int = currentIndex
@@ -36,21 +37,10 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
         value = ReikiSessionEvent.NONE
     }
 
-//    override var stateObservable = MutableLiveData<State>().apply { value = state }
-//    override var currentIndexObservable = MutableLiveData<Int>().apply { value = currentIndex }
-//    override var timeLeftObservable = MutableLiveData<String>().apply { value = "00:00" }
-
-//    override fun getStateObservable(): LiveData<State> = stateObservable
-//    override fun getCurrentIndexObservable(): LiveData<Int> = currentIndexObservable
-//    override fun getPreviousIndexObservable(): LiveData<Int> = previousIndexObservable
-//    override fun getTimeLeftObservable(): LiveData<String>  = timeLeftObservable
-
-    private var bgMusicPlayer: MediaPlayer? = null
-
     // Override methods
     override fun start(index: Int) {
-
         state = RUNNING
+
         previousIndex = currentIndex
         currentIndex = index
 
@@ -65,36 +55,36 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
     }
 
     override fun pause() {
+        state = PAUSED
+
         countDownTimer!!.cancel()
         pauseBackgroundSound()
-
-        state = PAUSED
 
         eventLiveData.value = ReikiSessionEvent.STATE_CHANGED
     }
 
     override fun resume() {
+        state = RUNNING
+
         startCountDown(secondsLeft)
         playBackgroundSound()
-
-        state = RUNNING
 
         eventLiveData.value = ReikiSessionEvent.STATE_CHANGED
     }
 
     override fun stop() {
+        state = STOPPED
 
         if(countDownTimer != null) {
             countDownTimer!!.cancel()
             stopBackgroundSound()
 
-            state = STOPPED
             previousIndex = currentIndex
-            currentIndex = -1
             previousDuration =  reikiAndAllPositions.positions.get(previousIndex).duration
-
-            eventLiveData.value = ReikiSessionEvent.STATE_CHANGED
+            currentIndex = -1
         }
+
+        eventLiveData.value = ReikiSessionEvent.STATE_CHANGED
     }
 
     // Private methods
@@ -135,6 +125,7 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
         }
         else {
             state = STOPPED
+
             previousIndex = currentIndex
             currentIndex = -1
 
@@ -167,9 +158,11 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
         }
     }
 
-    /**
-     * Method to play Background Sound
-     */
+    private fun playReminderSound() {
+        val mpReminderSound = MediaPlayer.create(context, R.raw.reminder_sound)
+        mpReminderSound.start()
+    }
+
     private fun playBackgroundSound() {
         if (reikiAndAllPositions.reiki!!.playMusic) {
             try {
@@ -188,9 +181,6 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
         }
     }
 
-    /**
-     * Method to pause Background Sound
-     */
     private fun pauseBackgroundSound() {
         if (bgMusicPlayer != null) {
             bgMusicPlayer?.pause()
@@ -199,9 +189,6 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
         }
     }
 
-    /**
-     * Method to stop Background Sound
-     */
     private fun stopBackgroundSound() {
         if (bgMusicPlayer != null) {
 
@@ -214,13 +201,5 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
 
             Log.d("Reiki", "[ReikiSession] stopBackgroundSound")
         }
-    }
-
-    /**
-     * Method to play Reminder Sound
-     */
-    private fun playReminderSound() {
-        val mpReminderSound = MediaPlayer.create(context, R.raw.reminder_sound)
-        mpReminderSound.start()
     }
 }
