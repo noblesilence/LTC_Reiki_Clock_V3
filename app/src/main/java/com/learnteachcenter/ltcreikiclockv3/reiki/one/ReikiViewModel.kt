@@ -4,20 +4,23 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableField
+import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.repositories.ReikiRepository
+import com.learnteachcenter.ltcreikiclockv3.util.Resource
 
 class ReikiViewModel(private val generator: ReikiGenerator = ReikiGenerator(),
                      private val repository: ReikiRepository = Injection.provideReikiRepository()
 ) : ViewModel() {
 
     private val reikiLiveData = MutableLiveData<Reiki>()
-    private val saveLiveData = MutableLiveData<Boolean>()
+    private val saveLiveData = MutableLiveData<Resource<Reiki>>()
 
     fun getReikiLiveData(): LiveData<Reiki> = reikiLiveData
-    fun getSaveLiveData(): LiveData<Boolean> = saveLiveData
+    fun getSaveLiveData(): LiveData<Resource<Reiki>> = saveLiveData
 
     var id = ObservableField<String>("")
+    var seqNo = ObservableField<Int>(0)
     var title = ObservableField<String>("")
     var description = ObservableField<String>("")
     var playMusic = true
@@ -27,6 +30,7 @@ class ReikiViewModel(private val generator: ReikiGenerator = ReikiGenerator(),
     fun updateReiki() {
         reiki = generator.generateReiki(
             id.get() ?: "",
+            seqNo.get() ?: 0,
             title.get() ?: "",
             description.get() ?: "",
             playMusic,
@@ -37,11 +41,11 @@ class ReikiViewModel(private val generator: ReikiGenerator = ReikiGenerator(),
 
     fun saveReiki() {
         updateReiki()
-        return if(canSaveReiki()) {
-            repository.addReiki(reiki)
-            saveLiveData.postValue(true)
+
+        if(canSaveReiki()) {
+            Log.wtf("Reiki", "saveReiki")
         } else {
-            saveLiveData.postValue(false)
+            Log.wtf("Reiki", "Title cannot be empty.")
         }
     }
 

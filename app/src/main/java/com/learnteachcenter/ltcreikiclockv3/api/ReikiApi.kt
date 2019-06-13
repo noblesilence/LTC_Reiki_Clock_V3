@@ -1,11 +1,13 @@
 package com.learnteachcenter.ltcreikiclockv3.api
 
 import android.arch.lifecycle.LiveData
+import com.learnteachcenter.ltcreikiclockv3.api.responses.AddReikiResponse
 import com.learnteachcenter.ltcreikiclockv3.api.responses.ApiResponse
 import com.learnteachcenter.ltcreikiclockv3.authentication.login.LoginResponse
 import com.learnteachcenter.ltcreikiclockv3.api.responses.ReikisResponse
 import com.learnteachcenter.ltcreikiclockv3.authentication.User
 import com.learnteachcenter.ltcreikiclockv3.authentication.signup.SignUpResponse
+import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -32,4 +34,13 @@ interface ReikiApi {
 
     @GET("reikis")
     fun getReikis(): LiveData<ApiResponse<ReikisResponse>>
+
+    @FormUrlEncoded
+    @POST("reikis")
+    fun addReiki(
+        @Field("title") title: String,
+        @Field("description") description: String?,
+        @Field("playMusic") playMusic: Boolean,
+        @Field("positions") positions: List<Position>?
+    ): Call<AddReikiResponse>
 }

@@ -41,7 +41,7 @@
                 android:name="com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSessionActivity"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".reiki.one.ReikiActivity">
+        <activity android:name=".reiki.one.AddReikiActivity">
         </activity>
     </application>
 

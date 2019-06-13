@@ -2,16 +2,22 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "cf5240694192c64ba3014f9ff77c2383",
+    "identityHash": "6d686148a51239c94961f974832eec2f",
     "entities": [
       {
         "tableName": "reikis",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `playMusic` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `seqNo` INTEGER NOT NULL, `title` TEXT NOT NULL, `description` TEXT, `playMusic` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "seqNo",
+            "columnName": "seqNo",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -24,7 +30,7 @@
             "fieldPath": "description",
             "columnName": "description",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "playMusic",
@@ -119,7 +125,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"cf5240694192c64ba3014f9ff77c2383\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"6d686148a51239c94961f974832eec2f\")"
     ]
   }
 }

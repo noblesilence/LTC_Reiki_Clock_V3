@@ -1,6 +1,8 @@
 package com.learnteachcenter.ltcreikiclockv3.repositories
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MediatorLiveData
+import android.arch.lifecycle.Observer
 import android.os.AsyncTask
 import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.app.AppExecutors
@@ -10,7 +12,10 @@ import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil
 import com.learnteachcenter.ltcreikiclockv3.api.ReikiApi
 import com.learnteachcenter.ltcreikiclockv3.api.responses.ApiResponse
 import com.learnteachcenter.ltcreikiclockv3.api.responses.ReikisResponse
+import com.learnteachcenter.ltcreikiclockv3.api.responses.AddReikiResponse
+import com.learnteachcenter.ltcreikiclockv3.authentication.User
 import com.learnteachcenter.ltcreikiclockv3.reiki.one.Reiki
+import com.learnteachcenter.ltcreikiclockv3.reiki.one.ReikiGenerator
 import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiAndAllPositions
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkBoundResource
 import com.learnteachcenter.ltcreikiclockv3.util.Resource
@@ -27,9 +32,7 @@ object ReikiRepository {
     private val appExecutors: AppExecutors = Injection.provideAppExecutors()
 
     fun getReikis(): LiveData<Resource<List<Reiki>>> {
-        return object : NetworkBoundResource<List<Reiki>, ReikisResponse>(
-            appExecutors
-        ) {
+        return object : NetworkBoundResource<List<Reiki>, ReikisResponse>(appExecutors) {
             override fun saveNetworkCallResult(response: ReikisResponse) {
                 Log.d(TAG, "saveNetworkCallResult")
 
@@ -37,7 +40,7 @@ object ReikiRepository {
 
                 reikis?.forEach {reiki ->
                     reikiDao.insertReiki(reiki)
-                    reiki.positions.forEach { pos ->
+                    reiki.positions?.forEach { pos ->
                         pos.reikiId = reiki.id
                         reikiDao.insertPosition(pos)
                     }
@@ -64,11 +67,6 @@ object ReikiRepository {
 
     fun deleteAllReikis() {
         DeleteAsyncTask(reikiDao).execute()
-    }
-
-    // Create
-    fun addReiki(reiki: Reiki) {
-        reikiDao.insertReiki(reiki)
     }
 
     private class DeleteAsyncTask internal constructor(private val dao: ReikiDao) : AsyncTask<Void, Void, Void>() {

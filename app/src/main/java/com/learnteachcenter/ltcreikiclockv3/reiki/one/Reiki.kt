@@ -15,10 +15,11 @@ data class Reiki (
     @Expose
     @SerializedName("_id")
     @PrimaryKey @NonNull var id: String,
+    @Expose var seqNo: Int,
     @Expose var title: String,
-    @Expose var description: String = "",
+    @Expose var description: String? = "",
     @Expose var playMusic: Boolean = true,
-    @Expose @Ignore var positions: List<Position> = listOf()
+    @Expose @Ignore var positions: List<Position>? = listOf()
 ) {
-    constructor():this("0","","",false, listOf())
+    constructor():this("0", 0,"","",false, listOf())
 }
