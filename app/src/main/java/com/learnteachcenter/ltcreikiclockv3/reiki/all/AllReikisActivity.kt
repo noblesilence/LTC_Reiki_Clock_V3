@@ -2,9 +2,15 @@ package com.learnteachcenter.ltcreikiclockv3.reiki.all
 
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.graphics.Canvas
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -21,12 +27,15 @@ import com.learnteachcenter.ltcreikiclockv3.reiki.one.Reiki
 import com.learnteachcenter.ltcreikiclockv3.reiki.one.AddReikiActivity
 import kotlinx.android.synthetic.main.activity_all_reikis.*
 import kotlinx.android.synthetic.main.content_all_reikis.*
+import kotlinx.android.synthetic.main.list_item_reiki.*
 
 class AllReikisActivity : AppCompatActivity() {
 
     private val TAG = "Reiki"
 
     private lateinit var viewModel: ReikisViewModel
+    private lateinit var swipeBackground: ColorDrawable
+    private lateinit var deleteIcon: Drawable
 
     private val adapter =
         ReikisAdapter(mutableListOf()) { reiki: Reiki ->
@@ -40,6 +49,9 @@ class AllReikisActivity : AppCompatActivity() {
         supportActionBar?.title = "Reiki Timer"
 
         viewModel = ViewModelProviders.of(this).get(ReikisViewModel::class.java)
+
+        swipeBackground = ColorDrawable(resources.getColor(R.color.colorSwipeBackground))
+        deleteIcon = ContextCompat.getDrawable(this, R.drawable.ic_delete)!!
 
         initRecyclerView()
         subscribeObservers()
@@ -72,6 +84,65 @@ class AllReikisActivity : AppCompatActivity() {
 
     private fun showReikis(reikis: List<Reiki>) {
         adapter.setReikis(reikis)
+
+        val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback (0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
+                (adapter as ReikisAdapter).removeItem(viewHolder)
+            }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                val itemView = viewHolder.itemView
+
+                val iconMargin = (itemView.height - deleteIcon.intrinsicHeight) / 2
+
+                if(dX > 0) {
+                    swipeBackground.setBounds(itemView.left, itemView.top, dX.toInt(), itemView.bottom)
+                    deleteIcon.setBounds(
+                        itemView.left + iconMargin,
+                        itemView.top + iconMargin,
+                        itemView.left + iconMargin + deleteIcon.intrinsicWidth,
+                        itemView.bottom - iconMargin )
+                } else {
+                    swipeBackground.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                    deleteIcon.setBounds(
+                        itemView.right - iconMargin - deleteIcon.intrinsicWidth,
+                        itemView.top + iconMargin,
+                        itemView.right - iconMargin,
+                        itemView.bottom - iconMargin )
+                }
+
+                c.save()
+
+                swipeBackground.draw(c)
+
+                if(dX > 0) {
+                    c.clipRect(itemView.left, itemView.top, dX.toInt(), itemView.bottom)
+                } else {
+                    c.clipRect(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                }
+
+                deleteIcon.draw(c)
+
+                c.restore()
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(reikisRecyclerView)
     }
 
     private fun showErrorMessage(error: String) {

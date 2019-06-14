@@ -80,5 +80,4 @@ class AddReikiActivity : AppCompatActivity() {
     }
 
     private fun isValidInput(): Boolean = input_reiki_title.text.toString().trim().isNotEmpty()
-
 }
