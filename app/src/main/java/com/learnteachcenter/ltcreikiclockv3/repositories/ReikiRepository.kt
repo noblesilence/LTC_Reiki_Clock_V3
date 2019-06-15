@@ -13,12 +13,17 @@ import com.learnteachcenter.ltcreikiclockv3.api.ReikiApi
 import com.learnteachcenter.ltcreikiclockv3.api.responses.ApiResponse
 import com.learnteachcenter.ltcreikiclockv3.api.responses.ReikisResponse
 import com.learnteachcenter.ltcreikiclockv3.api.responses.AddReikiResponse
+import com.learnteachcenter.ltcreikiclockv3.api.responses.DeleteReikiResponse
 import com.learnteachcenter.ltcreikiclockv3.authentication.User
 import com.learnteachcenter.ltcreikiclockv3.reiki.one.Reiki
 import com.learnteachcenter.ltcreikiclockv3.reiki.one.ReikiGenerator
 import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiAndAllPositions
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkBoundResource
 import com.learnteachcenter.ltcreikiclockv3.util.Resource
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 // https://medium.com/@thanasakis/restful-api-consuming-on-android-using-retrofit-and-architecture-components-livedata-room-and-59e3b064f94
 // https://stackoverflow.com/questions/32519618/retrofit-2-0-how-to-get-deserialised-error-response-body
@@ -69,9 +74,43 @@ object ReikiRepository {
         DeleteAsyncTask(reikiDao).execute()
     }
 
+    fun deleteReiki(reikiId: String) {
+        // Delete in local database
+        DeleteReikiAsyncTask(reikiDao, reikiId).execute()
+
+        // Delete on the remote database
+        val call: Call<DeleteReikiResponse> = reikiApi.deleteReiki(reikiId)
+
+        call.enqueue(object: Callback<DeleteReikiResponse> {
+            override fun onFailure(call: Call<DeleteReikiResponse>, t: Throwable) {
+                Log.wtf("Reiki", "Delete error: ${t.message}")
+            }
+
+            override fun onResponse(call: Call<DeleteReikiResponse>, response: Response<DeleteReikiResponse>) {
+                val deleteResponse: DeleteReikiResponse? = response.body()
+
+                if(deleteResponse != null) {
+                    if(deleteResponse.success) {
+                        Log.wtf("Reiki", "Delete success!")
+                    }
+                } else {
+                    val jObjError = JSONObject(response.errorBody()!!.string())
+                    Log.wtf("Reiki", jObjError.toString())
+                }
+            }
+        })
+    }
+
     private class DeleteAsyncTask internal constructor(private val dao: ReikiDao) : AsyncTask<Void, Void, Void>() {
         override fun doInBackground(vararg params: Void?): Void? {
             dao.deleteAllReikis()
+            return null
+        }
+    }
+
+    private class DeleteReikiAsyncTask internal constructor(private val dao: ReikiDao, private val reikiId: String) : AsyncTask<String, Void, Void> () {
+        override fun doInBackground(vararg params: String?): Void? {
+            dao.deleteReiki(reikiId)
             return null
         }
     }

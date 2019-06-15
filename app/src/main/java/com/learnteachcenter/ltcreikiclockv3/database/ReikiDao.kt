@@ -21,6 +21,9 @@ interface ReikiDao {
     @Query("DELETE FROM reikis")
     fun deleteAllReikis()
 
+    @Query("DELETE FROM reikis WHERE id = :reikiId")
+    fun deleteReiki(reikiId: String)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPosition(position: Position): Long
 

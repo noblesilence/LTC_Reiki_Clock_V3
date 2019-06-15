@@ -41,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
 
                 val call: Call<LoginResponse> = reikiApi.logIn(email, password)
 
-                call.enqueue(object: Callback<LoginResponse>{
+                call.enqueue(object: Callback<LoginResponse> {
                     override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                         displayMessage("Server error: ${t.message}")
 

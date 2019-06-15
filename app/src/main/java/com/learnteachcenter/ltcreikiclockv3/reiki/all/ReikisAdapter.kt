@@ -7,13 +7,15 @@ import android.view.ViewGroup
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.app.inflate
 import com.learnteachcenter.ltcreikiclockv3.reiki.one.Reiki
-import com.learnteachcenter.ltcreikiclockv3.reiki.one.ReikiGenerator
 import kotlinx.android.synthetic.main.list_item_reiki.view.*
+import android.util.Log
 
 // https://www.andreasjakl.com/recyclerview-kotlin-style-click-listener-android/
 
-class ReikisAdapter(private val reikis: MutableList<Reiki>, val clickListener: (Reiki) -> Unit)
-    : RecyclerView.Adapter<ReikisAdapter.ViewHolder>(){
+class ReikisAdapter(private val reikis: MutableList<Reiki>,
+                    private val clickListener: (Reiki) -> Unit,
+                    val deleteListener: (Reiki) -> Unit
+) : RecyclerView.Adapter<ReikisAdapter.ViewHolder>(){
 
     private lateinit var removedItem: Reiki
     private var removedPosition: Int = 0
@@ -41,10 +43,23 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>, val clickListener: (
         reikis.removeAt(viewHolder.adapterPosition)
         notifyItemRemoved(viewHolder.adapterPosition)
 
-        Snackbar.make(viewHolder.itemView, "${removedItem.title} deleted.", Snackbar.LENGTH_LONG).setAction("UNDO") {
-            reikis.add(removedPosition, removedItem)
-            notifyItemInserted(removedPosition)
-        }.show()
+        Snackbar
+            .make(viewHolder.itemView, "${removedItem.title} deleted.", Snackbar.LENGTH_LONG)
+            .setAction("UNDO") {
+                    reikis.add(removedPosition, removedItem)
+                    notifyItemInserted(removedPosition)
+                }
+            .addCallback(object : Snackbar.Callback() {
+                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                    when(event) {
+                        Snackbar.Callback.DISMISS_EVENT_TIMEOUT -> {
+                            deleteListener(removedItem)
+                        }
+                    }
+                    super.onDismissed(transientBottomBar, event)
+                }
+            })
+            .show()
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

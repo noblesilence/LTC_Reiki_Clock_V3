@@ -37,10 +37,13 @@ class AllReikisActivity : AppCompatActivity() {
     private lateinit var swipeBackground: ColorDrawable
     private lateinit var deleteIcon: Drawable
 
-    private val adapter =
-        ReikisAdapter(mutableListOf()) { reiki: Reiki ->
-            reikiItemClicked(reiki)
-        }
+    // TODO: create a new method to handle delete Reiki
+
+    private val adapter = ReikisAdapter(
+        mutableListOf(),
+        clickListener = { reiki -> reikiItemClicked(reiki) },
+        deleteListener = { reiki -> onDeleteReiki(reiki) }
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -166,6 +169,13 @@ class AllReikisActivity : AppCompatActivity() {
         i.putExtra(IntentExtraNames.EXTRA_REIKI_PLAY_MUSIC, reiki.playMusic)
 
         startActivity(i)
+    }
+
+    fun onDeleteReiki(reiki: Reiki) {
+        // TODO: delete in DB and delete on the server
+        Log.wtf("Reiki", "Delete this Reiki: ${reiki.title}")
+
+        viewModel.deleteReiki(reiki.id)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
