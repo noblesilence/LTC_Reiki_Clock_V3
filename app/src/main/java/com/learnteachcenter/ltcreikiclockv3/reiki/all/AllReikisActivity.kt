@@ -35,6 +35,8 @@ class AllReikisActivity : AppCompatActivity() {
 
     private val TAG = "Reiki"
 
+    private var mode: Mode = Mode.VIEW
+
     private lateinit var viewModel: ReikisViewModel
     private lateinit var swipeBackground: ColorDrawable
     private lateinit var deleteIcon: Drawable
@@ -90,7 +92,6 @@ class AllReikisActivity : AppCompatActivity() {
     private fun showReikis(reikis: List<Reiki>) {
         adapter.setReikis(reikis)
 
-        //changeToEditUI()
         changeToViewUI()
     }
 
@@ -194,13 +195,31 @@ class AllReikisActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
+
+        if(mode == Mode.VIEW) {
+            menu.findItem(R.id.action_edit).setVisible(true)
+            menu.findItem(R.id.action_done).setVisible(false)
+        } else {
+            menu.findItem(R.id.action_edit).setVisible(false)
+            menu.findItem(R.id.action_done).setVisible(true)
+        }
+
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_clear_all -> {
-//                viewModel.deleteAllReikisInDB()
+
+            R.id.action_edit -> {
+                mode = Mode.EDIT
+                invalidateOptionsMenu()
+                changeToEditUI()
+                true
+            }
+            R.id.action_done -> {
+                mode = Mode.VIEW
+                invalidateOptionsMenu()
+                changeToViewUI()
                 true
             }
             R.id.action_logout -> {
@@ -212,5 +231,9 @@ class AllReikisActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    enum class Mode {
+        VIEW, EDIT
     }
 }

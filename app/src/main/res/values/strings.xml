@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Reiki Timer</string>
     <string name="save">Save</string>
+    <string name="edit">Edit</string>
+    <string name="done">Done</string>
     <string name="reiki_saved">Reiki saved!</string>
     <string name="reiki_play_pause_button">Play/Pause Reiki</string>
     <string name="position_duration">Duration (mm:ss)</string>
