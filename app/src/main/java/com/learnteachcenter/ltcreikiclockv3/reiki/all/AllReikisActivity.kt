@@ -27,7 +27,9 @@ import com.learnteachcenter.ltcreikiclockv3.reiki.one.Reiki
 import com.learnteachcenter.ltcreikiclockv3.reiki.one.AddReikiActivity
 import kotlinx.android.synthetic.main.activity_all_reikis.*
 import kotlinx.android.synthetic.main.content_all_reikis.*
-import kotlinx.android.synthetic.main.list_item_reiki.*
+
+// https://stackoverflow.com/questions/38340358/how-to-enable-and-disable-drag-and-drop-on-a-recyclerview
+
 
 class AllReikisActivity : AppCompatActivity() {
 
@@ -37,7 +39,7 @@ class AllReikisActivity : AppCompatActivity() {
     private lateinit var swipeBackground: ColorDrawable
     private lateinit var deleteIcon: Drawable
 
-    // TODO: create a new method to handle delete Reiki
+    private var itemTouchHelper: ItemTouchHelper? = null
 
     private val adapter = ReikisAdapter(
         mutableListOf(),
@@ -88,7 +90,19 @@ class AllReikisActivity : AppCompatActivity() {
     private fun showReikis(reikis: List<Reiki>) {
         adapter.setReikis(reikis)
 
+        //changeToEditUI()
+        changeToViewUI()
+    }
+
+    private fun changeToViewUI() {
+        if(itemTouchHelper != null) {
+            itemTouchHelper!!.attachToRecyclerView(null)
+        }
+    }
+
+    private fun changeToEditUI() {
         val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback (0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+
             override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
                 return false
             }
@@ -144,8 +158,8 @@ class AllReikisActivity : AppCompatActivity() {
             }
         }
 
-        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
-        itemTouchHelper.attachToRecyclerView(reikisRecyclerView)
+        itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper!!.attachToRecyclerView(reikisRecyclerView)
     }
 
     private fun showErrorMessage(error: String) {
@@ -172,7 +186,6 @@ class AllReikisActivity : AppCompatActivity() {
     }
 
     fun onDeleteReiki(reiki: Reiki) {
-        // TODO: delete in DB and delete on the server
         Log.wtf("Reiki", "Delete this Reiki: ${reiki.title}")
 
         viewModel.deleteReiki(reiki.id)
