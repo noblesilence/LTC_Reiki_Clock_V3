@@ -14,6 +14,7 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import com.learnteachcenter.ltcreikiclockv3.R
@@ -27,6 +28,7 @@ import com.learnteachcenter.ltcreikiclockv3.reiki.one.Reiki
 import com.learnteachcenter.ltcreikiclockv3.reiki.one.AddReikiActivity
 import kotlinx.android.synthetic.main.activity_all_reikis.*
 import kotlinx.android.synthetic.main.content_all_reikis.*
+import kotlinx.android.synthetic.main.list_item_reiki.view.*
 
 // https://stackoverflow.com/questions/38340358/how-to-enable-and-disable-drag-and-drop-on-a-recyclerview
 
@@ -45,6 +47,7 @@ class AllReikisActivity : AppCompatActivity() {
 
     private val adapter = ReikisAdapter(
         mutableListOf(),
+        Mode.VIEW,
         clickListener = { reiki -> reikiItemClicked(reiki) },
         deleteListener = { reiki -> onDeleteReiki(reiki) }
     )
@@ -96,12 +99,30 @@ class AllReikisActivity : AppCompatActivity() {
     }
 
     private fun changeToViewUI() {
+
+        adapter.updateViewMode(Mode.VIEW)
+        adapter.notifyDataSetChanged()
+
         if(itemTouchHelper != null) {
             itemTouchHelper!!.attachToRecyclerView(null)
         }
     }
 
     private fun changeToEditUI() {
+
+        adapter.updateViewMode(Mode.EDIT)
+        adapter.notifyDataSetChanged()
+
+        for(i in 0 until reikisRecyclerView.childCount) {
+            val holder = reikisRecyclerView.getChildViewHolder(reikisRecyclerView.getChildAt(i))
+
+            holder.itemView.imv_arrow_right.visibility = View.GONE
+
+            holder.itemView.imv_drag_handle.visibility = View.VISIBLE
+            holder.itemView.imv_delete.visibility = View.VISIBLE
+            holder.itemView.imv_edit.visibility = View.VISIBLE
+        }
+
         val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback (0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
             override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
