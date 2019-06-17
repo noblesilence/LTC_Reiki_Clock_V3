@@ -24,6 +24,7 @@ import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
 import com.learnteachcenter.ltcreikiclockv3.util.ResourceObserver
 import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSessionActivity
 import com.learnteachcenter.ltcreikiclockv3.authentication.login.LoginActivity
+import com.learnteachcenter.ltcreikiclockv3.reiki.edit.EditReikiActivity
 import com.learnteachcenter.ltcreikiclockv3.reiki.one.Reiki
 import com.learnteachcenter.ltcreikiclockv3.reiki.one.AddReikiActivity
 import kotlinx.android.synthetic.main.activity_all_reikis.*
@@ -49,6 +50,7 @@ class AllReikisActivity : AppCompatActivity() {
         mutableListOf(),
         Mode.VIEW,
         clickListener = { reiki -> reikiItemClicked(reiki) },
+        editListener = { reiki -> onEditReiki(reiki) },
         deleteListener = { reiki -> onDeleteReiki(reiki) }
     )
 
@@ -112,16 +114,6 @@ class AllReikisActivity : AppCompatActivity() {
 
         adapter.updateViewMode(Mode.EDIT)
         adapter.notifyDataSetChanged()
-
-        for(i in 0 until reikisRecyclerView.childCount) {
-            val holder = reikisRecyclerView.getChildViewHolder(reikisRecyclerView.getChildAt(i))
-
-            holder.itemView.imv_arrow_right.visibility = View.GONE
-
-            holder.itemView.imv_drag_handle.visibility = View.VISIBLE
-            holder.itemView.imv_delete.visibility = View.VISIBLE
-            holder.itemView.imv_edit.visibility = View.VISIBLE
-        }
 
         val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback (0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
@@ -199,6 +191,16 @@ class AllReikisActivity : AppCompatActivity() {
     fun reikiItemClicked(reiki: Reiki) {
 
         val i = Intent(this, ReikiSessionActivity::class.java)
+        i.putExtra(IntentExtraNames.EXTRA_REIKI_ID, reiki.id)
+        i.putExtra(IntentExtraNames.EXTRA_REIKI_TITLE, reiki.title)
+        i.putExtra(IntentExtraNames.EXTRA_REIKI_DESCRIPTION, reiki.description)
+        i.putExtra(IntentExtraNames.EXTRA_REIKI_PLAY_MUSIC, reiki.playMusic)
+
+        startActivity(i)
+    }
+
+    fun onEditReiki(reiki: Reiki) {
+        val i = Intent(this, EditReikiActivity::class.java)
         i.putExtra(IntentExtraNames.EXTRA_REIKI_ID, reiki.id)
         i.putExtra(IntentExtraNames.EXTRA_REIKI_TITLE, reiki.title)
         i.putExtra(IntentExtraNames.EXTRA_REIKI_DESCRIPTION, reiki.description)

@@ -15,6 +15,7 @@ import android.util.Log
 class ReikisAdapter(private val reikis: MutableList<Reiki>,
                     private var mode: AllReikisActivity.Mode,
                     private val clickListener: (Reiki) -> Unit,
+                    private val editListener: (Reiki) -> Unit,
                     val deleteListener: (Reiki) -> Unit
 ) : RecyclerView.Adapter<ReikisAdapter.ViewHolder>(){
 
@@ -26,7 +27,7 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(reikis[position], clickListener, mode)
+        holder.bind(reikis[position], clickListener, editListener, mode)
     }
 
     override fun getItemCount(): Int = reikis.size
@@ -71,7 +72,10 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
 
         private lateinit var reiki: Reiki
 
-        fun bind(reiki: Reiki, clickListener: (Reiki) -> Unit, mode: AllReikisActivity.Mode) {
+        fun bind(reiki: Reiki,
+                 clickListener: (Reiki) -> Unit,
+                 editListener: (Reiki) -> Unit,
+                 mode: AllReikisActivity.Mode) {
             this.reiki = reiki
 
             itemView.title.text = reiki.title
@@ -82,16 +86,22 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
 
                 itemView.imv_drag_handle.visibility = View.GONE
                 itemView.imv_edit.visibility = View.GONE
-                itemView.imv_delete.visibility = View.GONE
 
-                // set the item onclick listener
+                // Remove Edit
+                itemView.imv_edit.setOnClickListener(null)
+
+                // Item Click
                 itemView.setOnClickListener { clickListener(reiki) }
             } else {
                 itemView.imv_drag_handle.visibility = View.VISIBLE
                 itemView.imv_edit.visibility = View.VISIBLE
-                itemView.imv_delete.visibility = View.VISIBLE
 
                 itemView.imv_arrow_right.visibility = View.GONE
+
+                // Edit
+                itemView.imv_edit.setOnClickListener {
+                    editListener(reiki)
+                }
 
                 // remove the item onclick listener
                 itemView.setOnClickListener(null)

@@ -14,13 +14,14 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-
-        <activity android:name="com.learnteachcenter.ltcreikiclockv3.authentication.signup.SignUpActivity">
+        <activity android:name=".reiki.edit.EditReikiActivity">
         </activity>
-        <activity android:name="com.learnteachcenter.ltcreikiclockv3.authentication.login.LoginActivity">
+        <activity android:name=".authentication.signup.SignUpActivity">
+        </activity>
+        <activity android:name=".authentication.login.LoginActivity">
         </activity>
         <activity
-                android:name="com.learnteachcenter.ltcreikiclockv3.splash.SplashActivity"
+                android:name=".splash.SplashActivity"
                 android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -29,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name="com.learnteachcenter.ltcreikiclockv3.reiki.all.AllReikisActivity"
+                android:name=".reiki.all.AllReikisActivity"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -38,7 +39,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name="com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSessionActivity"
+                android:name=".reiki.session.ReikiSessionActivity"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity android:name=".reiki.one.AddReikiActivity">
