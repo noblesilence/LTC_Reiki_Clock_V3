@@ -11,13 +11,16 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.support.v7.widget.helper.ItemTouchHelper.*
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.widget.Toast
 import com.learnteachcenter.ltcreikiclockv3.R
+import com.learnteachcenter.ltcreikiclockv3.api.responses.UpdateReikisOrderResponse
+import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.database.AuthenticationPrefs
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil
 import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
@@ -29,7 +32,10 @@ import com.learnteachcenter.ltcreikiclockv3.reiki.one.Reiki
 import com.learnteachcenter.ltcreikiclockv3.reiki.one.AddReikiActivity
 import kotlinx.android.synthetic.main.activity_all_reikis.*
 import kotlinx.android.synthetic.main.content_all_reikis.*
-import kotlinx.android.synthetic.main.list_item_reiki.view.*
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 // https://stackoverflow.com/questions/38340358/how-to-enable-and-disable-drag-and-drop-on-a-recyclerview
 
@@ -46,12 +52,15 @@ class AllReikisActivity : AppCompatActivity() {
 
     private var itemTouchHelper: ItemTouchHelper? = null
 
+    private val reikiApi = Injection.provideReikiApi()
+
     private val adapter = ReikisAdapter(
         mutableListOf(),
         Mode.VIEW,
         clickListener = { reiki -> reikiItemClicked(reiki) },
         editListener = { reiki -> onEditReiki(reiki) },
-        deleteListener = { reiki -> onDeleteReiki(reiki) }
+        deleteListener = { reiki -> onDeleteReiki(reiki) },
+        dragListener = { viewHolder -> onDragReiki(viewHolder) }
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,6 +111,32 @@ class AllReikisActivity : AppCompatActivity() {
 
     private fun changeToViewUI() {
 
+        // Update the seq no's on the server
+
+        // TODO: update only if user has reordered.
+
+        val reikis = adapter.getReikis()
+
+        val call: Call<UpdateReikisOrderResponse> = reikiApi.updateReikisOrder(reikis)
+
+        call.enqueue(object: Callback<UpdateReikisOrderResponse>{
+            override fun onFailure(call: Call<UpdateReikisOrderResponse>, t: Throwable) {
+                Log.wtf("Reiki", "Error updating on the server ${t.message}")
+            }
+
+            override fun onResponse(call: Call<UpdateReikisOrderResponse>, response: Response<UpdateReikisOrderResponse>) {
+                val updateResponse: UpdateReikisOrderResponse? = response.body()
+
+                if(updateResponse != null) {
+                    if(!updateResponse.success) {
+                        val jObjError = JSONObject(response.errorBody()!!.string())
+
+                        Log.wtf("Reiki", "Update error $jObjError")
+                    }
+                }
+            }
+        })
+
         adapter.updateViewMode(Mode.VIEW)
         adapter.notifyDataSetChanged()
 
@@ -115,10 +150,33 @@ class AllReikisActivity : AppCompatActivity() {
         adapter.updateViewMode(Mode.EDIT)
         adapter.notifyDataSetChanged()
 
-        val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback (0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+        val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback (
+            UP or
+                    DOWN or
+                    START or END,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
-            override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
-                return false
+            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+                super.onSelectedChanged(viewHolder, actionState)
+
+                if(actionState == ACTION_STATE_DRAG) {
+                    viewHolder?.itemView?.alpha = 0.5f
+                }
+            }
+
+            override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+                super.clearView(recyclerView, viewHolder)
+                viewHolder.itemView.alpha = 1.0f
+            }
+
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+
+                val from = viewHolder.adapterPosition
+                val to = target.adapterPosition
+
+                adapter.swapItems(from, to)
+
+                return true
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
@@ -174,6 +232,10 @@ class AllReikisActivity : AppCompatActivity() {
 
         itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
         itemTouchHelper!!.attachToRecyclerView(reikisRecyclerView)
+    }
+
+    fun onDragReiki(viewHolder: RecyclerView.ViewHolder) {
+        itemTouchHelper?.startDrag(viewHolder)
     }
 
     private fun showErrorMessage(error: String) {

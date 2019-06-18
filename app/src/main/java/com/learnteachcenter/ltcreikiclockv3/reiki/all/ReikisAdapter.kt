@@ -9,6 +9,8 @@ import com.learnteachcenter.ltcreikiclockv3.app.inflate
 import com.learnteachcenter.ltcreikiclockv3.reiki.one.Reiki
 import kotlinx.android.synthetic.main.list_item_reiki.view.*
 import android.util.Log
+import android.view.MotionEvent
+import java.util.*
 
 // https://www.andreasjakl.com/recyclerview-kotlin-style-click-listener-android/
 
@@ -16,18 +18,35 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
                     private var mode: AllReikisActivity.Mode,
                     private val clickListener: (Reiki) -> Unit,
                     private val editListener: (Reiki) -> Unit,
-                    val deleteListener: (Reiki) -> Unit
+                    private val deleteListener: (Reiki) -> Unit,
+                    private val dragListener: (RecyclerView.ViewHolder) -> Unit
 ) : RecyclerView.Adapter<ReikisAdapter.ViewHolder>(){
 
     private lateinit var removedItem: Reiki
     private var removedPosition: Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(parent.inflate(R.layout.list_item_reiki))
+        val viewHolder = ViewHolder(parent.inflate(R.layout.list_item_reiki))
+
+        if(mode == AllReikisActivity.Mode.EDIT) {
+            viewHolder.itemView.imv_drag_handle.setOnTouchListener {
+                    view, event ->
+
+                if(event.actionMasked == MotionEvent.ACTION_DOWN) {
+                    dragListener(viewHolder)
+                }
+
+                return@setOnTouchListener true
+            }
+        } else {
+            viewHolder.itemView.imv_drag_handle.setOnTouchListener(null)
+        }
+
+        return viewHolder
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(reikis[position], clickListener, editListener, mode)
+        holder.bind(reikis[position], clickListener, editListener, dragListener, mode)
     }
 
     override fun getItemCount(): Int = reikis.size
@@ -40,6 +59,20 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
         this.reikis.clear()
         this.reikis.addAll(reikis)
         notifyDataSetChanged()
+    }
+
+    fun getReikis() = this.reikis
+
+    fun swapItems(from: Int, to: Int) {
+        Collections.swap(reikis, from, to)
+
+        for(i in 0..reikis.size-1) {
+            reikis[i].seqNo = i
+
+            Log.wtf("Reiki", "title: ${reikis[i].title}, seqNo: ${reikis[i].seqNo}")
+        }
+
+        notifyItemMoved(from, to)
     }
 
     fun removeItem(viewHolder: RecyclerView.ViewHolder) {
@@ -75,6 +108,7 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
         fun bind(reiki: Reiki,
                  clickListener: (Reiki) -> Unit,
                  editListener: (Reiki) -> Unit,
+                 dragListener: (ViewHolder) -> Unit,
                  mode: AllReikisActivity.Mode) {
             this.reiki = reiki
 

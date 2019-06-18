@@ -5,6 +5,7 @@ import com.learnteachcenter.ltcreikiclockv3.api.responses.*
 import com.learnteachcenter.ltcreikiclockv3.authentication.login.LoginResponse
 import com.learnteachcenter.ltcreikiclockv3.authentication.User
 import com.learnteachcenter.ltcreikiclockv3.authentication.signup.SignUpResponse
+import com.learnteachcenter.ltcreikiclockv3.reiki.one.Reiki
 import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
 import retrofit2.Call
 import retrofit2.http.*
@@ -52,6 +53,12 @@ interface ReikiApi {
         @Field("description") description: String,
         @Field("playMusic") playMusic: Boolean
     ): Call<UpdateReikiResponse>
+
+    // Update Reikis order
+    @PUT("reikis")
+    fun updateReikisOrder(
+        @Body reikis: List<Reiki>
+    ): Call<UpdateReikisOrderResponse>
 
     // Delete Reiki
     @DELETE("reikis/{id}")
