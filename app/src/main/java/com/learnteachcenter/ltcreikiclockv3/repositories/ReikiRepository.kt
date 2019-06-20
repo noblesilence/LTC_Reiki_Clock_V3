@@ -101,6 +101,10 @@ object ReikiRepository {
         })
     }
 
+    fun updateReikis(vararg reikis: Reiki) {
+        val i: Int = reikiDao.updateReikis(*reikis)
+    }
+
     private class DeleteAsyncTask internal constructor(private val dao: ReikiDao) : AsyncTask<Void, Void, Void>() {
         override fun doInBackground(vararg params: Void?): Void? {
             dao.deleteAllReikis()

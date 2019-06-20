@@ -1,6 +1,8 @@
 package com.learnteachcenter.ltcreikiclockv3.reiki.all
 
 import android.arch.lifecycle.*
+import android.os.AsyncTask
+import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.reiki.one.Reiki
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.util.Resource
@@ -10,6 +12,20 @@ class ReikisViewModel (val repository: ReikiRepository = Injection.provideReikiR
     : ViewModel() {
 
     var reikis: LiveData<Resource<List<Reiki>>> = repository.getReikis()
+
+    // Update Reikis
+    fun updateReikis(vararg reikis: Reiki) {
+        val updateReikisTask = UpdateReikisTask(repository)
+        updateReikisTask.execute(*reikis)
+    }
+
+    private class UpdateReikisTask internal constructor(private val repository: ReikiRepository)
+        : AsyncTask<Reiki, Void, Void>() {
+        override fun doInBackground(vararg reikis: Reiki): Void? {
+            repository.updateReikis(*reikis)
+            return null
+        }
+    }
 
     fun deleteReiki(reikiId: String) = repository.deleteReiki(reikiId)
 

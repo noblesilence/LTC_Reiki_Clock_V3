@@ -36,6 +36,7 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 // https://stackoverflow.com/questions/38340358/how-to-enable-and-disable-drag-and-drop-on-a-recyclerview
 
@@ -64,6 +65,9 @@ class AllReikisActivity : AppCompatActivity() {
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        Log.wtf("Reiki", "[AllReikisActivity] onCreate")
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_reikis)
         setSupportActionBar(toolbar)
@@ -109,13 +113,14 @@ class AllReikisActivity : AppCompatActivity() {
         changeToViewUI()
     }
 
-    private fun changeToViewUI() {
-
-        // Update the seq no's on the server
+    private fun reorderReikis() {
+        // Update the seq no's on the server and the local database
 
         // TODO: update only if user has reordered.
 
         val reikis = adapter.getReikis()
+
+        // Server
 
         val call: Call<UpdateReikisOrderResponse> = reikiApi.updateReikisOrder(reikis)
 
@@ -137,9 +142,15 @@ class AllReikisActivity : AppCompatActivity() {
             }
         })
 
+        // Local database
+        val reikisToUpdate = Arrays.copyOfRange(reikis.toTypedArray(), 0, reikis.size)
+        viewModel.updateReikis(*reikisToUpdate)
+
         adapter.updateViewMode(Mode.VIEW)
         adapter.notifyDataSetChanged()
+    }
 
+    private fun changeToViewUI() {
         if(itemTouchHelper != null) {
             itemTouchHelper!!.attachToRecyclerView(null)
         }
@@ -304,6 +315,7 @@ class AllReikisActivity : AppCompatActivity() {
             R.id.action_done -> {
                 mode = Mode.VIEW
                 invalidateOptionsMenu()
+                reorderReikis()
                 changeToViewUI()
                 true
             }
