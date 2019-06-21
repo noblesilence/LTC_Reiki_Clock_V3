@@ -7,7 +7,7 @@ import android.arch.persistence.room.PrimaryKey
 import android.support.annotation.NonNull
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.learnteachcenter.ltcreikiclockv3.reiki.one.Reiki
+import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
 
 @Entity(foreignKeys = arrayOf(ForeignKey(
     entity = Reiki::class,
@@ -17,7 +17,7 @@ import com.learnteachcenter.ltcreikiclockv3.reiki.one.Reiki
     tableName = "positions",
     indices = arrayOf(Index(value = ["reikiId"])))
 data class Position (
-    @Expose @SerializedName("_id") @NonNull @PrimaryKey var positionId: String,
+    @Expose @SerializedName("_id") @NonNull @PrimaryKey var id: String,
     @Expose var seqNo: Int,
     var reikiId: String,
     @Expose var title: String,

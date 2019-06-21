@@ -3,7 +3,7 @@ package com.learnteachcenter.ltcreikiclockv3.api.responses;
 import android.support.annotation.Nullable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.learnteachcenter.ltcreikiclockv3.reiki.one.Reiki;
+import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki;
 
 import java.util.List;
 

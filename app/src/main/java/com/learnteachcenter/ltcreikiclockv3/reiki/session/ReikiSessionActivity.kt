@@ -2,6 +2,7 @@ package com.learnteachcenter.ltcreikiclockv3.reiki.session
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -14,6 +15,7 @@ import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.ReikiSess
 import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.ReikiSessionEvent.INDEX_CHANGED
 import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.ReikiSessionEvent.TIME_LEFT_CHANGED
 import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
+import com.learnteachcenter.ltcreikiclockv3.reiki.position.AddPositionActivity
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil
 import kotlinx.android.synthetic.main.activity_all_positions.*
 import kotlinx.android.synthetic.main.list_item_position.view.*
@@ -50,15 +52,6 @@ class ReikiSessionActivity : AppCompatActivity() {
 
             initRecyclerView()
             subscribeToReikiAndAllPositions()
-
-            // Show/hide Add button based on internet connectivity
-            if(NetworkUtil.isConnected(this)) {
-                fab_add.alpha = 1F
-                fab_add.setOnClickListener {
-                }
-            } else {
-                fab_add.alpha = 0F
-            }
         }
     }
 
@@ -102,7 +95,7 @@ class ReikiSessionActivity : AppCompatActivity() {
                         State.STOPPED -> {
                             // Update Buttons
                             changeToPlayButton()
-                            fab_add.alpha = 1F
+                            fab_add_position.alpha = 1F
                             fab_stop.alpha = 0F
 
                             val previousIndex = reikiSession.getPreviousIndex()
@@ -113,7 +106,7 @@ class ReikiSessionActivity : AppCompatActivity() {
                         State.RUNNING -> {
                             // Update Buttons
                             changeToPauseButton()
-                            fab_add.alpha = 0F
+                            fab_add_position.alpha = 0F
                             fab_stop.alpha = 1F
 
                             val currentIndex: Int = reikiSession.getCurrentIndex()
@@ -124,7 +117,7 @@ class ReikiSessionActivity : AppCompatActivity() {
                         State.PAUSED -> {
                             // Update buttons
                             changeToPlayButton()
-                            fab_add.alpha = 0F
+                            fab_add_position.alpha = 0F
                             fab_stop.alpha = 1F
 
                             val currentIndex = reikiSession.getCurrentIndex()
@@ -176,20 +169,24 @@ class ReikiSessionActivity : AppCompatActivity() {
                 }
             }
 
-            fab_add.alpha = 0F
+            fab_add_position.alpha = 0F
         }
 
         fab_stop.setOnClickListener {
             viewModel.stopSession()
         }
 
-        fab_add.setOnClickListener {
-            onAddClick()
+        if(NetworkUtil.isConnected(this)) {
+            fab_add_position.setOnClickListener {
+                fab_add_position.alpha = 1F
+                val intent = Intent(this, AddPositionActivity::class.java)
+                intent.putExtra(IntentExtraNames.EXTRA_REIKI_ID, reikiId)
+                intent.putExtra(IntentExtraNames.EXTRA_REIKI_TITLE, reikiTitle)
+                startActivity(intent)
+            }
+        } else {
+            fab_add_position.alpha = 0F
         }
-    }
-
-    private fun onAddClick() {
-
     }
 
     private fun highlightItem(itemIndex: Int, itemDuration: String) {

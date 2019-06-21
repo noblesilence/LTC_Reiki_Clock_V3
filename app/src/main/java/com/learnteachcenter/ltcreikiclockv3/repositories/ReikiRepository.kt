@@ -1,8 +1,6 @@
 package com.learnteachcenter.ltcreikiclockv3.repositories
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.Observer
 import android.os.AsyncTask
 import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.app.AppExecutors
@@ -12,11 +10,9 @@ import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil
 import com.learnteachcenter.ltcreikiclockv3.api.ReikiApi
 import com.learnteachcenter.ltcreikiclockv3.api.responses.ApiResponse
 import com.learnteachcenter.ltcreikiclockv3.api.responses.ReikisResponse
-import com.learnteachcenter.ltcreikiclockv3.api.responses.AddReikiResponse
 import com.learnteachcenter.ltcreikiclockv3.api.responses.DeleteReikiResponse
-import com.learnteachcenter.ltcreikiclockv3.authentication.User
-import com.learnteachcenter.ltcreikiclockv3.reiki.one.Reiki
-import com.learnteachcenter.ltcreikiclockv3.reiki.one.ReikiGenerator
+import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
+import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
 import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiAndAllPositions
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkBoundResource
 import com.learnteachcenter.ltcreikiclockv3.util.Resource
@@ -103,6 +99,17 @@ object ReikiRepository {
 
     fun updateReikis(vararg reikis: Reiki) {
         val i: Int = reikiDao.updateReikis(*reikis)
+    }
+
+    fun insertPosition(position: Position) {
+        InsertAsyncTask(reikiDao, position).execute()
+    }
+
+    private class InsertAsyncTask internal constructor(private val dao: ReikiDao, private val position: Position) : AsyncTask<Position, Void, Void>() {
+        override fun doInBackground(vararg params: Position): Void? {
+            dao.insertPosition(position)
+            return null
+        }
     }
 
     private class DeleteAsyncTask internal constructor(private val dao: ReikiDao) : AsyncTask<Void, Void, Void>() {

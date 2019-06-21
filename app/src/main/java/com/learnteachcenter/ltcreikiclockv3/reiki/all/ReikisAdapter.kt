@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.app.inflate
-import com.learnteachcenter.ltcreikiclockv3.reiki.one.Reiki
+import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
 import kotlinx.android.synthetic.main.list_item_reiki.view.*
 import android.util.Log
 import android.view.MotionEvent

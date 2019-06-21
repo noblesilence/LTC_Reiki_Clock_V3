@@ -3,14 +3,17 @@ package com.learnteachcenter.ltcreikiclockv3.api
 import android.arch.lifecycle.LiveData
 import com.learnteachcenter.ltcreikiclockv3.api.responses.*
 import com.learnteachcenter.ltcreikiclockv3.authentication.login.LoginResponse
-import com.learnteachcenter.ltcreikiclockv3.authentication.User
 import com.learnteachcenter.ltcreikiclockv3.authentication.signup.SignUpResponse
-import com.learnteachcenter.ltcreikiclockv3.reiki.one.Reiki
+import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
 import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
 import retrofit2.Call
 import retrofit2.http.*
 
 interface ReikiApi {
+
+    /*
+    * Authentication
+    * */
 
     // Sign Up
     @FormUrlEncoded
@@ -29,6 +32,10 @@ interface ReikiApi {
         @Field("email") email: String,
         @Field("password") password: String
     ): Call<LoginResponse>
+
+    /*
+    * Reikis
+    * */
 
     // Get
     @GET("reikis")
@@ -65,4 +72,16 @@ interface ReikiApi {
     fun deleteReiki(
         @Path("id") reikiId: String
     ): Call<DeleteReikiResponse>
+
+    /*
+    * Positions
+    * */
+
+    @FormUrlEncoded
+    @POST("reikis/position/{id}")
+    fun addPosition(
+        @Path("id") reikiId: String,
+        @Field("title") title: String,
+        @Field("duration") duration: String
+    ): Call<AddPositionResponse>
 }

@@ -3,7 +3,7 @@ package com.learnteachcenter.ltcreikiclockv3.reiki.session
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Relation
 import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
-import com.learnteachcenter.ltcreikiclockv3.reiki.one.Reiki
+import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
 
 class ReikiAndAllPositions {
 

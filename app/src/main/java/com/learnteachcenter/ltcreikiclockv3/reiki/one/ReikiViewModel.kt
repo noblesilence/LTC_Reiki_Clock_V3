@@ -6,6 +6,8 @@ import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableField
 import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
+import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
+import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiGenerator
 import com.learnteachcenter.ltcreikiclockv3.repositories.ReikiRepository
 import com.learnteachcenter.ltcreikiclockv3.util.Resource
 

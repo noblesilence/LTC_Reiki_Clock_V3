@@ -1,4 +1,4 @@
-package com.learnteachcenter.ltcreikiclockv3.reiki.one
+package com.learnteachcenter.ltcreikiclockv3.reiki
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore

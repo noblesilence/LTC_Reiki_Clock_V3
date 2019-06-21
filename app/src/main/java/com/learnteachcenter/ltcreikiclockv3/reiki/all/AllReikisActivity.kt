@@ -17,7 +17,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.widget.Toast
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.api.responses.UpdateReikisOrderResponse
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
@@ -28,7 +27,7 @@ import com.learnteachcenter.ltcreikiclockv3.util.ResourceObserver
 import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSessionActivity
 import com.learnteachcenter.ltcreikiclockv3.authentication.login.LoginActivity
 import com.learnteachcenter.ltcreikiclockv3.reiki.edit.EditReikiActivity
-import com.learnteachcenter.ltcreikiclockv3.reiki.one.Reiki
+import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
 import com.learnteachcenter.ltcreikiclockv3.reiki.one.AddReikiActivity
 import kotlinx.android.synthetic.main.activity_all_reikis.*
 import kotlinx.android.synthetic.main.content_all_reikis.*

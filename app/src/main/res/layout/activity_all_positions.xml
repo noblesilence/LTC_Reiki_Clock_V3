@@ -84,11 +84,11 @@
             app:fabSize="normal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/fab_stop"
-            app:layout_constraintRight_toLeftOf="@id/fab_add"
+            app:layout_constraintRight_toLeftOf="@id/fab_add_position"
             app:rippleColor="@color/colorTransparentBlack"/>
 
     <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_add"
+            android:id="@+id/fab_add_position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
