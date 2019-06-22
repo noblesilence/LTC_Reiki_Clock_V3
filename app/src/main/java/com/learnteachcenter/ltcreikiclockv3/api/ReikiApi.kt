@@ -67,6 +67,13 @@ interface ReikiApi {
         @Body reikis: List<Reiki>
     ): Call<UpdateReikisOrderResponse>
 
+    // Update Positions order
+    @PUT("reikis/{id}/positions")
+    fun updatePositionsOrder(
+        @Path("id") reikiId: String,
+        @Body positions: List<Position>
+    ): Call<UpdatePositionsOrderResponse>
+
     // Delete Reiki
     @DELETE("reikis/{id}")
     fun deleteReiki(
@@ -84,4 +91,10 @@ interface ReikiApi {
         @Field("title") title: String,
         @Field("duration") duration: String
     ): Call<AddPositionResponse>
+
+    @DELETE("reikis/position/{id}/{position_id}")
+    fun deletePosition(
+        @Path("id") reikiId: String,
+        @Path("position_id") positionId: String
+    ): Call<DeletePositionResponse>
 }

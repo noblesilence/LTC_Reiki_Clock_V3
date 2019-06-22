@@ -23,7 +23,7 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
 ) : RecyclerView.Adapter<ReikisAdapter.ViewHolder>(){
 
     private lateinit var removedItem: Reiki
-    private var removedPosition: Int = 0
+    private var removedPosition: Int = 0 // TODO: change this to -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val viewHolder = ViewHolder(parent.inflate(R.layout.list_item_reiki))
@@ -66,7 +66,7 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
     fun swapItems(from: Int, to: Int) {
         Collections.swap(reikis, from, to)
 
-        for(i in 0..reikis.size-1) {
+        for(i in 0..reikis.size - 1) {
             reikis[i].seqNo = i
 
             Log.wtf("Reiki", "title: ${reikis[i].title}, seqNo: ${reikis[i].seqNo}")

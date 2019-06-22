@@ -7,8 +7,15 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
+import android.support.v7.widget.helper.ItemTouchHelper.*
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import com.learnteachcenter.ltcreikiclockv3.R
+import com.learnteachcenter.ltcreikiclockv3.api.responses.UpdatePositionsOrderResponse
+import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.State
 import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.ReikiSessionEvent.NONE
 import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.ReikiSessionEvent.STATE_CHANGED
@@ -16,18 +23,38 @@ import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.ReikiSess
 import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.ReikiSessionEvent.TIME_LEFT_CHANGED
 import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
 import com.learnteachcenter.ltcreikiclockv3.reiki.position.AddPositionActivity
+import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil
 import kotlinx.android.synthetic.main.activity_all_positions.*
 import kotlinx.android.synthetic.main.list_item_position.view.*
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.util.*
 
 class ReikiSessionActivity : AppCompatActivity() {
 
     private val TAG = "Reiki"
 
+    private var mode: Mode = Mode.VIEW
+
+    private var itemTouchHelper: ItemTouchHelper? = null
+
+    private val reikiApi = Injection.provideReikiApi()
+    private val reikiDao = Injection.provideReikiDao()
+    private val repository = Injection.provideReikiRepository()
+
     private lateinit var reikiId: String
     private lateinit var reikiTitle: String
     private lateinit var viewModel: ReikiSessionViewModel
-    private val adapter = PositionsAdapter(mutableListOf())
+    private val adapter = PositionsAdapter(
+        mutableListOf(),
+        Mode.VIEW,
+        editListener = { position -> onEditPosition(position) },
+        deleteListener = { position -> onDeletePosition(position) },
+        dragListener = { viewHolder -> onDragPosition(viewHolder) }
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -64,7 +91,9 @@ class ReikiSessionActivity : AppCompatActivity() {
 
     private fun subscribeToReikiAndAllPositions() {
         viewModel.reikiAndAllPositions.observe(this, Observer<ReikiAndAllPositions> {
-            adapter.setPositions(it?.positions)
+            // Sort the Positions by seq no
+            val sortedPositions = it?.positions!!.sortedWith(compareBy({ it.seqNo }))
+            adapter.setPositions(sortedPositions)
             viewModel.initSession(it!!)
             subscribeToReikiSession()
             setUpListeners()
@@ -229,5 +258,139 @@ class ReikiSessionActivity : AppCompatActivity() {
 
     private fun changeToPauseButton() {
         fab_play_pause.setImageResource(R.drawable.ic_pause)
+    }
+
+    private fun reorderPositions() {
+        // Update the Seq No's on the server and the local database
+
+        // TODO: update only if order is changed
+
+        val positions = adapter.getPositions()
+
+        // Update in local database
+        val positionsToUpdate = Arrays.copyOfRange(positions.toTypedArray(), 0, positions.size)
+        repository.updatePositions(*positionsToUpdate)
+
+        // Update on the server
+
+        val call: Call<UpdatePositionsOrderResponse> = reikiApi.updatePositionsOrder(reikiId, positions)
+
+        call.enqueue(object: Callback<UpdatePositionsOrderResponse> {
+            override fun onFailure(call: Call<UpdatePositionsOrderResponse>, t: Throwable) {
+                Log.wtf("Reiki", "Error updating on the server ${t.message}")
+            }
+
+            override fun onResponse(call: Call<UpdatePositionsOrderResponse>, response: Response<UpdatePositionsOrderResponse>) {
+                val updateResponse: UpdatePositionsOrderResponse? = response.body()
+
+                if(updateResponse != null) {
+                    if(!updateResponse.success) {
+                        val jObjError = JSONObject(response.errorBody()!!.string())
+
+                        Log.wtf("Reiki", "Update error $jObjError")
+                    }
+                }
+            }
+        })
+    }
+
+    private fun changeToViewUI() {
+        if(itemTouchHelper != null) {
+            itemTouchHelper!!.attachToRecyclerView(null)
+        }
+    }
+
+    private fun changeToEditUI() {
+
+        adapter.updateViewMode(Mode.EDIT)
+        adapter.notifyDataSetChanged()
+
+        val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback (
+            UP or DOWN,
+            0) {
+
+            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+                super.onSelectedChanged(viewHolder, actionState)
+
+                if(actionState == ACTION_STATE_DRAG) {
+                    viewHolder?.itemView?.alpha = 0.5f
+                }
+            }
+
+            override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+                super.clearView(recyclerView, viewHolder)
+                viewHolder.itemView.alpha = 1.0f
+            }
+
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+
+                val from = viewHolder.adapterPosition
+                val to = target.adapterPosition
+
+                adapter.swapItems(from, to)
+
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
+                (adapter as PositionsAdapter).removeItem(viewHolder)
+            }
+        }
+
+        itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper!!.attachToRecyclerView(positionsRecyclerView)
+    }
+
+    fun onEditPosition(position: Position) {
+        // TODO: go to Edit Position Activity
+        Log.wtf("Reiki", "Should go to Edit Position Activity")
+    }
+
+    fun onDeletePosition(position: Position) {
+        viewModel.deletePosition(reikiId, position.id)
+    }
+
+    fun onDragPosition(viewHolder: RecyclerView.ViewHolder) {
+        itemTouchHelper?.startDrag(viewHolder)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+
+        if(mode == Mode.VIEW) {
+            menu.findItem(R.id.action_edit).setVisible(true)
+            menu.findItem(R.id.action_done).setVisible(false)
+        } else {
+            menu.findItem(R.id.action_edit).setVisible(false)
+            menu.findItem(R.id.action_done).setVisible(true)
+        }
+
+        menu.findItem(R.id.action_logout).setVisible(false)
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+
+            R.id.action_edit -> {
+                mode = Mode.EDIT
+                invalidateOptionsMenu()
+                changeToEditUI()
+                true
+            }
+            R.id.action_done -> {
+                mode = Mode.VIEW
+                invalidateOptionsMenu()
+                reorderPositions()
+                changeToViewUI()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    enum class Mode {
+        VIEW, EDIT
     }
 }

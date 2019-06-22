@@ -52,19 +52,16 @@
             android:gravity="center_vertical|start"
             android:maxLines="4"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/duration"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/lbl_position_seq_no"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/lbl_position_seq_no"
+            app:layout_constraintHorizontal_bias="1.0"
             tools:text="Solar Plexus"/>
 
     <TextView
             android:id="@+id/duration"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
             android:drawableLeft="@drawable/ic_alarm_black_24dp"
             android:drawableStart="@drawable/ic_alarm_black_24dp"
             android:drawablePadding="8dp"
@@ -74,7 +71,47 @@
             android:textColor="@color/colorGray"
             android:fontFamily="sans-serif"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/title"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/imv_edit" android:layout_marginRight="8dp"/>
+
+    <ImageView
+            android:id="@+id/imv_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_edit"
+            android:tint="@color/colorTextLight"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imv_delete" />
+
+    <ImageView
+            android:id="@+id/imv_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_delete"
+            android:tint="@color/colorTextLight"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imv_drag_handle" />
+
+    <ImageView
+            android:id="@+id/imv_drag_handle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center_horizontal|start"
+            app:srcCompat="@drawable/ic_drag_handle"
+            android:tint="@color/colorSecondaryDark"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:padding="@dimen/dp_16"/>
 
 </android.support.constraint.ConstraintLayout>

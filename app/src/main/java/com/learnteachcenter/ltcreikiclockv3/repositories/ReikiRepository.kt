@@ -9,6 +9,7 @@ import com.learnteachcenter.ltcreikiclockv3.database.ReikiDao
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil
 import com.learnteachcenter.ltcreikiclockv3.api.ReikiApi
 import com.learnteachcenter.ltcreikiclockv3.api.responses.ApiResponse
+import com.learnteachcenter.ltcreikiclockv3.api.responses.DeletePositionResponse
 import com.learnteachcenter.ltcreikiclockv3.api.responses.ReikisResponse
 import com.learnteachcenter.ltcreikiclockv3.api.responses.DeleteReikiResponse
 import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
@@ -105,8 +106,34 @@ object ReikiRepository {
         InsertAsyncTask(reikiDao, position).execute()
     }
 
+    fun deletePosition(positionId: String, reikiId: String) {
+        // Delete in local database
+        DeletePositionAsyncTask(reikiDao, positionId, reikiId).execute()
+
+        // Delete on remote database
+        val call: Call<DeletePositionResponse> = reikiApi.deletePosition(reikiId, positionId)
+
+        call.enqueue(object: Callback<DeletePositionResponse> {
+            override fun onFailure(call: Call<DeletePositionResponse>, t: Throwable) {
+                Log.wtf("Reiki", "Delete error: ${t.message}")
+            }
+
+            override fun onResponse(call: Call<DeletePositionResponse>, response: Response<DeletePositionResponse>) {
+                val deleteResponse: DeletePositionResponse? = response.body()
+
+                if(deleteResponse != null) {
+                    Log.wtf("Reiki", "Delete success")
+                } else {
+                    val jObjError = JSONObject(response.errorBody()!!.string())
+                    Log.wtf("Reiki", jObjError.toString())
+                }
+            }
+        })
+    }
+
     private class InsertAsyncTask internal constructor(private val dao: ReikiDao, private val position: Position) : AsyncTask<Position, Void, Void>() {
         override fun doInBackground(vararg params: Position): Void? {
+
             dao.insertPosition(position)
             return null
         }
@@ -122,6 +149,29 @@ object ReikiRepository {
     private class DeleteReikiAsyncTask internal constructor(private val dao: ReikiDao, private val reikiId: String) : AsyncTask<String, Void, Void> () {
         override fun doInBackground(vararg params: String?): Void? {
             dao.deleteReiki(reikiId)
+            return null
+        }
+    }
+
+    private class DeletePositionAsyncTask internal constructor(
+        private val dao: ReikiDao,
+        private val positionId: String,
+        private val reikiId: String) : AsyncTask<String, Void, Void> () {
+
+        override fun doInBackground(vararg params: String?): Void? {
+            dao.deletePosition(positionId, reikiId)
+            return null
+        }
+    }
+
+    fun updatePositions(vararg positions: Position) {
+        UpdatePositionsAsyncTask().execute(*positions)
+    }
+
+    private class UpdatePositionsAsyncTask : AsyncTask<Position, Void, Void> () {
+        override fun doInBackground(vararg positions: Position): Void? {
+            val count: Int = reikiDao.updatePositions(*positions)
+            Log.wtf("Reiki", "***[ReikiRepository]*** count $count")
             return null
         }
     }

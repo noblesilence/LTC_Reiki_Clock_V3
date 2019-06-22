@@ -50,4 +50,8 @@ class ReikiSessionViewModel (private val reikiId: String) : ViewModel() {
 
         reikiSession.stop()
     }
+
+    fun deletePosition(reikiId: String, positionId: String) {
+        repository.deletePosition(reikiId, positionId)
+    }
 }
