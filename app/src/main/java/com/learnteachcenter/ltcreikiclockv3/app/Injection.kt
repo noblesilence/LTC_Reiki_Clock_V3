@@ -11,13 +11,13 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import com.google.gson.GsonBuilder
 import com.learnteachcenter.ltcreikiclockv3.database.AuthenticationPrefs
+import com.learnteachcenter.ltcreikiclockv3.repositories.ReikiRepositoryImpl
 import com.learnteachcenter.ltcreikiclockv3.util.LiveDataCallAdapterFactory
 
 
 object Injection {
 
-    fun provideReikiRepository(): ReikiRepository =
-        ReikiRepository
+    fun provideReikiRepository(): ReikiRepository = ReikiRepositoryImpl
 
     fun provideReikiDao(): ReikiDao = ReikiApplication.database.reikiDao()
 
