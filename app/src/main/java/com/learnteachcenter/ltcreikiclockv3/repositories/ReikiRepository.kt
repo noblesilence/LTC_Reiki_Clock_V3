@@ -33,6 +33,7 @@ object ReikiRepository {
     private val reikiApi: ReikiApi = Injection.provideReikiApi()
     private val appExecutors: AppExecutors = Injection.provideAppExecutors()
 
+    // Get all Reikis
     fun getReikis(): LiveData<Resource<List<Reiki>>> {
         return object : NetworkBoundResource<List<Reiki>, ReikisResponse>(appExecutors) {
             override fun saveNetworkCallResult(response: ReikisResponse) {
@@ -63,14 +64,37 @@ object ReikiRepository {
         }.asLiveData()
     }
 
+    // Get one Reiki from the database
     fun getReiki(reikiId: String): LiveData<ReikiAndAllPositions> {
         return reikiDao.getReiki(reikiId)
     }
 
-    fun deleteAllReikis() {
-        DeleteAsyncTask(reikiDao).execute()
+    // Update the list of Reikis (from reordering operation)
+    fun updateReikis(vararg reikis: Reiki) {
+        UpdateReikisAsyncTask().execute(*reikis)
     }
 
+    private class UpdateReikisAsyncTask : AsyncTask<Reiki, Void, Void> () {
+        override fun doInBackground(vararg reikis: Reiki): Void? {
+            val count : Int = reikiDao.updateReikis(*reikis)
+            return null
+        }
+    }
+
+    // Delete all Reikis
+    fun deleteAllReikis() {
+        DeleteAllReikisAsyncTask(reikiDao).execute()
+    }
+
+    private class DeleteAllReikisAsyncTask internal constructor(private val dao: ReikiDao)
+        : AsyncTask<Void, Void, Void>() {
+        override fun doInBackground(vararg params: Void?): Void? {
+            dao.deleteAllReikis()
+            return null
+        }
+    }
+
+    // Delete one Reiki in local and remote databases
     fun deleteReiki(reikiId: String) {
         // Delete in local database
         DeleteReikiAsyncTask(reikiDao, reikiId).execute()
@@ -98,18 +122,37 @@ object ReikiRepository {
         })
     }
 
-    fun updateReikis(vararg reikis: Reiki) {
-        val i: Int = reikiDao.updateReikis(*reikis)
+    private class DeleteReikiAsyncTask internal constructor(private val dao: ReikiDao, private val reikiId: String)
+        : AsyncTask<String, Void, Void> () {
+        override fun doInBackground(vararg params: String?): Void? {
+            dao.deleteReiki(reikiId)
+            return null
+        }
     }
 
+    /*
+    * Positions
+    * */
+
+    // Insert 1 Position
     fun insertPosition(position: Position) {
-        InsertAsyncTask(reikiDao, position).execute()
+        InsertPositionAsyncTask(reikiDao, position).execute()
     }
 
+    private class InsertPositionAsyncTask internal constructor(private val dao: ReikiDao, private val position: Position)
+        : AsyncTask<Position, Void, Void>() {
+        override fun doInBackground(vararg params: Position): Void? {
+            dao.insertPosition(position)
+            return null
+        }
+    }
+
+    // Update 1 Position
     fun updatePosition(position: Position) {
         UpdatePositionAsyncTask().execute(position)
     }
 
+    // Update 1 Position async task
     private class UpdatePositionAsyncTask : AsyncTask<Position, Void, Void> () {
         override fun doInBackground(vararg position: Position): Void? {
             val count: Int = reikiDao.updatePosition(position[0])
@@ -117,6 +160,19 @@ object ReikiRepository {
         }
     }
 
+    // Update a list of Positions (reorder operation)
+    fun updatePositions(vararg positions: Position) {
+        UpdatePositionsAsyncTask().execute(*positions)
+    }
+
+    private class UpdatePositionsAsyncTask : AsyncTask<Position, Void, Void> () {
+        override fun doInBackground(vararg positions: Position): Void? {
+            val count: Int = reikiDao.updatePositions(*positions)
+            return null
+        }
+    }
+
+    // Delete 1 Position (local and remote)
     fun deletePosition(reikiId: String, positionId: String) {
         // Delete in local database
         DeletePositionAsyncTask(reikiDao, reikiId, positionId).execute()
@@ -142,50 +198,15 @@ object ReikiRepository {
         })
     }
 
-    private class InsertAsyncTask internal constructor(private val dao: ReikiDao, private val position: Position)
-        : AsyncTask<Position, Void, Void>() {
-        override fun doInBackground(vararg params: Position): Void? {
-            dao.insertPosition(position)
-            return null
-        }
-    }
-
-    private class DeleteAsyncTask internal constructor(private val dao: ReikiDao)
-        : AsyncTask<Void, Void, Void>() {
-        override fun doInBackground(vararg params: Void?): Void? {
-            dao.deleteAllReikis()
-            return null
-        }
-    }
-
-    private class DeleteReikiAsyncTask internal constructor(private val dao: ReikiDao, private val reikiId: String)
-        : AsyncTask<String, Void, Void> () {
-        override fun doInBackground(vararg params: String?): Void? {
-            dao.deleteReiki(reikiId)
-            return null
-        }
-    }
-
     private class DeletePositionAsyncTask internal constructor(
         private val dao: ReikiDao,
         private val reikiId: String,
         private val positionId: String
-        ) : AsyncTask<String, Void, Void> () {
+    ) : AsyncTask<String, Void, Void> () {
 
         override fun doInBackground(vararg params: String?): Void? {
             val deletedCount: Int = dao.deletePosition(reikiId, positionId)
             Log.d("Reiki", "[ReikiRepository] Deleted count is ${deletedCount}")
-            return null
-        }
-    }
-
-    fun updatePositions(vararg positions: Position) {
-        UpdatePositionsAsyncTask().execute(*positions)
-    }
-
-    private class UpdatePositionsAsyncTask : AsyncTask<Position, Void, Void> () {
-        override fun doInBackground(vararg positions: Position): Void? {
-            val count: Int = reikiDao.updatePositions(*positions)
             return null
         }
     }
