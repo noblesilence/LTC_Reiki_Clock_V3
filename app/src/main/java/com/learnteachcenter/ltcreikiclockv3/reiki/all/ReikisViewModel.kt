@@ -12,12 +12,14 @@ class ReikisViewModel (val repository: ReikiRepository = Injection.provideReikiR
 
     var reikis: LiveData<Resource<List<Reiki>>> = repository.getReikis()
 
+    // TODO Refactor: move this to repository class
     // Update Reikis
     fun updateReikis(vararg reikis: Reiki) {
         val updateReikisTask = UpdateReikisTask(repository)
         updateReikisTask.execute(*reikis)
     }
 
+    // TODO Refactor: move this to repository class
     private class UpdateReikisTask internal constructor(private val repository: ReikiRepository)
         : AsyncTask<Reiki, Void, Void>() {
         override fun doInBackground(vararg reikis: Reiki): Void? {

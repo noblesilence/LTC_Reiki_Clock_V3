@@ -39,7 +39,6 @@ import java.util.*
 
 // https://stackoverflow.com/questions/38340358/how-to-enable-and-disable-drag-and-drop-on-a-recyclerview
 
-
 class AllReikisActivity : AppCompatActivity() {
 
     private val TAG = "Reiki"
@@ -161,9 +160,7 @@ class AllReikisActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
 
         val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback (
-            UP or
-                    DOWN or
-                    START or END,
+            UP or DOWN or START or END,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
             override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
@@ -282,8 +279,6 @@ class AllReikisActivity : AppCompatActivity() {
     }
 
     fun onDeleteReiki(reiki: Reiki) {
-        Log.wtf("Reiki", "Delete this Reiki: ${reiki.title}")
-
         viewModel.deleteReiki(reiki.id)
     }
 

@@ -3,6 +3,9 @@ package com.learnteachcenter.ltcreikiclockv3.reiki.session
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.graphics.Canvas
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -13,6 +16,7 @@ import android.support.v7.widget.helper.ItemTouchHelper.*
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.api.responses.UpdatePositionsOrderResponse
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
@@ -23,6 +27,7 @@ import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.ReikiSess
 import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.ReikiSessionEvent.TIME_LEFT_CHANGED
 import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
 import com.learnteachcenter.ltcreikiclockv3.reiki.position.AddPositionActivity
+import com.learnteachcenter.ltcreikiclockv3.reiki.position.EditPositionActivity
 import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil
 import kotlinx.android.synthetic.main.activity_all_positions.*
@@ -41,6 +46,9 @@ class ReikiSessionActivity : AppCompatActivity() {
 
     private var itemTouchHelper: ItemTouchHelper? = null
 
+    private lateinit var swipeBackground: ColorDrawable
+    private lateinit var deleteIcon: Drawable
+
     private val reikiApi = Injection.provideReikiApi()
     private val reikiDao = Injection.provideReikiDao()
     private val repository = Injection.provideReikiRepository()
@@ -57,9 +65,6 @@ class ReikiSessionActivity : AppCompatActivity() {
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-        Log.wtf(TAG, "\n[ReikiSessionActivity] onCreate")
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_positions)
         setSupportActionBar(toolbar)
@@ -67,15 +72,15 @@ class ReikiSessionActivity : AppCompatActivity() {
         val i = intent
 
         if(i.hasExtra(IntentExtraNames.EXTRA_REIKI_ID)) {
-
-            Log.wtf(TAG, "[ReikiSessionActivity] EXTRA REIKI ID")
-
             reikiId = i.getStringExtra(IntentExtraNames.EXTRA_REIKI_ID)
             reikiTitle = i.getStringExtra(IntentExtraNames.EXTRA_REIKI_TITLE)
 
             supportActionBar?.title = reikiTitle
 
             viewModel = ViewModelProviders.of(this, ReikiSessionViewModelFactory(reikiId)).get(ReikiSessionViewModel::class.java)
+
+            swipeBackground = ColorDrawable(resources.getColor(R.color.colorSwipeBackground))
+            deleteIcon = ContextCompat.getDrawable(this, R.drawable.ic_delete)!!
 
             initRecyclerView()
             subscribeToReikiAndAllPositions()
@@ -85,8 +90,6 @@ class ReikiSessionActivity : AppCompatActivity() {
     private fun initRecyclerView() {
         positionsRecyclerView.layoutManager = LinearLayoutManager(this)
         positionsRecyclerView.adapter = adapter
-
-        Log.wtf(TAG, "initRecyclerView")
     }
 
     private fun subscribeToReikiAndAllPositions() {
@@ -94,17 +97,13 @@ class ReikiSessionActivity : AppCompatActivity() {
             // Sort the Positions by seq no
             val sortedPositions = it?.positions!!.sortedWith(compareBy({ it.seqNo }))
             adapter.setPositions(sortedPositions)
-            viewModel.initSession(it!!)
+            viewModel.initSession(it)
             subscribeToReikiSession()
             setUpListeners()
-
-            Log.wtf(TAG, "subscribeToReikiAndAllPositions")
         })
     }
 
     private fun subscribeToReikiSession() {
-
-        Log.wtf(TAG, "[ReikiSessionActivity] subscribeToReikiSession()")
 
         val reikiSession: ReikiSession? = viewModel.getReikiSession()
 
@@ -292,6 +291,9 @@ class ReikiSessionActivity : AppCompatActivity() {
                 }
             }
         })
+
+        adapter.updateViewMode(Mode.VIEW)
+        adapter.notifyDataSetChanged()
     }
 
     private fun changeToViewUI() {
@@ -306,8 +308,8 @@ class ReikiSessionActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
 
         val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback (
-            UP or DOWN,
-            0) {
+            UP or DOWN or START or END,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
             override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
                 super.onSelectedChanged(viewHolder, actionState)
@@ -335,22 +337,77 @@ class ReikiSessionActivity : AppCompatActivity() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
                 (adapter as PositionsAdapter).removeItem(viewHolder)
             }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                val itemView = viewHolder.itemView
+
+                val iconMargin = (itemView.height - deleteIcon.intrinsicHeight) / 2
+
+                if(dX > 0) {
+                    swipeBackground.setBounds(itemView.left, itemView.top, dX.toInt(), itemView.bottom)
+                    deleteIcon.setBounds(
+                        itemView.left + iconMargin,
+                        itemView.top + iconMargin,
+                        itemView.left + iconMargin + deleteIcon.intrinsicWidth,
+                        itemView.bottom - iconMargin )
+                } else {
+                    swipeBackground.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                    deleteIcon.setBounds(
+                        itemView.right - iconMargin - deleteIcon.intrinsicWidth,
+                        itemView.top + iconMargin,
+                        itemView.right - iconMargin,
+                        itemView.bottom - iconMargin )
+                }
+
+                c.save()
+
+                swipeBackground.draw(c)
+
+                if(dX > 0) {
+                    c.clipRect(itemView.left, itemView.top, dX.toInt(), itemView.bottom)
+                } else {
+                    c.clipRect(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                }
+
+                deleteIcon.draw(c)
+
+                c.restore()
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            }
         }
 
         itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
         itemTouchHelper!!.attachToRecyclerView(positionsRecyclerView)
     }
 
-    fun onEditPosition(position: Position) {
-        // TODO: go to Edit Position Activity
+    private fun onEditPosition(position: Position) {
         Log.wtf("Reiki", "Should go to Edit Position Activity")
+
+        val i = Intent(this, EditPositionActivity::class.java)
+        i.putExtra(IntentExtraNames.EXTRA_POSITION_ID, position.id)
+        i.putExtra(IntentExtraNames.EXTRA_POSITION_SEQ_NO, position.seqNo)
+        i.putExtra(IntentExtraNames.EXTRA_REIKI_ID, position.reikiId)
+        i.putExtra(IntentExtraNames.EXTRA_POSITION_TITLE, position.title)
+        i.putExtra(IntentExtraNames.EXTRA_POSITION_DURATION, position.duration)
+
+        startActivity(i)
     }
 
     fun onDeletePosition(position: Position) {
+        Log.wtf("Reiki", "[ReikiSessionActivity] (onDeletePosition) Should delete")
         viewModel.deletePosition(reikiId, position.id)
     }
 
-    fun onDragPosition(viewHolder: RecyclerView.ViewHolder) {
+    private fun onDragPosition(viewHolder: RecyclerView.ViewHolder) {
         itemTouchHelper?.startDrag(viewHolder)
     }
 

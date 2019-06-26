@@ -77,6 +77,7 @@ class EditReikiActivity : AppCompatActivity() {
 
                                 val i = Intent(this@EditReikiActivity, AllReikisActivity::class.java)
                                 startActivity(i)
+                                // TODO: add finish()?
                             } else {
                                 val jObjError = JSONObject(response.errorBody()!!.string())
                                 displayMessage(jObjError.toString())

@@ -2,7 +2,6 @@ package com.learnteachcenter.ltcreikiclockv3.reiki.session
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
-import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.repositories.ReikiRepository
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 
@@ -35,19 +34,14 @@ class ReikiSessionViewModel (private val reikiId: String) : ViewModel() {
     }
 
     fun pauseSession() {
-        Log.d("Reiki", "Pause Reiki session")
-
         reikiSession.pause()
     }
 
     fun resumeSession() {
-
         reikiSession.resume()
     }
 
     fun stopSession() {
-        Log.d("Reiki", "Stop Reiki session")
-
         reikiSession.stop()
     }
 

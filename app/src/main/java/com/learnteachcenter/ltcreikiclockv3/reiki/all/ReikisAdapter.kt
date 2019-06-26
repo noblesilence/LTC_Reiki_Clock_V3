@@ -23,7 +23,7 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
 ) : RecyclerView.Adapter<ReikisAdapter.ViewHolder>(){
 
     private lateinit var removedItem: Reiki
-    private var removedPosition: Int = 0 // TODO: change this to -1
+    private var removedPosition: Int = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val viewHolder = ViewHolder(parent.inflate(R.layout.list_item_reiki))
@@ -135,6 +135,7 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
                 // Edit
                 itemView.imv_edit.setOnClickListener {
                     editListener(reiki)
+                    Log.wtf("Reiki", "Should edit Reiki")
                 }
 
                 // remove the item onclick listener

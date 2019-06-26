@@ -2,6 +2,7 @@ package com.learnteachcenter.ltcreikiclockv3.reiki.session
 
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -22,11 +23,12 @@ class PositionsAdapter (private val positions: MutableList<Position>,
     private var removedPosition: Int = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+
         val viewHolder = ViewHolder(parent.inflate(R.layout.list_item_position))
 
         if(mode == ReikiSessionActivity.Mode.EDIT) {
             viewHolder.itemView.imv_drag_handle.setOnTouchListener {
-                view, event ->
+                _, event ->
 
                 if(event.actionMasked == MotionEvent.ACTION_DOWN) {
                     dragListener(viewHolder)
@@ -48,7 +50,13 @@ class PositionsAdapter (private val positions: MutableList<Position>,
     override fun getItemCount(): Int = positions.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(positions[position], editListener, dragListener, mode)
+        holder.bind(
+            positions[position],
+            editListener,
+            deleteListener,
+            dragListener,
+            mode
+        )
     }
 
     fun setPositions(positions: List<Position>?) {
@@ -102,6 +110,7 @@ class PositionsAdapter (private val positions: MutableList<Position>,
 
         fun bind(position: Position,
                  editListener: (Position) -> Unit,
+                 deleteListener: (Position) -> Unit,
                  dragListener: (RecyclerView.ViewHolder) -> Unit,
                  mode: ReikiSessionActivity.Mode) {
 
@@ -111,11 +120,17 @@ class PositionsAdapter (private val positions: MutableList<Position>,
             itemView.duration.text = position.duration
 
             if(mode == ReikiSessionActivity.Mode.VIEW) {
+                itemView.duration.visibility = View.VISIBLE // TODO: remove after debug
+
                 itemView.imv_drag_handle.visibility = View.GONE
+
                 itemView.imv_edit.visibility = View.GONE
                 itemView.imv_edit.setOnClickListener(null)
             } else {
+                itemView.duration.visibility = View.GONE // TODO: remove after debug
+
                 itemView.imv_drag_handle.visibility = View.VISIBLE
+
                 itemView.imv_edit.visibility = View.VISIBLE
                 itemView.imv_edit.setOnClickListener {
                     editListener(position)

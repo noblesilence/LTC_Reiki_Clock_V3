@@ -92,6 +92,15 @@ interface ReikiApi {
         @Field("duration") duration: String
     ): Call<AddPositionResponse>
 
+    @FormUrlEncoded
+    @PUT("reikis/{id}/positions/{position_id}")
+    fun updatePosition(
+        @Path("id") reikiId: String,
+        @Path("position_id") positionId: String,
+        @Field("title") title: String,
+        @Field("duration") duration: String
+    ): Call<UpdatePositionResponse>
+
     @DELETE("reikis/position/{id}/{position_id}")
     fun deletePosition(
         @Path("id") reikiId: String,

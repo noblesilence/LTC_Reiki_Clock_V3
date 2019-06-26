@@ -5,5 +5,5 @@ import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
 
 data class DeletePositionResponse (
     @Expose
-    val positions: List<Position> = listOf()
+    val success: Boolean = false
 )
