@@ -33,6 +33,18 @@ object ReikiRepositoryImpl: ReikiRepository {
     private val reikiApi: ReikiApi = Injection.provideReikiApi()
     private val appExecutors: AppExecutors = Injection.provideAppExecutors()
 
+    // Insert 1 Reiki
+    override fun addReiki(reiki: Reiki) {
+        InsertReikiAsyncTask().execute(reiki)
+    }
+
+    private class InsertReikiAsyncTask : AsyncTask<Reiki, Void, Void>() {
+        override fun doInBackground(vararg reikis: Reiki): Void? {
+            reikiDao.insertReiki(reikis[0])
+            return null
+        }
+    }
+
     // Get all Reikis
     override fun getReikis(): LiveData<Resource<List<Reiki>>> {
         return object : NetworkBoundResource<List<Reiki>, ReikisResponse>(appExecutors) {

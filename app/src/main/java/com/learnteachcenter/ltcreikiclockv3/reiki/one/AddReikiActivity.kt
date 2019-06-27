@@ -3,10 +3,12 @@ package com.learnteachcenter.ltcreikiclockv3.reiki.one
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.api.responses.AddReikiResponse
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
+import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiGenerator
 import com.learnteachcenter.ltcreikiclockv3.reiki.all.AllReikisActivity
 import kotlinx.android.synthetic.main.activity_add_reiki.*
 import org.json.JSONObject
@@ -17,6 +19,8 @@ import retrofit2.Response
 class AddReikiActivity : AppCompatActivity() {
 
     private var reikiApi = Injection.provideReikiApi()
+    private var repository = Injection.provideReikiRepository()
+    private var generator = ReikiGenerator()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,12 +51,15 @@ class AddReikiActivity : AppCompatActivity() {
                     override fun onResponse(call: Call<AddReikiResponse>, response: Response<AddReikiResponse>) {
                         val addResponse: AddReikiResponse? = response.body()
 
+                        Log.wtf("Reiki", "[AddReikiActivity] addResponse: ${addResponse}")
+
                         if(addResponse != null) {
                             if(addResponse.id != "") {
+                                val reiki = generator.generateReiki(addResponse.id, addResponse.seqNo, addResponse.title, addResponse.description, addResponse.playMusic, addResponse.positions)
+                                // ID got back from the remote database. Add the Reiki to local database
+                                repository.addReiki(reiki)
                                 displayMessage("Add Success")
-
-                                val i = Intent(this@AddReikiActivity, AllReikisActivity::class.java)
-                                startActivity(i)
+                                finish()
                             }
                         } else {
                             val jObjError = JSONObject(response.errorBody()!!.string())

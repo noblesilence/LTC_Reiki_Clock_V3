@@ -74,10 +74,7 @@ class EditReikiActivity : AppCompatActivity() {
                         if(updateResponse != null) {
                             if(updateResponse.success) {
                                 displayMessage("Update Success!")
-
-                                val i = Intent(this@EditReikiActivity, AllReikisActivity::class.java)
-                                startActivity(i)
-                                // TODO: add finish()?
+                                finish()
                             } else {
                                 val jObjError = JSONObject(response.errorBody()!!.string())
                                 displayMessage(jObjError.toString())

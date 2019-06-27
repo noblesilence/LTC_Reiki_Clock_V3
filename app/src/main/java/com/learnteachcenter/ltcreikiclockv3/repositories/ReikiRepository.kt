@@ -24,6 +24,7 @@ import retrofit2.Response
 
 interface ReikiRepository {
 
+    fun addReiki(reiki: Reiki)
     fun getReikis(): LiveData<Resource<List<Reiki>>>
     fun getReiki(reikiId: String): LiveData<ReikiAndAllPositions>   // Get one Reiki from the database
     fun updateReikis(vararg reikis: Reiki) // Update the list of Reikis (from reordering operation)
