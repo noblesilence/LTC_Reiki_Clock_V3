@@ -13,8 +13,8 @@
 
     <ImageButton
             android:id="@+id/icon_play_pause"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:background="?attr/selectableItemBackground"
@@ -58,22 +58,34 @@
             app:layout_constraintHorizontal_bias="1.0"
             tools:text="Solar Plexus"/>
 
+    <ImageButton
+            android:id="@+id/imv_alarm"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="@dimen/dp_8"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:background="@drawable/ic_alarm_black_24dp"
+            android:padding="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/duration"
+            app:layout_constraintTop_toTopOf="parent"/>
+
     <TextView
             android:id="@+id/duration"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:drawableLeft="@drawable/ic_alarm_black_24dp"
-            android:drawableStart="@drawable/ic_alarm_black_24dp"
-            android:drawablePadding="8dp"
             android:gravity="center_vertical|end"
             android:text="@string/position_duration"
             android:textSize="16sp"
             android:textColor="@color/colorGray"
             android:fontFamily="sans-serif"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/title"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/imv_edit" android:layout_marginRight="8dp"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imv_edit"/>
 
     <ImageView
             android:id="@+id/imv_edit"
@@ -86,7 +98,8 @@
             android:layout_marginRight="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imv_drag_handle" />
+            app:layout_constraintEnd_toStartOf="@+id/imv_drag_handle"
+            />
 
     <ImageView
             android:id="@+id/imv_drag_handle"
@@ -99,6 +112,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:padding="@dimen/dp_16"/>
+            android:padding="@dimen/dp_16"
+            />
 
 </android.support.constraint.ConstraintLayout>

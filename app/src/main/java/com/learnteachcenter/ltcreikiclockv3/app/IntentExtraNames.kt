@@ -3,6 +3,7 @@ package com.learnteachcenter.ltcreikiclockv3.app
 object IntentExtraNames {
     val NEW_REIKI_SEQNO = "NEW_REIKI_SEQNO"
     val EXTRA_REIKI_ID = "EXTRA_REIKI_ID"
+    val EXTRA_REIKI_SEQ_NO = "EXTRA_REIKI_SEQ_NO"
     val EXTRA_REIKI_TITLE = "EXTRA_REIKI_TITLE"
     val EXTRA_REIKI_DESCRIPTION = "EXTRA_REIKI_DESCRIPTION"
     val EXTRA_REIKI_PLAY_MUSIC = "EXTRA_REIKI_PLAY_MUSIC"

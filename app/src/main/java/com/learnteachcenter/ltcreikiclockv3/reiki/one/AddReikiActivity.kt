@@ -26,7 +26,6 @@ class AddReikiActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_reiki)
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         title = "Add Reiki"
 
         // On Save click

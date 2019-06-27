@@ -33,6 +33,10 @@ object ReikiRepositoryImpl: ReikiRepository {
     private val reikiApi: ReikiApi = Injection.provideReikiApi()
     private val appExecutors: AppExecutors = Injection.provideAppExecutors()
 
+    /*
+    * Reiki CRUD
+    * */
+
     // Insert 1 Reiki
     override fun addReiki(reiki: Reiki) {
         InsertReikiAsyncTask().execute(reiki)
@@ -143,7 +147,7 @@ object ReikiRepositoryImpl: ReikiRepository {
     }
 
     /*
-    * Positions
+    * Positions CRUD
     * */
 
     // Insert 1 Position

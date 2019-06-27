@@ -1,6 +1,5 @@
 package com.learnteachcenter.ltcreikiclockv3.reiki.edit
 
-import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -8,7 +7,7 @@ import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.api.responses.UpdateReikiResponse
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
-import com.learnteachcenter.ltcreikiclockv3.reiki.all.AllReikisActivity
+import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiGenerator
 import kotlinx.android.synthetic.main.activity_edit_reiki.*
 import org.json.JSONObject
 import retrofit2.Call
@@ -18,11 +17,14 @@ import retrofit2.Response
 class EditReikiActivity : AppCompatActivity() {
 
     private var id: String = ""
+    private var seqNo: Int = 0
     private var title: String = ""
     private var description: String = ""
     private var playMusic: Boolean = false
 
     private var reikiApi = Injection.provideReikiApi()
+    private var repository = Injection.provideReikiRepository()
+    private var generator = ReikiGenerator()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +34,10 @@ class EditReikiActivity : AppCompatActivity() {
 
         if(i.hasExtra(IntentExtraNames.EXTRA_REIKI_ID)) {
             id = i.getStringExtra(IntentExtraNames.EXTRA_REIKI_ID)
+        }
+
+        if(i.hasExtra(IntentExtraNames.EXTRA_REIKI_SEQ_NO)) {
+            seqNo = i.getIntExtra(IntentExtraNames.EXTRA_REIKI_SEQ_NO, 0)
         }
 
         if(i.hasExtra(IntentExtraNames.EXTRA_REIKI_TITLE)) {
@@ -58,6 +64,13 @@ class EditReikiActivity : AppCompatActivity() {
                 val title = et_title.text.toString().trim()
                 val description = et_description.text.toString().trim()
                 val playMusic = ckb_play_music.isChecked
+
+                val reiki = generator.generateReiki(id, seqNo, title, description, playMusic)
+
+                // Update in local database
+                repository.updateReikis(reiki)
+
+                // Update in remote database
 
                 val call: Call<UpdateReikiResponse> = reikiApi.updateReiki(id, title, description, playMusic)
 

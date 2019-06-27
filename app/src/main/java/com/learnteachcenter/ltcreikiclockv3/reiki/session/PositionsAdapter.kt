@@ -120,17 +120,18 @@ class PositionsAdapter (private val positions: MutableList<Position>,
             itemView.duration.text = position.duration
 
             if(mode == ReikiSessionActivity.Mode.VIEW) {
-                itemView.duration.visibility = View.VISIBLE // TODO: remove after debug
+                itemView.imv_alarm.visibility = View.VISIBLE
+                itemView.icon_play_pause.visibility = View.VISIBLE
 
                 itemView.imv_drag_handle.visibility = View.GONE
-
                 itemView.imv_edit.visibility = View.GONE
                 itemView.imv_edit.setOnClickListener(null)
             } else {
-                itemView.duration.visibility = View.GONE // TODO: remove after debug
+
+                itemView.imv_alarm.visibility = View.GONE
+                itemView.icon_play_pause.visibility = View.GONE
 
                 itemView.imv_drag_handle.visibility = View.VISIBLE
-
                 itemView.imv_edit.visibility = View.VISIBLE
                 itemView.imv_edit.setOnClickListener {
                     editListener(position)

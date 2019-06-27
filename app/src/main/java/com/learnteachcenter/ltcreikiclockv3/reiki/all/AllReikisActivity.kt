@@ -271,6 +271,7 @@ class AllReikisActivity : AppCompatActivity() {
     fun onEditReiki(reiki: Reiki) {
         val i = Intent(this, EditReikiActivity::class.java)
         i.putExtra(IntentExtraNames.EXTRA_REIKI_ID, reiki.id)
+        i.putExtra(IntentExtraNames.EXTRA_REIKI_SEQ_NO, reiki.seqNo)
         i.putExtra(IntentExtraNames.EXTRA_REIKI_TITLE, reiki.title)
         i.putExtra(IntentExtraNames.EXTRA_REIKI_DESCRIPTION, reiki.description)
         i.putExtra(IntentExtraNames.EXTRA_REIKI_PLAY_MUSIC, reiki.playMusic)
