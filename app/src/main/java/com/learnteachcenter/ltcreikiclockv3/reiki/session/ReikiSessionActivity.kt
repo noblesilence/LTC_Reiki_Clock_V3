@@ -16,9 +16,8 @@ import android.support.v7.widget.helper.ItemTouchHelper.*
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import com.learnteachcenter.ltcreikiclockv3.R
-import com.learnteachcenter.ltcreikiclockv3.api.responses.UpdatePositionsOrderResponse
+import com.learnteachcenter.ltcreikiclockv3.api.responses.Position.UpdatePositionsOrderResponse
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.State
 import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.ReikiSessionEvent.NONE

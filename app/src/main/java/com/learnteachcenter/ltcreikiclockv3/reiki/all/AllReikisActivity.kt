@@ -18,7 +18,7 @@ import android.view.MenuItem
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import com.learnteachcenter.ltcreikiclockv3.R
-import com.learnteachcenter.ltcreikiclockv3.api.responses.UpdateReikisOrderResponse
+import com.learnteachcenter.ltcreikiclockv3.api.responses.Reiki.UpdateReikisOrderResponse
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.database.AuthenticationPrefs
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil

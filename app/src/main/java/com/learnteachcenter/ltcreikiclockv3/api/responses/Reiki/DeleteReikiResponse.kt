@@ -1,4 +1,4 @@
-package com.learnteachcenter.ltcreikiclockv3.api.responses
+package com.learnteachcenter.ltcreikiclockv3.api.responses.Reiki
 
 import com.google.gson.annotations.Expose
 

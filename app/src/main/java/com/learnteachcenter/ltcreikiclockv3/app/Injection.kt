@@ -35,7 +35,7 @@ object Injection {
         val gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
 
         return Retrofit.Builder()
-            .baseUrl(BuildConfig.URL)
+            .baseUrl(BuildConfig.SERVER_URL)
             .client(provideOkHttpClient())
             .addCallAdapterFactory(LiveDataCallAdapterFactory())
             .addConverterFactory(GsonConverterFactory.create(gson))

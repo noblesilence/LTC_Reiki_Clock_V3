@@ -1,17 +1,15 @@
 package com.learnteachcenter.ltcreikiclockv3.reiki.position
 
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.learnteachcenter.ltcreikiclockv3.R
-import com.learnteachcenter.ltcreikiclockv3.api.responses.UpdatePositionResponse
+import com.learnteachcenter.ltcreikiclockv3.api.responses.Position.UpdatePositionResponse
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
 import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiGenerator
-import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSessionActivity
 import kotlinx.android.synthetic.main.activity_edit_position.*
 import org.json.JSONObject
 import retrofit2.Call

@@ -1,15 +1,13 @@
 package com.learnteachcenter.ltcreikiclockv3.reiki.one
 
-import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.learnteachcenter.ltcreikiclockv3.R
-import com.learnteachcenter.ltcreikiclockv3.api.responses.AddReikiResponse
+import com.learnteachcenter.ltcreikiclockv3.api.responses.Reiki.AddReikiResponse
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiGenerator
-import com.learnteachcenter.ltcreikiclockv3.reiki.all.AllReikisActivity
 import kotlinx.android.synthetic.main.activity_add_reiki.*
 import org.json.JSONObject
 import retrofit2.Call

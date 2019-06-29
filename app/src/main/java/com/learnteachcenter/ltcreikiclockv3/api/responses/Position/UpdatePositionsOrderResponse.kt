@@ -1,8 +1,8 @@
-package com.learnteachcenter.ltcreikiclockv3.api.responses
+package com.learnteachcenter.ltcreikiclockv3.api.responses.Position
 
 import com.google.gson.annotations.Expose
 
-data class UpdateReikisOrderResponse (
+data class UpdatePositionsOrderResponse (
     @Expose val success: Boolean = false,
     @Expose val error: String? = ""
 )

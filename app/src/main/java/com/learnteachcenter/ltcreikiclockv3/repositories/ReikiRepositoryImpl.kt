@@ -5,9 +5,9 @@ import android.os.AsyncTask
 import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.api.ReikiApi
 import com.learnteachcenter.ltcreikiclockv3.api.responses.ApiResponse
-import com.learnteachcenter.ltcreikiclockv3.api.responses.DeletePositionResponse
-import com.learnteachcenter.ltcreikiclockv3.api.responses.DeleteReikiResponse
-import com.learnteachcenter.ltcreikiclockv3.api.responses.ReikisResponse
+import com.learnteachcenter.ltcreikiclockv3.api.responses.Position.DeletePositionResponse
+import com.learnteachcenter.ltcreikiclockv3.api.responses.Reiki.DeleteReikiResponse
+import com.learnteachcenter.ltcreikiclockv3.api.responses.Reiki.ReikisResponse
 import com.learnteachcenter.ltcreikiclockv3.app.AppExecutors
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.database.ReikiDao

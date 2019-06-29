@@ -2,6 +2,11 @@ package com.learnteachcenter.ltcreikiclockv3.api
 
 import android.arch.lifecycle.LiveData
 import com.learnteachcenter.ltcreikiclockv3.api.responses.*
+import com.learnteachcenter.ltcreikiclockv3.api.responses.Position.AddPositionResponse
+import com.learnteachcenter.ltcreikiclockv3.api.responses.Position.DeletePositionResponse
+import com.learnteachcenter.ltcreikiclockv3.api.responses.Position.UpdatePositionResponse
+import com.learnteachcenter.ltcreikiclockv3.api.responses.Position.UpdatePositionsOrderResponse
+import com.learnteachcenter.ltcreikiclockv3.api.responses.Reiki.*
 import com.learnteachcenter.ltcreikiclockv3.authentication.login.LoginResponse
 import com.learnteachcenter.ltcreikiclockv3.authentication.signup.SignUpResponse
 import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
