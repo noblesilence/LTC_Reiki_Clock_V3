@@ -3,6 +3,7 @@ package com.learnteachcenter.ltcreikiclockv3.reiki.positionlist
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -25,6 +26,7 @@ import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession.Reik
 import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession.ReikiSessionEvent.INDEX_CHANGED
 import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession.ReikiSessionEvent.TIME_LEFT_CHANGED
 import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
+import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
 import com.learnteachcenter.ltcreikiclockv3.reiki.position.AddPositionActivity
 import com.learnteachcenter.ltcreikiclockv3.reiki.position.EditPositionActivity
 import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
@@ -43,8 +45,7 @@ class PositionListActivity : AppCompatActivity() {
 
     private val TAG = "Reiki"
 
-    private var mode: Mode =
-        Mode.VIEW
+    private var mode: Mode = Mode.VIEW
 
     private var itemTouchHelper: ItemTouchHelper? = null
 
@@ -66,6 +67,17 @@ class PositionListActivity : AppCompatActivity() {
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        Log.wtf("Reiki", "onCreate")
+
+        if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            Log.wtf("Reiki", "Portrait")
+        } else {
+            if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                Log.wtf("Reiki", "Landscape")
+            }
+        }
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_positions)
         setSupportActionBar(toolbar)
@@ -135,6 +147,9 @@ class PositionListActivity : AppCompatActivity() {
                             unhighlightItem(previousIndex, previousDuration)
                         }
                         State.RUNNING -> {
+
+                            Log.wtf("Reiki", "State is running. Change to pause button.")
+
                             // Update Buttons
                             changeToPauseButton()
                             fab_add_position.alpha = 0F
@@ -175,6 +190,7 @@ class PositionListActivity : AppCompatActivity() {
                     val currentDuration = reikiSession.getTimeLeft()
 
                     highlightItem(currentIndex, currentDuration)
+                    updateButtons(reikiSession.getState()) // Need to add this to handle screen rotation
                 }
 
                 NONE -> {
@@ -182,6 +198,23 @@ class PositionListActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    private fun updateButtons(state: State) {
+        when(state) {
+            State.STOPPED -> {
+                changeToPlayButton()
+                fab_add_position.alpha = 1F
+            }
+            State.RUNNING -> {
+                changeToPauseButton()
+                fab_add_position.alpha = 0F
+            }
+            State.PAUSED -> {
+                changeToPlayButton()
+                fab_add_position.alpha = 0F
+            }
+        }
     }
 
     private fun setUpListeners() {
@@ -233,7 +266,7 @@ class PositionListActivity : AppCompatActivity() {
             holder.itemView.icon_play_pause.setImageDrawable(image)
             holder.itemView.duration.text = itemDuration
         } catch(exception: Exception) {
-            Log.wtf("Reiki", "[PositionListActivity] highlightItem -> Exception: $exception")
+            Log.wtf("Reiki", "[PositionListActivity] highlightItem ->  itemIndex: $itemIndex, itemDuration: $itemDuration. \nException: $exception.")
         }
     }
 
