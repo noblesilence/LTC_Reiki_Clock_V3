@@ -479,8 +479,17 @@ class PositionListActivity : AppCompatActivity() {
                 changeToViewUI()
                 true
             }
+            R.id.home -> {
+                onBackPressed()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onBackPressed() {
+        viewModel.stopSession()
+        super.onBackPressed()
     }
 
     enum class Mode {
