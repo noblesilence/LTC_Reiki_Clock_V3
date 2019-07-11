@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.database.AuthenticationPrefs
-import com.learnteachcenter.ltcreikiclockv3.reiki.all.AllReikisActivity
+import com.learnteachcenter.ltcreikiclockv3.reiki.list.ReikiListActivity
 import com.learnteachcenter.ltcreikiclockv3.authentication.signup.SignUpActivity
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import kotlinx.android.synthetic.main.activity_login.*
@@ -56,7 +56,7 @@ class LoginActivity : AppCompatActivity() {
                                 displayMessage("Login Success")
 
                                 AuthenticationPrefs.saveAuthToken(loginResponse.token)
-                                val i = Intent(this@LoginActivity, AllReikisActivity::class.java)
+                                val i = Intent(this@LoginActivity, ReikiListActivity::class.java)
                                 startActivity(i)
                                 finish()
                             }

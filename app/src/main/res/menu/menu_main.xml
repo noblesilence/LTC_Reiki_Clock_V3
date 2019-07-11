@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  tools:context="com.learnteachcenter.ltcreikiclockv3.reiki.all.AllReikisActivity">
+  tools:context="com.learnteachcenter.ltcreikiclockv3.reiki.list.ReikiListActivity">
 
   <item
     android:id="@+id/action_edit"

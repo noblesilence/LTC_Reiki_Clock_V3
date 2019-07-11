@@ -5,7 +5,7 @@ import android.arch.persistence.room.*
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
 import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
 import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
-import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiAndAllPositions
+import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiAndAllPositions
 
 @Dao
 interface ReikiDao {

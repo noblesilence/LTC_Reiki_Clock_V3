@@ -1,4 +1,4 @@
-package com.learnteachcenter.ltcreikiclockv3.reiki.session
+package com.learnteachcenter.ltcreikiclockv3.reiki.reikisession
 
 import android.arch.lifecycle.MutableLiveData
 

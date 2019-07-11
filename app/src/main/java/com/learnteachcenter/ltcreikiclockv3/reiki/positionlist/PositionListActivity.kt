@@ -1,4 +1,4 @@
-package com.learnteachcenter.ltcreikiclockv3.reiki.session
+package com.learnteachcenter.ltcreikiclockv3.reiki.positionlist
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -19,15 +19,17 @@ import android.view.MenuItem
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.api.responses.Position.UpdatePositionsOrderResponse
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
-import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.State
-import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.ReikiSessionEvent.NONE
-import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.ReikiSessionEvent.STATE_CHANGED
-import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.ReikiSessionEvent.INDEX_CHANGED
-import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSession.ReikiSessionEvent.TIME_LEFT_CHANGED
+import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession.State
+import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession.ReikiSessionEvent.NONE
+import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession.ReikiSessionEvent.STATE_CHANGED
+import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession.ReikiSessionEvent.INDEX_CHANGED
+import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession.ReikiSessionEvent.TIME_LEFT_CHANGED
 import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
 import com.learnteachcenter.ltcreikiclockv3.reiki.position.AddPositionActivity
 import com.learnteachcenter.ltcreikiclockv3.reiki.position.EditPositionActivity
 import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
+import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiAndAllPositions
+import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil
 import kotlinx.android.synthetic.main.activity_all_positions.*
 import kotlinx.android.synthetic.main.list_item_position.view.*
@@ -37,11 +39,12 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-class ReikiSessionActivity : AppCompatActivity() {
+class PositionListActivity : AppCompatActivity() {
 
     private val TAG = "Reiki"
 
-    private var mode: Mode = Mode.VIEW
+    private var mode: Mode =
+        Mode.VIEW
 
     private var itemTouchHelper: ItemTouchHelper? = null
 
@@ -49,12 +52,11 @@ class ReikiSessionActivity : AppCompatActivity() {
     private lateinit var deleteIcon: Drawable
 
     private val reikiApi = Injection.provideReikiApi()
-    private val reikiDao = Injection.provideReikiDao()
     private val repository = Injection.provideReikiRepository()
 
     private lateinit var reikiId: String
     private lateinit var reikiTitle: String
-    private lateinit var viewModel: ReikiSessionViewModel
+    private lateinit var viewModel: PositionListViewModel
     private val adapter = PositionsAdapter(
         mutableListOf(),
         Mode.VIEW,
@@ -76,7 +78,9 @@ class ReikiSessionActivity : AppCompatActivity() {
 
             supportActionBar?.title = reikiTitle
 
-            viewModel = ViewModelProviders.of(this, ReikiSessionViewModelFactory(reikiId)).get(ReikiSessionViewModel::class.java)
+            viewModel = ViewModelProviders.of(this,
+                PositionListViewModelFactory(reikiId)
+            ).get(PositionListViewModel::class.java)
 
             swipeBackground = ColorDrawable(resources.getColor(R.color.colorSwipeBackground))
             deleteIcon = ContextCompat.getDrawable(this, R.drawable.ic_delete)!!
@@ -229,7 +233,7 @@ class ReikiSessionActivity : AppCompatActivity() {
             holder.itemView.icon_play_pause.setImageDrawable(image)
             holder.itemView.duration.text = itemDuration
         } catch(exception: Exception) {
-            Log.wtf("Reiki", "[ReikiSessionActivity] highlightItem -> Exception: $exception")
+            Log.wtf("Reiki", "[PositionListActivity] highlightItem -> Exception: $exception")
         }
     }
 
@@ -246,7 +250,7 @@ class ReikiSessionActivity : AppCompatActivity() {
             holder.itemView.icon_play_pause.setImageDrawable(image)
             holder.itemView.duration.text = itemDuration
         } catch(exception: Exception) {
-            Log.wtf("Reiki", "[ReikiSessionActivity] highlightItem -> Exception: $exception")
+            Log.wtf("Reiki", "[PositionListActivity] highlightItem -> Exception: $exception")
         }
     }
 
@@ -402,7 +406,7 @@ class ReikiSessionActivity : AppCompatActivity() {
     }
 
     fun onDeletePosition(position: Position) {
-        Log.wtf("Reiki", "[ReikiSessionActivity] (onDeletePosition) Should delete")
+        Log.wtf("Reiki", "[PositionListActivity] (onDeletePosition) Should delete")
         viewModel.deletePosition(reikiId, position.id)
     }
 

@@ -1,4 +1,4 @@
-package com.learnteachcenter.ltcreikiclockv3.reiki.one
+package com.learnteachcenter.ltcreikiclockv3.reiki.add
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle

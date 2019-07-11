@@ -1,4 +1,4 @@
-package com.learnteachcenter.ltcreikiclockv3.reiki.all
+package com.learnteachcenter.ltcreikiclockv3.reiki.list
 
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.RecyclerView
@@ -15,7 +15,7 @@ import java.util.*
 // https://www.andreasjakl.com/recyclerview-kotlin-style-click-listener-android/
 
 class ReikisAdapter(private val reikis: MutableList<Reiki>,
-                    private var mode: AllReikisActivity.Mode,
+                    private var mode: ReikiListActivity.Mode,
                     private val clickListener: (Reiki) -> Unit,
                     private val editListener: (Reiki) -> Unit,
                     private val deleteListener: (Reiki) -> Unit,
@@ -28,7 +28,7 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val viewHolder = ViewHolder(parent.inflate(R.layout.list_item_reiki))
 
-        if(mode == AllReikisActivity.Mode.EDIT) {
+        if(mode == ReikiListActivity.Mode.EDIT) {
             viewHolder.itemView.imv_drag_handle.setOnTouchListener {
                     view, event ->
 
@@ -51,7 +51,7 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
 
     override fun getItemCount(): Int = reikis.size
 
-    fun updateViewMode(newMode: AllReikisActivity.Mode) {
+    fun updateViewMode(newMode: ReikiListActivity.Mode) {
         mode = newMode
     }
 
@@ -109,13 +109,13 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
                  clickListener: (Reiki) -> Unit,
                  editListener: (Reiki) -> Unit,
                  dragListener: (ViewHolder) -> Unit,
-                 mode: AllReikisActivity.Mode) {
+                 mode: ReikiListActivity.Mode) {
             this.reiki = reiki
 
             itemView.title.text = reiki.title
             itemView.description.text = reiki.description
 
-            if(mode == AllReikisActivity.Mode.VIEW) {
+            if(mode == ReikiListActivity.Mode.VIEW) {
                 itemView.imv_arrow_right.visibility = View.VISIBLE
 
                 itemView.imv_drag_handle.visibility = View.GONE

@@ -1,4 +1,4 @@
-package com.learnteachcenter.ltcreikiclockv3.reiki.all
+package com.learnteachcenter.ltcreikiclockv3.reiki.list
 
 import android.arch.lifecycle.*
 import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki

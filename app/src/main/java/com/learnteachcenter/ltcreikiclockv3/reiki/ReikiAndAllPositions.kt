@@ -1,4 +1,4 @@
-package com.learnteachcenter.ltcreikiclockv3.reiki.session
+package com.learnteachcenter.ltcreikiclockv3.reiki
 
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Relation
@@ -12,5 +12,5 @@ class ReikiAndAllPositions {
 
     @Relation(parentColumn = "id",
         entityColumn = "reikiId")
-    var positions: List<Position> = ArrayList()
+    var positions: List<Position> = listOf()
 }

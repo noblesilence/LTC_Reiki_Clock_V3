@@ -10,7 +10,7 @@ import com.learnteachcenter.ltcreikiclockv3.api.responses.Position.AddPositionRe
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
 import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiGenerator
-import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSessionActivity
+import com.learnteachcenter.ltcreikiclockv3.reiki.positionlist.PositionListActivity
 import kotlinx.android.synthetic.main.activity_add_position.*
 import org.json.JSONObject
 import retrofit2.Call
@@ -89,7 +89,7 @@ class AddPositionActivity : AppCompatActivity() {
 
                                 displayMessage("Add Success")
 
-                                val i = Intent(this@AddPositionActivity, ReikiSessionActivity::class.java)
+                                val i = Intent(this@AddPositionActivity, PositionListActivity::class.java)
                                 i.putExtra(IntentExtraNames.EXTRA_REIKI_ID, reikiId)
                                 i.putExtra(IntentExtraNames.EXTRA_REIKI_TITLE, reikiTitle)
                                 startActivity(i)

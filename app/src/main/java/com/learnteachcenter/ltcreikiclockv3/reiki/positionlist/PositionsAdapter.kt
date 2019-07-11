@@ -1,8 +1,7 @@
-package com.learnteachcenter.ltcreikiclockv3.reiki.session
+package com.learnteachcenter.ltcreikiclockv3.reiki.positionlist
 
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,7 @@ import kotlinx.android.synthetic.main.list_item_position.view.*
 import java.util.*
 
 class PositionsAdapter (private val positions: MutableList<Position>,
-                        private var mode: ReikiSessionActivity.Mode,
+                        private var mode: PositionListActivity.Mode,
                         private val editListener: (Position) -> Unit,
                         private val deleteListener: (Position) -> Unit,
                         private val dragListener: (RecyclerView.ViewHolder) -> Unit
@@ -24,9 +23,10 @@ class PositionsAdapter (private val positions: MutableList<Position>,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-        val viewHolder = ViewHolder(parent.inflate(R.layout.list_item_position))
+        val viewHolder =
+            ViewHolder(parent.inflate(R.layout.list_item_position))
 
-        if(mode == ReikiSessionActivity.Mode.EDIT) {
+        if(mode == PositionListActivity.Mode.EDIT) {
             viewHolder.itemView.imv_drag_handle.setOnTouchListener {
                 _, event ->
 
@@ -43,7 +43,7 @@ class PositionsAdapter (private val positions: MutableList<Position>,
         return viewHolder
     }
 
-    fun updateViewMode(newMode: ReikiSessionActivity.Mode) {
+    fun updateViewMode(newMode: PositionListActivity.Mode) {
         mode = newMode
     }
 
@@ -112,14 +112,15 @@ class PositionsAdapter (private val positions: MutableList<Position>,
                  editListener: (Position) -> Unit,
                  deleteListener: (Position) -> Unit,
                  dragListener: (RecyclerView.ViewHolder) -> Unit,
-                 mode: ReikiSessionActivity.Mode) {
+                 mode: PositionListActivity.Mode
+        ) {
 
             this.position = position
 
             itemView.title.text = position.title
             itemView.duration.text = position.duration
 
-            if(mode == ReikiSessionActivity.Mode.VIEW) {
+            if(mode == PositionListActivity.Mode.VIEW) {
                 itemView.imv_alarm.visibility = View.VISIBLE
                 itemView.icon_play_pause.visibility = View.VISIBLE
 

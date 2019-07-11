@@ -34,16 +34,16 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".reiki.all.AllReikisActivity"
+                android:name=".reiki.list.ReikiListActivity"
                 android:launchMode="singleTask"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name=".reiki.session.ReikiSessionActivity"
+                android:name=".reiki.positionlist.PositionListActivity"
                 android:launchMode="singleTask"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".reiki.one.AddReikiActivity">
+        <activity android:name=".reiki.add.AddReikiActivity">
         </activity>
     </application>
 

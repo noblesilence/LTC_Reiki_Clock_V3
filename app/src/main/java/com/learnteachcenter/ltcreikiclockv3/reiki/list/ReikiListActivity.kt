@@ -1,4 +1,4 @@
-package com.learnteachcenter.ltcreikiclockv3.reiki.all
+package com.learnteachcenter.ltcreikiclockv3.reiki.list
 
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
@@ -24,11 +24,11 @@ import com.learnteachcenter.ltcreikiclockv3.database.AuthenticationPrefs
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil
 import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
 import com.learnteachcenter.ltcreikiclockv3.util.ResourceObserver
-import com.learnteachcenter.ltcreikiclockv3.reiki.session.ReikiSessionActivity
+import com.learnteachcenter.ltcreikiclockv3.reiki.positionlist.PositionListActivity
 import com.learnteachcenter.ltcreikiclockv3.authentication.login.LoginActivity
 import com.learnteachcenter.ltcreikiclockv3.reiki.edit.EditReikiActivity
 import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
-import com.learnteachcenter.ltcreikiclockv3.reiki.one.AddReikiActivity
+import com.learnteachcenter.ltcreikiclockv3.reiki.add.AddReikiActivity
 import kotlinx.android.synthetic.main.activity_all_reikis.*
 import kotlinx.android.synthetic.main.content_all_reikis.*
 import org.json.JSONObject
@@ -39,7 +39,7 @@ import java.util.*
 
 // https://stackoverflow.com/questions/38340358/how-to-enable-and-disable-drag-and-drop-on-a-recyclerview
 
-class AllReikisActivity : AppCompatActivity() {
+class ReikiListActivity : AppCompatActivity() {
 
     private val TAG = "Reiki"
 
@@ -64,7 +64,7 @@ class AllReikisActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        Log.wtf("Reiki", "[AllReikisActivity] onCreate")
+        Log.wtf("Reiki", "[ReikiListActivity] onCreate")
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_reikis)
@@ -96,7 +96,7 @@ class AllReikisActivity : AppCompatActivity() {
 
     private fun subscribeObservers(){
         viewModel.reikis.observe(this, ResourceObserver(
-            "AllReikisActivity",
+            "ReikiListActivity",
             hideLoading = ::hideLoading,
             showLoading = ::showLoading,
             onSuccess = ::showReikis,
@@ -259,7 +259,7 @@ class AllReikisActivity : AppCompatActivity() {
 
     fun reikiItemClicked(reiki: Reiki) {
 
-        val i = Intent(this, ReikiSessionActivity::class.java)
+        val i = Intent(this, PositionListActivity::class.java)
         i.putExtra(IntentExtraNames.EXTRA_REIKI_ID, reiki.id)
         i.putExtra(IntentExtraNames.EXTRA_REIKI_TITLE, reiki.title)
         i.putExtra(IntentExtraNames.EXTRA_REIKI_DESCRIPTION, reiki.description)
