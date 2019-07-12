@@ -17,6 +17,7 @@ import android.support.v7.widget.helper.ItemTouchHelper.*
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.api.responses.Position.UpdatePositionsOrderResponse
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
@@ -26,7 +27,6 @@ import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession.Reik
 import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession.ReikiSessionEvent.INDEX_CHANGED
 import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession.ReikiSessionEvent.TIME_LEFT_CHANGED
 import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
-import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
 import com.learnteachcenter.ltcreikiclockv3.reiki.position.AddPositionActivity
 import com.learnteachcenter.ltcreikiclockv3.reiki.position.EditPositionActivity
 import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
@@ -80,7 +80,7 @@ class PositionListActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_positions)
-        setSupportActionBar(toolbar)
+        configureUI()
 
         val i = intent
 
@@ -100,6 +100,18 @@ class PositionListActivity : AppCompatActivity() {
             initRecyclerView()
             subscribeToReikiAndAllPositions()
         }
+    }
+
+    private fun configureUI() {
+        setSupportActionBar(toolbarAllPositions)
+
+        toolbarAllPositions.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_chevron_left)
+        toolbarAllPositions.setNavigationOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                onBackPressed()
+                finish()
+            }
+        })
     }
 
     private fun initRecyclerView() {
@@ -426,8 +438,6 @@ class PositionListActivity : AppCompatActivity() {
     }
 
     private fun onEditPosition(position: Position) {
-        Log.wtf("Reiki", "Should go to Edit Position Activity")
-
         val i = Intent(this, EditPositionActivity::class.java)
         i.putExtra(IntentExtraNames.EXTRA_POSITION_ID, position.id)
         i.putExtra(IntentExtraNames.EXTRA_POSITION_SEQ_NO, position.seqNo)
@@ -439,7 +449,6 @@ class PositionListActivity : AppCompatActivity() {
     }
 
     fun onDeletePosition(position: Position) {
-        Log.wtf("Reiki", "[PositionListActivity] (onDeletePosition) Should delete")
         viewModel.deletePosition(reikiId, position.id)
     }
 

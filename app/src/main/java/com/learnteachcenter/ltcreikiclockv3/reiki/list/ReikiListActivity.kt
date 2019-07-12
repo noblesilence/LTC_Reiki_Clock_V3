@@ -15,6 +15,7 @@ import android.support.v7.widget.helper.ItemTouchHelper.*
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import com.learnteachcenter.ltcreikiclockv3.R
@@ -36,6 +37,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
+
+
+
 
 // https://stackoverflow.com/questions/38340358/how-to-enable-and-disable-drag-and-drop-on-a-recyclerview
 
@@ -73,7 +77,7 @@ class ReikiListActivity : AppCompatActivity() {
 
         viewModel = ViewModelProviders.of(this).get(ReikisViewModel::class.java)
 
-        swipeBackground = ColorDrawable(resources.getColor(R.color.colorSwipeBackground))
+        swipeBackground = ColorDrawable(ContextCompat.getColor(this, R.color.colorSwipeBackground))
         deleteIcon = ContextCompat.getDrawable(this, R.drawable.ic_delete)!!
 
         initRecyclerView()
@@ -323,6 +327,11 @@ class ReikiListActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     enum class Mode {

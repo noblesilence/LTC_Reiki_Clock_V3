@@ -14,16 +14,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".reiki.position.EditPositionActivity">
-        </activity>
-        <activity android:name=".reiki.position.AddPositionActivity">
-        </activity>
-        <activity android:name=".reiki.edit.EditReikiActivity">
-        </activity>
-        <activity android:name=".authentication.signup.SignUpActivity">
-        </activity>
-        <activity android:name=".authentication.login.LoginActivity">
-        </activity>
+
         <activity
                 android:name=".splash.SplashActivity"
                 android:theme="@style/SplashTheme">
@@ -33,18 +24,39 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".authentication.signup.SignUpActivity">
+        </activity>
+
+        <activity android:name=".authentication.login.LoginActivity">
+        </activity>
+
         <activity
                 android:name=".reiki.list.ReikiListActivity"
                 android:launchMode="singleTask"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
+
+        <activity android:name=".reiki.add.AddReikiActivity"
+                  android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity android:name=".reiki.edit.EditReikiActivity">
+        </activity>
+
         <activity
                 android:name=".reiki.positionlist.PositionListActivity"
                 android:launchMode="singleTask"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".reiki.add.AddReikiActivity">
+
+        <activity android:name=".reiki.position.AddPositionActivity"
+                  android:theme="@style/AppTheme.NoActionBar">
         </activity>
+
+        <activity android:name=".reiki.position.EditPositionActivity">
+        </activity>
+
     </application>
 
 </manifest>

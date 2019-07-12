@@ -6,17 +6,36 @@
             android:layout_height="match_parent"
             tools:context=".reiki.add.AddReikiActivity">
 
+        <android.support.design.widget.AppBarLayout
+                android:id="@+id/toolbarWrap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbarAddReiki"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary"
+                    app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        </android.support.design.widget.AppBarLayout>
+
         <EditText
                 android:layout_width="353dp"
                 android:layout_height="57dp"
                 android:inputType="textPersonName"
                 android:text=""
                 android:ems="10"
-                android:id="@+id/input_reiki_title" android:layout_marginStart="8dp"
-                app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
-                android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/input_reiki_title"
+                android:layout_marginStart="8dp"
                 android:layout_marginRight="8dp"
-                android:layout_marginTop="16dp" app:layout_constraintTop_toTopOf="parent"/>
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolbarWrap" app:layout_constraintEnd_toEndOf="parent"/>
         <EditText
                 android:layout_width="358dp"
                 android:layout_height="61dp"

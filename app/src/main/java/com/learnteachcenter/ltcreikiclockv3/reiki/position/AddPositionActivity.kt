@@ -3,7 +3,9 @@ package com.learnteachcenter.ltcreikiclockv3.reiki.position
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.api.responses.Position.AddPositionResponse
@@ -12,6 +14,7 @@ import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
 import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiGenerator
 import com.learnteachcenter.ltcreikiclockv3.reiki.positionlist.PositionListActivity
 import kotlinx.android.synthetic.main.activity_add_position.*
+import kotlinx.android.synthetic.main.activity_all_positions.*
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -45,8 +48,15 @@ class AddPositionActivity : AppCompatActivity() {
     }
 
     private fun configureUI() {
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        setSupportActionBar(toolbarAddPosition)
         title = "Add Position"
+        toolbarAddPosition.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_chevron_left)
+        toolbarAddPosition.setNavigationOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                onBackPressed()
+                finish()
+            }
+        })
     }
 
     private fun configureClickListeners() {

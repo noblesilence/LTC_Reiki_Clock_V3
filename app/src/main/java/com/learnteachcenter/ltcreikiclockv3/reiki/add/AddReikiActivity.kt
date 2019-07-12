@@ -2,7 +2,9 @@ package com.learnteachcenter.ltcreikiclockv3.reiki.add
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.api.responses.Reiki.AddReikiResponse
@@ -24,7 +26,7 @@ class AddReikiActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_reiki)
 
-        title = "Add Reiki"
+        configureUI()
 
         // On Save click
         btn_add_reiki.setOnClickListener {
@@ -67,6 +69,18 @@ class AddReikiActivity : AppCompatActivity() {
                 })
             }
         }
+    }
+
+    private fun configureUI() {
+        setSupportActionBar(toolbarAddReiki)
+        title = "Add Reiki"
+        toolbarAddReiki.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_chevron_left)
+        toolbarAddReiki.setNavigationOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                onBackPressed()
+                finish()
+            }
+        })
     }
 
     private fun displayMessage(message: String) {
