@@ -36,6 +36,7 @@ import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil
 import kotlinx.android.synthetic.main.activity_all_positions.*
 import kotlinx.android.synthetic.main.list_item_position.view.*
+import kotlinx.android.synthetic.main.toolbar.*
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -44,10 +45,7 @@ import java.util.*
 
 class PositionListActivity : AppCompatActivity() {
 
-    private val TAG = "Reiki"
-
     private var mode: Mode = Mode.VIEW
-
     private var itemTouchHelper: ItemTouchHelper? = null
 
     private lateinit var swipeBackground: ColorDrawable
@@ -69,19 +67,8 @@ class PositionListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        Log.wtf("Reiki", "onCreate")
-
-        if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            Log.wtf("Reiki", "Portrait")
-        } else {
-            if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                Log.wtf("Reiki", "Landscape")
-            }
-        }
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_positions)
-        configureUI()
 
         val i = intent
 
@@ -89,11 +76,11 @@ class PositionListActivity : AppCompatActivity() {
             reikiId = i.getStringExtra(IntentExtraNames.EXTRA_REIKI_ID)
             reikiTitle = i.getStringExtra(IntentExtraNames.EXTRA_REIKI_TITLE)
 
-            supportActionBar?.title = reikiTitle
-
             viewModel = ViewModelProviders.of(this,
                 PositionListViewModelFactory(reikiId)
             ).get(PositionListViewModel::class.java)
+
+            configureUI()
 
             swipeBackground = ColorDrawable(ContextCompat.getColor(this, R.color.colorSwipeBackground))
             deleteIcon = ContextCompat.getDrawable(this, R.drawable.ic_delete)!!
@@ -106,6 +93,8 @@ class PositionListActivity : AppCompatActivity() {
     private fun configureUI() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        toolbar_title.text = reikiTitle.toUpperCase()
         toolbar.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_chevron_left)
         toolbar.setNavigationOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
@@ -358,7 +347,7 @@ class PositionListActivity : AppCompatActivity() {
 
         val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback (
             UP or DOWN or START or END,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            LEFT or RIGHT) {
 
             override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
                 super.onSelectedChanged(viewHolder, actionState)

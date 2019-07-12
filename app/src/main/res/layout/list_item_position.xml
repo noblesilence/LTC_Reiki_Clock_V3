@@ -48,15 +48,14 @@
             android:layout_height="wrap_content"
             android:layout_margin="5sp"
             android:ellipsize="end"
-            android:fontFamily="sans-serif"
+            app:fontFamily="@font/lato_regular"
             android:gravity="center_vertical|start"
             android:maxLines="4"
-            android:textSize="16sp"
+            android:textSize="18sp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/lbl_position_seq_no"
-            app:layout_constraintHorizontal_bias="1.0"
-            tools:text="Solar Plexus"/>
+            tools:text="Solar Plexus" android:textColor="@color/colorBlack"/>
 
     <ImageButton
             android:id="@+id/imv_alarm"
@@ -79,8 +78,8 @@
             android:gravity="center_vertical|end"
             android:text="@string/position_duration"
             android:textSize="16sp"
-            android:textColor="@color/colorGray"
-            android:fontFamily="sans-serif"
+            android:textColor="@color/colorBlack"
+            app:fontFamily="@font/lato_regular"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             app:layout_constraintBottom_toBottomOf="parent"

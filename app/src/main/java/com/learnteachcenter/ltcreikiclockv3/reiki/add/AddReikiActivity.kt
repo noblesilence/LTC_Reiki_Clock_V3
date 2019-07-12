@@ -12,6 +12,7 @@ import com.learnteachcenter.ltcreikiclockv3.api.responses.Reiki.AddReikiResponse
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiGenerator
 import kotlinx.android.synthetic.main.activity_add_reiki.*
+import kotlinx.android.synthetic.main.toolbar.*
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -75,7 +76,8 @@ class AddReikiActivity : AppCompatActivity() {
     private fun configureUI() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        title = "Add Reiki"
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        toolbar_title.text = getString(R.string.app_name).toUpperCase()
         toolbar.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_chevron_left)
         toolbar.setNavigationOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {

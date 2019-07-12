@@ -16,6 +16,7 @@ import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiGenerator
 import com.learnteachcenter.ltcreikiclockv3.reiki.positionlist.PositionListActivity
 import kotlinx.android.synthetic.main.activity_add_position.*
 import kotlinx.android.synthetic.main.activity_all_positions.*
+import kotlinx.android.synthetic.main.toolbar.*
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -51,7 +52,8 @@ class AddPositionActivity : AppCompatActivity() {
     private fun configureUI() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        title = "Add Position"
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        toolbar_title.text = getString(R.string.app_name).toUpperCase()
         toolbar.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_chevron_left)
         toolbar.setNavigationOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {

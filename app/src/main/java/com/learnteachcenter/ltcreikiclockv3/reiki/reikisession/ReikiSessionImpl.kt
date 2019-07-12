@@ -81,7 +81,11 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
             stopBackgroundSound()
 
             previousIndex = currentIndex
-            previousDuration =  reikiAndAllPositions.positions.get(previousIndex).duration
+
+            if(previousIndex > -1) {
+                previousDuration =  reikiAndAllPositions.positions.get(previousIndex).duration
+            }
+
             currentIndex = -1
         }
 

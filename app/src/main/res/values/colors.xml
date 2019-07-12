@@ -20,6 +20,7 @@
     <color name="colorTransparentBlack">#00000000</color>
     <color name="colorTransparentWhite">#5affffff</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorBlack">#000000</color>
 
     <color name="ALPHA_WHITE">#b3ffffff</color>
 </resources>

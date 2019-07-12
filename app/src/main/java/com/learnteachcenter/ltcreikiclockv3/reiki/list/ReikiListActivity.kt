@@ -32,14 +32,12 @@ import com.learnteachcenter.ltcreikiclockv3.reiki.edit.EditReikiActivity
 import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
 import com.learnteachcenter.ltcreikiclockv3.reiki.add.AddReikiActivity
 import kotlinx.android.synthetic.main.activity_all_reikis.*
-import kotlinx.android.synthetic.main.content_all_reikis.*
+import kotlinx.android.synthetic.main.toolbar.*
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-
-
 
 // https://stackoverflow.com/questions/38340358/how-to-enable-and-disable-drag-and-drop-on-a-recyclerview
 
@@ -67,7 +65,8 @@ class ReikiListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_all_reikis)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar?.title = "Reiki Timer"
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        toolbar_title.text = getString(R.string.app_name).toUpperCase()
 
         viewModel = ViewModelProviders.of(this).get(ReikisViewModel::class.java)
 
