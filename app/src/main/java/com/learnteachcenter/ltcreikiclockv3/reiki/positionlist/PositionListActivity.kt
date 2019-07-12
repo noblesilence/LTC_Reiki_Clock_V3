@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.support.v7.widget.helper.ItemTouchHelper.*
 import android.util.Log
@@ -94,7 +95,7 @@ class PositionListActivity : AppCompatActivity() {
                 PositionListViewModelFactory(reikiId)
             ).get(PositionListViewModel::class.java)
 
-            swipeBackground = ColorDrawable(resources.getColor(R.color.colorSwipeBackground))
+            swipeBackground = ColorDrawable(ContextCompat.getColor(this, R.color.colorSwipeBackground))
             deleteIcon = ContextCompat.getDrawable(this, R.drawable.ic_delete)!!
 
             initRecyclerView()
@@ -103,10 +104,10 @@ class PositionListActivity : AppCompatActivity() {
     }
 
     private fun configureUI() {
-        setSupportActionBar(toolbarAllPositions)
-
-        toolbarAllPositions.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_chevron_left)
-        toolbarAllPositions.setNavigationOnClickListener(object : View.OnClickListener {
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        toolbar.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_chevron_left)
+        toolbar.setNavigationOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
                 onBackPressed()
                 finish()
@@ -383,7 +384,7 @@ class PositionListActivity : AppCompatActivity() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
-                (adapter as PositionsAdapter).removeItem(viewHolder)
+                adapter.removeItem(viewHolder)
             }
 
             override fun onChildDraw(

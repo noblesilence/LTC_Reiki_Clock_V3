@@ -33,12 +33,10 @@
 
         <activity
                 android:name=".reiki.list.ReikiListActivity"
-                android:launchMode="singleTask"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:launchMode="singleTask">
         </activity>
 
-        <activity android:name=".reiki.add.AddReikiActivity"
-                  android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".reiki.add.AddReikiActivity">
         </activity>
 
         <activity android:name=".reiki.edit.EditReikiActivity">
@@ -46,12 +44,10 @@
 
         <activity
                 android:name=".reiki.positionlist.PositionListActivity"
-                android:launchMode="singleTask"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:launchMode="singleTask">
         </activity>
 
-        <activity android:name=".reiki.position.AddPositionActivity"
-                  android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".reiki.position.AddPositionActivity">
         </activity>
 
         <activity android:name=".reiki.position.EditPositionActivity">

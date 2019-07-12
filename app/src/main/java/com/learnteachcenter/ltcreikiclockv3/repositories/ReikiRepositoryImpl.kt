@@ -90,10 +90,9 @@ object ReikiRepositoryImpl: ReikiRepository {
         UpdateReikisAsyncTask().execute(*reikis)
     }
 
-    private class UpdateReikisAsyncTask : AsyncTask<Reiki, Void, Void>() {
-        override fun doInBackground(vararg reikis: Reiki): Void? {
-            val count : Int = reikiDao.updateReikis(*reikis)
-            return null
+    private class UpdateReikisAsyncTask : AsyncTask<Reiki, Void, Int>() {
+        override fun doInBackground(vararg reikis: Reiki): Int {
+            return reikiDao.updateReikis(*reikis)
         }
     }
 
@@ -181,10 +180,9 @@ object ReikiRepositoryImpl: ReikiRepository {
         UpdatePositionsAsyncTask().execute(*positions)
     }
 
-    private class UpdatePositionsAsyncTask : AsyncTask<Position, Void, Void>() {
-        override fun doInBackground(vararg positions: Position): Void? {
-            val count: Int = reikiDao.updatePositions(*positions)
-            return null
+    private class UpdatePositionsAsyncTask : AsyncTask<Position, Void, Int>() {
+        override fun doInBackground(vararg positions: Position): Int {
+            return reikiDao.updatePositions(*positions)
         }
     }
 

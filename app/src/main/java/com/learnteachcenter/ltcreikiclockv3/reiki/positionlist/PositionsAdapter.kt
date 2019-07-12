@@ -53,8 +53,6 @@ class PositionsAdapter (private val positions: MutableList<Position>,
         holder.bind(
             positions[position],
             editListener,
-            deleteListener,
-            dragListener,
             mode
         )
     }
@@ -93,7 +91,7 @@ class PositionsAdapter (private val positions: MutableList<Position>,
             .addCallback(object : Snackbar.Callback() {
                 override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                     when(event) {
-                        Snackbar.Callback.DISMISS_EVENT_TIMEOUT -> {
+                        DISMISS_EVENT_TIMEOUT -> {
                             deleteListener(removedItem)
                         }
                     }
@@ -110,8 +108,6 @@ class PositionsAdapter (private val positions: MutableList<Position>,
 
         fun bind(position: Position,
                  editListener: (Position) -> Unit,
-                 deleteListener: (Position) -> Unit,
-                 dragListener: (RecyclerView.ViewHolder) -> Unit,
                  mode: PositionListActivity.Mode
         ) {
 

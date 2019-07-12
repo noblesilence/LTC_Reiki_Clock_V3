@@ -7,6 +7,9 @@
                                              app:layout_behavior="@string/appbar_scrolling_view_behavior"
                                              tools:context=".reiki.list.ReikiListActivity"
                                              tools:showIn="@layout/activity_all_reikis">
+
+    <include android:id="@+id/toolbar" layout="@layout/toolbar" />
+
     <ProgressBar
             android:layout_weight="1"
             android:id="@+id/progressBar"
@@ -26,7 +29,7 @@
             android:layout_height="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintTop_toBottomOf="@id/toolbar" app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintVertical_bias="0.0" android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"/>
 

@@ -7,21 +7,7 @@
         android:layout_height="match_parent"
         tools:context="com.learnteachcenter.ltcreikiclockv3.reiki.position.AddPositionActivity">
 
-    <android.support.design.widget.AppBarLayout
-            android:id="@+id/toolbarWrap"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbarAddPosition"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </android.support.design.widget.AppBarLayout>
+    <include android:id="@+id/toolbar" layout="@layout/toolbar" />
 
     <EditText
             android:layout_width="match_parent"
@@ -31,7 +17,7 @@
             android:ems="10"
             android:id="@+id/et_position_title"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/toolbarWrap"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginLeft="8dp"/>

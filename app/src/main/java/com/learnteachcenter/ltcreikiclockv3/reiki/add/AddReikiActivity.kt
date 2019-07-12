@@ -3,6 +3,7 @@ package com.learnteachcenter.ltcreikiclockv3.reiki.add
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -72,10 +73,11 @@ class AddReikiActivity : AppCompatActivity() {
     }
 
     private fun configureUI() {
-        setSupportActionBar(toolbarAddReiki)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
         title = "Add Reiki"
-        toolbarAddReiki.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_chevron_left)
-        toolbarAddReiki.setNavigationOnClickListener(object : View.OnClickListener {
+        toolbar.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_chevron_left)
+        toolbar.setNavigationOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
                 onBackPressed()
                 finish()

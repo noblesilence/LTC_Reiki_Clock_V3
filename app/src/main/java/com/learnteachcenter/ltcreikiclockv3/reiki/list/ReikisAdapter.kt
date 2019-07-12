@@ -30,7 +30,7 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
 
         if(mode == ReikiListActivity.Mode.EDIT) {
             viewHolder.itemView.imv_drag_handle.setOnTouchListener {
-                    view, event ->
+                    _, event ->
 
                 if(event.actionMasked == MotionEvent.ACTION_DOWN) {
                     dragListener(viewHolder)
@@ -46,7 +46,7 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(reikis[position], clickListener, editListener, dragListener, mode)
+        holder.bind(reikis[position], clickListener, editListener, mode)
     }
 
     override fun getItemCount(): Int = reikis.size
@@ -91,7 +91,7 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
             .addCallback(object : Snackbar.Callback() {
                 override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                     when(event) {
-                        Snackbar.Callback.DISMISS_EVENT_TIMEOUT -> {
+                        DISMISS_EVENT_TIMEOUT -> {
                             deleteListener(removedItem)
                         }
                     }
@@ -108,7 +108,6 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
         fun bind(reiki: Reiki,
                  clickListener: (Reiki) -> Unit,
                  editListener: (Reiki) -> Unit,
-                 dragListener: (ViewHolder) -> Unit,
                  mode: ReikiListActivity.Mode) {
             this.reiki = reiki
 

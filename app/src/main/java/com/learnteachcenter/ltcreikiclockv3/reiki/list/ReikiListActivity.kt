@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.support.v7.widget.helper.ItemTouchHelper.*
 import android.util.Log
@@ -40,21 +41,16 @@ import java.util.*
 
 
 
-
 // https://stackoverflow.com/questions/38340358/how-to-enable-and-disable-drag-and-drop-on-a-recyclerview
 
 class ReikiListActivity : AppCompatActivity() {
 
     private val TAG = "Reiki"
-
     private var mode: Mode = Mode.VIEW
-
     private lateinit var viewModel: ReikisViewModel
     private lateinit var swipeBackground: ColorDrawable
     private lateinit var deleteIcon: Drawable
-
     private var itemTouchHelper: ItemTouchHelper? = null
-
     private val reikiApi = Injection.provideReikiApi()
 
     private val adapter = ReikisAdapter(
@@ -67,11 +63,9 @@ class ReikiListActivity : AppCompatActivity() {
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-        Log.wtf("Reiki", "[ReikiListActivity] onCreate")
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_reikis)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.title = "Reiki Timer"
 
@@ -191,7 +185,7 @@ class ReikiListActivity : AppCompatActivity() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
-                (adapter as ReikisAdapter).removeItem(viewHolder)
+                adapter.removeItem(viewHolder)
             }
 
             override fun onChildDraw(
