@@ -5,6 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorLightGray"
         tools:context=".reiki.list.ReikiListActivity">
 
     <include android:id="@+id/toolbar" layout="@layout/toolbar" />
@@ -40,6 +41,6 @@
             android:layout_margin="@dimen/dp_16"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_baseline_add_24px" />
+            app:srcCompat="@drawable/ic_baseline_add_24px" app:backgroundTint="@color/colorSecondary"/>
 
 </android.support.constraint.ConstraintLayout>
