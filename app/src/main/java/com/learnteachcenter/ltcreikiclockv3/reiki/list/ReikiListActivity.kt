@@ -158,7 +158,7 @@ class ReikiListActivity : AppCompatActivity() {
 
         val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback (
             UP or DOWN or START or END,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            LEFT or RIGHT) {
 
             override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
                 super.onSelectedChanged(viewHolder, actionState)
@@ -311,13 +311,13 @@ class ReikiListActivity : AppCompatActivity() {
                 changeToViewUI()
                 true
             }
-            R.id.action_logout -> {
-                AuthenticationPrefs.clearAuthToken()
-                viewModel.deleteReikis()
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
-                true
-            }
+//            R.id.action_logout -> {
+//                AuthenticationPrefs.clearAuthToken()
+//                viewModel.deleteReikis()
+//                startActivity(Intent(this, LoginActivity::class.java))
+//                finish()
+//                true
+//            }
             else -> super.onOptionsItemSelected(item)
         }
     }

@@ -6,15 +6,10 @@
   <item
     android:id="@+id/action_edit"
     android:title="@string/edit"
-    android:icon="@drawable/ic_edit"
-    app:showAsAction="always" />
+    app:showAsAction="always"/>
   <item
     android:id="@+id/action_done"
     android:title="@string/done"
-    android:icon="@drawable/ic_done"
-    app:showAsAction="always" />
-  <item
-    android:id="@+id/action_logout"
-    android:title="@string/logout" />
+    app:showAsAction="always"/>
 
 </menu>

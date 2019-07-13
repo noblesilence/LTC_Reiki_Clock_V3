@@ -457,7 +457,7 @@ class PositionListActivity : AppCompatActivity() {
             menu.findItem(R.id.action_done).setVisible(true)
         }
 
-        menu.findItem(R.id.action_logout).setVisible(false)
+//        menu.findItem(R.id.action_logout).setVisible(false)
 
         return true
     }
