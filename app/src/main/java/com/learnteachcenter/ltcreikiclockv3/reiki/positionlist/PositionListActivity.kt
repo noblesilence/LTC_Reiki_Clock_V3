@@ -60,6 +60,7 @@ class PositionListActivity : AppCompatActivity() {
     private val adapter = PositionsAdapter(
         mutableListOf(),
         Mode.VIEW,
+        playListener = { position -> onPlayPosition(position) },
         editListener = { position -> onEditPosition(position) },
         deleteListener = { position -> onDeletePosition(position) },
         dragListener = { viewHolder -> onDragPosition(viewHolder) }
@@ -425,6 +426,10 @@ class PositionListActivity : AppCompatActivity() {
 
         itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
         itemTouchHelper!!.attachToRecyclerView(positionsRecyclerView)
+    }
+
+    private fun onPlayPosition(index: Int) {
+        viewModel.startSession(index)
     }
 
     private fun onEditPosition(position: Position) {

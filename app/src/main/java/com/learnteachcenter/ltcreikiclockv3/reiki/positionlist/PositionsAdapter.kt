@@ -13,6 +13,7 @@ import java.util.*
 
 class PositionsAdapter (private val positions: MutableList<Position>,
                         private var mode: PositionListActivity.Mode,
+                        private val playListener: (Int) -> Unit,
                         private val editListener: (Position) -> Unit,
                         private val deleteListener: (Position) -> Unit,
                         private val dragListener: (RecyclerView.ViewHolder) -> Unit
@@ -52,6 +53,7 @@ class PositionsAdapter (private val positions: MutableList<Position>,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(
             positions[position],
+            playListener,
             editListener,
             mode
         )
@@ -107,6 +109,7 @@ class PositionsAdapter (private val positions: MutableList<Position>,
         private lateinit var position: Position
 
         fun bind(position: Position,
+                 playListener: (Int) -> Unit,
                  editListener: (Position) -> Unit,
                  mode: PositionListActivity.Mode
         ) {
@@ -119,6 +122,9 @@ class PositionsAdapter (private val positions: MutableList<Position>,
             if(mode == PositionListActivity.Mode.VIEW) {
                 itemView.imv_alarm.visibility = View.VISIBLE
                 itemView.icon_play_pause.visibility = View.VISIBLE
+                itemView.icon_play_pause.setOnClickListener{
+                    playListener(this.adapterPosition)
+                }
 
                 itemView.imv_drag_handle.visibility = View.GONE
                 itemView.imv_edit.visibility = View.GONE
