@@ -311,13 +311,13 @@ class ReikiListActivity : AppCompatActivity() {
                 changeToViewUI()
                 true
             }
-//            R.id.action_logout -> {
-//                AuthenticationPrefs.clearAuthToken()
-//                viewModel.deleteReikis()
-//                startActivity(Intent(this, LoginActivity::class.java))
-//                finish()
-//                true
-//            }
+            R.id.action_logout -> {
+                AuthenticationPrefs.clearAuthToken()
+                viewModel.deleteReikis()
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
