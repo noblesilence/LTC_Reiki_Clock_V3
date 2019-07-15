@@ -61,7 +61,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ckb_play_music"
-                android:background="@color/colorSecondary"
+                android:background="@drawable/button_background"
                 android:textColor="@color/colorWhite"
                 android:text="@string/save"/>
     </android.support.constraint.ConstraintLayout>

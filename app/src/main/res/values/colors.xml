@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorSecondary">#A627B8</color>
+    <color name="colorSecondary">#D162E4</color>
     <color name="colorSwipeBackground">#FF0000</color>
-    <color name="colorAccent">#A627B8</color>
+    <color name="colorAccent">#D162E4</color>
     <color name="colorHighlight">#EDE3F3</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorBlack">#000000</color>

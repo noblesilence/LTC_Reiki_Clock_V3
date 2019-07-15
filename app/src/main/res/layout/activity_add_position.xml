@@ -23,6 +23,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:inputType="textCapWords"
+            android:autofillHints="@string/hint_title"
             android:hint="@string/hint_title"/>
 
     <EditText
@@ -38,6 +39,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:inputType="textCapWords"
+            android:autofillHints="@string/hint_duration"
             android:hint="@string/hint_duration"/>
     <Button
             android:id="@+id/btn_add_position"
@@ -52,6 +54,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/et_position_duration"
             android:textColor="@color/colorWhite"
-            android:background="@color/colorSecondary"
+            android:background="@drawable/button_background"
             android:text="@string/save"/>
 </android.support.constraint.ConstraintLayout>
