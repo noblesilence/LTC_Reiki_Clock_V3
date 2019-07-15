@@ -5,6 +5,18 @@
     <string name="save">Save</string>
     <string name="edit">Edit</string>
     <string name="done">Done</string>
+
+    <string name="add_reiki">Add Reiki</string>
+    <string name="hint_title">Title</string>
+    <string name="hint_description_optional">Description (optional)</string>
+    <string name="play_reiki_music">Play Reiki Music</string>
+
+    <string name="edit_reiki">Edit Reiki</string>
+
+    <string name="add_position">Add Position</string>
+    <string name="hint_duration">Duration (mm:ss)</string>
+
+    <string name="edit_position">Edit Position</string>
     <string name="reiki_saved">Reiki saved!</string>
     <string name="reiki_play_pause_button">Play/Pause Reiki</string>
     <string name="position_duration">Duration (mm:ss)</string>

@@ -36,21 +36,25 @@
                 android:launchMode="singleTask">
         </activity>
 
-        <activity android:name=".reiki.add.AddReikiActivity">
+        <activity android:name=".reiki.add.AddReikiActivity"
+                  android:windowSoftInputMode="stateVisible">
         </activity>
 
-        <activity android:name=".reiki.edit.EditReikiActivity">
+        <activity android:name=".reiki.edit.EditReikiActivity"
+                  android:windowSoftInputMode="stateVisible">
         </activity>
 
         <activity
-                android:name=".reiki.positionlist.PositionListActivity"
+                android:name=".position.list.PositionListActivity"
                 android:launchMode="singleTask">
         </activity>
 
-        <activity android:name=".reiki.position.AddPositionActivity">
+        <activity android:name=".position.add.AddPositionActivity"
+                  android:windowSoftInputMode="stateVisible">
         </activity>
 
-        <activity android:name=".reiki.position.EditPositionActivity">
+        <activity android:name=".position.edit.EditPositionActivity"
+                  android:windowSoftInputMode="stateVisible">
         </activity>
 
     </application>

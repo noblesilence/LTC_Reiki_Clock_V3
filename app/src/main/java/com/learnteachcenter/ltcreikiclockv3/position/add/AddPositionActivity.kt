@@ -1,4 +1,4 @@
-package com.learnteachcenter.ltcreikiclockv3.reiki.position
+package com.learnteachcenter.ltcreikiclockv3.position.add
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -13,9 +13,8 @@ import com.learnteachcenter.ltcreikiclockv3.api.responses.Position.AddPositionRe
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
 import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiGenerator
-import com.learnteachcenter.ltcreikiclockv3.reiki.positionlist.PositionListActivity
+import com.learnteachcenter.ltcreikiclockv3.position.list.PositionListActivity
 import kotlinx.android.synthetic.main.activity_add_position.*
-import kotlinx.android.synthetic.main.activity_all_positions.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.json.JSONObject
 import retrofit2.Call
@@ -53,7 +52,7 @@ class AddPositionActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        toolbar_title.text = getString(R.string.app_name).toUpperCase()
+        toolbar_title.text = getString(R.string.add_position)
         toolbar.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_chevron_left)
         toolbar.setNavigationOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {

@@ -1,4 +1,4 @@
-package com.learnteachcenter.ltcreikiclockv3.reiki.positionlist;
+package com.learnteachcenter.ltcreikiclockv3.position.list;
 
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;

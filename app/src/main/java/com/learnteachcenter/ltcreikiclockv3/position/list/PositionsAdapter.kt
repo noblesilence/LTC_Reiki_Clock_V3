@@ -1,4 +1,4 @@
-package com.learnteachcenter.ltcreikiclockv3.reiki.positionlist
+package com.learnteachcenter.ltcreikiclockv3.position.list
 
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.RecyclerView
@@ -7,12 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.app.inflate
-import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
+import com.learnteachcenter.ltcreikiclockv3.position.Position
 import kotlinx.android.synthetic.main.list_item_position.view.*
 import kotlinx.android.synthetic.main.list_item_position.view.imv_drag_handle
 import kotlinx.android.synthetic.main.list_item_position.view.imv_edit
 import kotlinx.android.synthetic.main.list_item_position.view.title
-import kotlinx.android.synthetic.main.list_item_reiki.view.*
 import java.util.*
 
 class PositionsAdapter (private val positions: MutableList<Position>,

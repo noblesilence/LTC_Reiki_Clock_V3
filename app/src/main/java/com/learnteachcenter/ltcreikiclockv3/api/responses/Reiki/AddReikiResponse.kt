@@ -2,7 +2,7 @@ package com.learnteachcenter.ltcreikiclockv3.api.responses.Reiki
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
+import com.learnteachcenter.ltcreikiclockv3.position.Position
 
 data class AddReikiResponse (
     @SerializedName("_id")

@@ -2,7 +2,6 @@ package com.learnteachcenter.ltcreikiclockv3.api.responses.Position
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
 
 // The Reiki API will return Reiki object,
 // which is the same as AddReikiResponse

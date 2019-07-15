@@ -73,11 +73,12 @@ class AddReikiActivity : AppCompatActivity() {
         }
     }
 
+    // This code is duplicate with EditReikiActivity
     private fun configureUI() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        toolbar_title.text = getString(R.string.app_name).toUpperCase()
+        toolbar_title.text = getString(R.string.add_reiki)
         toolbar.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_chevron_left)
         toolbar.setNavigationOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {

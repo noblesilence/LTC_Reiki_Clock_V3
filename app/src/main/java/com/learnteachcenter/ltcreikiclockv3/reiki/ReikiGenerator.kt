@@ -1,6 +1,6 @@
 package com.learnteachcenter.ltcreikiclockv3.reiki
 
-import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
+import com.learnteachcenter.ltcreikiclockv3.position.Position
 
 class ReikiGenerator {
     fun generateReiki(

@@ -12,7 +12,7 @@ import com.learnteachcenter.ltcreikiclockv3.app.AppExecutors
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.database.ReikiDao
 import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
-import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
+import com.learnteachcenter.ltcreikiclockv3.position.Position
 import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiAndAllPositions
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkBoundResource
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil

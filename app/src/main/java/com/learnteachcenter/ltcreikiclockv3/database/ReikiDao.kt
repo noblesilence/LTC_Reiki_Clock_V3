@@ -3,7 +3,7 @@ package com.learnteachcenter.ltcreikiclockv3.database
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
-import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
+import com.learnteachcenter.ltcreikiclockv3.position.Position
 import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
 import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiAndAllPositions
 

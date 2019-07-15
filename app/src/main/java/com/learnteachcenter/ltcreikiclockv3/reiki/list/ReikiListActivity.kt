@@ -16,7 +16,6 @@ import android.support.v7.widget.helper.ItemTouchHelper.*
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import com.learnteachcenter.ltcreikiclockv3.R
@@ -26,7 +25,7 @@ import com.learnteachcenter.ltcreikiclockv3.database.AuthenticationPrefs
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil
 import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
 import com.learnteachcenter.ltcreikiclockv3.util.ResourceObserver
-import com.learnteachcenter.ltcreikiclockv3.reiki.positionlist.PositionListActivity
+import com.learnteachcenter.ltcreikiclockv3.position.list.PositionListActivity
 import com.learnteachcenter.ltcreikiclockv3.authentication.login.LoginActivity
 import com.learnteachcenter.ltcreikiclockv3.reiki.edit.EditReikiActivity
 import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki

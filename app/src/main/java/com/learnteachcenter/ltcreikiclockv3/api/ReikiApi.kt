@@ -10,7 +10,7 @@ import com.learnteachcenter.ltcreikiclockv3.api.responses.Reiki.*
 import com.learnteachcenter.ltcreikiclockv3.authentication.login.LoginResponse
 import com.learnteachcenter.ltcreikiclockv3.authentication.signup.SignUpResponse
 import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
-import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
+import com.learnteachcenter.ltcreikiclockv3.position.Position
 import retrofit2.Call
 import retrofit2.http.*
 

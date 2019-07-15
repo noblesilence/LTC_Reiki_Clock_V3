@@ -2,7 +2,7 @@ package com.learnteachcenter.ltcreikiclockv3.repositories
 
 import android.arch.lifecycle.LiveData
 import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
-import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
+import com.learnteachcenter.ltcreikiclockv3.position.Position
 import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiAndAllPositions
 import com.learnteachcenter.ltcreikiclockv3.util.Resource
 

@@ -7,7 +7,7 @@ import android.arch.persistence.room.PrimaryKey
 import android.support.annotation.NonNull
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
+import com.learnteachcenter.ltcreikiclockv3.position.Position
 
 @Entity(tableName = "reikis",
     indices = arrayOf(Index(value = ["id"])))

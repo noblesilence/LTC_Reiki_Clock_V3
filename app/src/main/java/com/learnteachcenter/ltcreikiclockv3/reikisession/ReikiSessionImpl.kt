@@ -1,4 +1,4 @@
-package com.learnteachcenter.ltcreikiclockv3.reiki.reikisession
+package com.learnteachcenter.ltcreikiclockv3.reikisession
 
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
@@ -9,10 +9,10 @@ import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiAndAllPositions
 import com.learnteachcenter.ltcreikiclockv3.util.TimeFormatter
-import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession.ReikiSessionEvent
-import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession.State.RUNNING
-import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession.State.PAUSED
-import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession.State.STOPPED
+import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession.ReikiSessionEvent
+import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession.State.RUNNING
+import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession.State.PAUSED
+import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession.State.STOPPED
 
 class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
                         private val context: Context = Injection.provideContext()

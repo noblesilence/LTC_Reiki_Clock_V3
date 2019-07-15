@@ -1,9 +1,8 @@
-package com.learnteachcenter.ltcreikiclockv3.reiki.positionlist
+package com.learnteachcenter.ltcreikiclockv3.position.list
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -22,17 +21,17 @@ import android.view.View
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.api.responses.Position.UpdatePositionsOrderResponse
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
-import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession.State
-import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession.ReikiSessionEvent.NONE
-import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession.ReikiSessionEvent.STATE_CHANGED
-import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession.ReikiSessionEvent.INDEX_CHANGED
-import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession.ReikiSessionEvent.TIME_LEFT_CHANGED
+import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession.State
+import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession.ReikiSessionEvent.NONE
+import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession.ReikiSessionEvent.STATE_CHANGED
+import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession.ReikiSessionEvent.INDEX_CHANGED
+import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession.ReikiSessionEvent.TIME_LEFT_CHANGED
 import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
-import com.learnteachcenter.ltcreikiclockv3.reiki.position.AddPositionActivity
-import com.learnteachcenter.ltcreikiclockv3.reiki.position.EditPositionActivity
-import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
+import com.learnteachcenter.ltcreikiclockv3.position.add.AddPositionActivity
+import com.learnteachcenter.ltcreikiclockv3.position.edit.EditPositionActivity
+import com.learnteachcenter.ltcreikiclockv3.position.Position
 import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiAndAllPositions
-import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession
+import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil
 import kotlinx.android.synthetic.main.activity_all_positions.*
 import kotlinx.android.synthetic.main.list_item_position.view.*

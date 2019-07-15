@@ -1,4 +1,4 @@
-package com.learnteachcenter.ltcreikiclockv3.reiki.position
+package com.learnteachcenter.ltcreikiclockv3.position
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey

@@ -3,5 +3,4 @@
   <dimen name="dp_8">8dp</dimen>
   <dimen name="dp_16">16dp</dimen>
   <dimen name="dp_24">24dp</dimen>
-  <dimen name="list_item_creature_height">50dp</dimen>
 </resources>

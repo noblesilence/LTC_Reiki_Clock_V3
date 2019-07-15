@@ -1,12 +1,12 @@
-package com.learnteachcenter.ltcreikiclockv3.reiki.positionlist
+package com.learnteachcenter.ltcreikiclockv3.position.list
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 import com.learnteachcenter.ltcreikiclockv3.repositories.ReikiRepository
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiAndAllPositions
-import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSession
-import com.learnteachcenter.ltcreikiclockv3.reiki.reikisession.ReikiSessionImpl
+import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession
+import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSessionImpl
 
 class PositionListViewModel (private val reikiId: String) : ViewModel() {
 

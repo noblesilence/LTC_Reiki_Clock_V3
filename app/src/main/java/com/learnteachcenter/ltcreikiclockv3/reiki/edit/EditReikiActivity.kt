@@ -2,6 +2,9 @@ package com.learnteachcenter.ltcreikiclockv3.reiki.edit
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
+import android.support.v7.widget.Toolbar
+import android.view.View
 import android.widget.Toast
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.api.responses.Reiki.UpdateReikiResponse
@@ -9,6 +12,7 @@ import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
 import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiGenerator
 import kotlinx.android.synthetic.main.activity_edit_reiki.*
+import kotlinx.android.synthetic.main.toolbar.*
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,6 +33,8 @@ class EditReikiActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_reiki)
+
+        configureUI()
 
         val i = intent
 
@@ -98,6 +104,21 @@ class EditReikiActivity : AppCompatActivity() {
                 })
             }
         }
+    }
+
+    // This method is duplicate with AddReikiActivity
+    private fun configureUI() {
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        toolbar_title.text = getString(R.string.edit_reiki)
+        toolbar.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_chevron_left)
+        toolbar.setNavigationOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                onBackPressed()
+                finish()
+            }
+        })
     }
 
     private fun displayMessage(message: String) {
