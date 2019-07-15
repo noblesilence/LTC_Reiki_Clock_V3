@@ -9,6 +9,10 @@ import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.app.inflate
 import com.learnteachcenter.ltcreikiclockv3.reiki.position.Position
 import kotlinx.android.synthetic.main.list_item_position.view.*
+import kotlinx.android.synthetic.main.list_item_position.view.imv_drag_handle
+import kotlinx.android.synthetic.main.list_item_position.view.imv_edit
+import kotlinx.android.synthetic.main.list_item_position.view.title
+import kotlinx.android.synthetic.main.list_item_reiki.view.*
 import java.util.*
 
 class PositionsAdapter (private val positions: MutableList<Position>,
@@ -130,7 +134,6 @@ class PositionsAdapter (private val positions: MutableList<Position>,
                 itemView.imv_edit.visibility = View.GONE
                 itemView.imv_edit.setOnClickListener(null)
             } else {
-
                 itemView.imv_alarm.visibility = View.GONE
                 itemView.icon_play_pause.visibility = View.GONE
 

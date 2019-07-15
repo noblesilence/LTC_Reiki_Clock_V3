@@ -115,6 +115,7 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
             itemView.description.text = reiki.description
 
             if(mode == ReikiListActivity.Mode.VIEW) {
+                itemView.description.visibility = View.VISIBLE
                 itemView.imv_arrow_right.visibility = View.VISIBLE
 
                 itemView.imv_drag_handle.visibility = View.GONE
@@ -126,6 +127,7 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
                 // Item Click
                 itemView.setOnClickListener { clickListener(reiki) }
             } else {
+                itemView.description.visibility = View.GONE
                 itemView.imv_drag_handle.visibility = View.VISIBLE
                 itemView.imv_edit.visibility = View.VISIBLE
 
