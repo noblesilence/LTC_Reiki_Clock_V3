@@ -18,8 +18,7 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_margin="8dp"/>
+            app:layout_constraintHorizontal_bias="0.0"/>
 
     <TextView
             android:id="@+id/lbl_position_prompt"
@@ -27,7 +26,7 @@
             android:layout_height="0dp"
             android:text="@string/prompt_new_position"
             android:textColor="@color/ALPHA_WHITE"
-            android:fontFamily="sans-serif-medium"
+            app:fontFamily="@font/lato_regular"
             android:background="@color/colorPrimaryLight"
             android:textSize="34sp"
             android:gravity="center"

@@ -7,6 +7,7 @@
                                              android:layout_height="wrap_content"
                                              android:paddingTop="5sp"
                                              android:paddingBottom="5sp"
+                                             android:radius="5dp"
                                              android:divider="@drawable/divider"
                                              android:orientation="horizontal"
                                              android:showDividers="end">
@@ -15,29 +16,30 @@
             android:id="@+id/icon_play_pause"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="?attr/selectableItemBackground"
-            android:tint="@color/colorSecondary"
-            android:padding="16dp"
-            app:srcCompat="@drawable/ic_play_circle"
-            android:contentDescription="@string/reiki_play_pause_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            android:padding="16dp"
+            app:srcCompat="@drawable/ic_play_circle"
+            android:background="?attr/selectableItemBackground"
+            android:tint="@color/colorSecondary"
+            android:contentDescription="@string/reiki_play_pause_button"
+            />
 
     <TextView
             android:id="@+id/lbl_position_seq_no"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5sp"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif"
-            android:gravity="center_vertical|start"
-            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/title"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/icon_play_pause"
             app:layout_constraintTop_toTopOf="parent"
+            android:ellipsize="end"
+            app:fontFamily="@font/lato_regular"
+            android:gravity="center_vertical|start"
+            android:textSize="16sp"
             tools:text="1. "/>
 
     <TextView
@@ -45,15 +47,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/lbl_position_seq_no"
             android:ellipsize="end"
             app:fontFamily="@font/lato_regular"
             android:gravity="center_vertical|start"
             android:maxLines="4"
             android:textSize="18sp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/lbl_position_seq_no"
-            tools:text="Solar Plexus" android:textColor="@color/colorBlack"/>
+            tools:text="Solar Plexus"
+            android:textColor="@color/colorBlack"/>
 
     <ImageButton
             android:id="@+id/imv_alarm"
@@ -63,51 +66,52 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="@dimen/dp_8"
             android:layout_marginEnd="@dimen/dp_8"
-            android:background="@drawable/ic_alarm"
             android:padding="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/duration"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/ic_alarm"
+            android:contentDescription="@string/timer"/>
 
     <TextView
             android:id="@+id/duration"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="center_vertical|end"
-            android:text="@string/position_duration"
-            android:textSize="16sp"
-            android:textColor="@color/colorBlack"
-            app:fontFamily="@font/lato_regular"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imv_edit"/>
+            app:layout_constraintEnd_toStartOf="@+id/imv_edit"
+            android:gravity="center_vertical|end"
+            android:text="@string/position_duration"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+            app:fontFamily="@font/lato_regular" />
 
     <ImageView
             android:id="@+id/imv_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_edit"
-            android:tint="@color/colorTextLight"
-            android:layout_centerVertical="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/imv_drag_handle"
-            />
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/ic_edit"
+            android:tint="@color/colorTextLight"
+            android:contentDescription="@string/edit"/>
 
     <ImageView
             android:id="@+id/imv_drag_handle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:gravity="center_horizontal|start"
-            app:srcCompat="@drawable/ic_drag_handle"
-            android:tint="@color/colorSecondaryDark"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:padding="@dimen/dp_16"
-            />
+            android:gravity="center_horizontal|start"
+            app:srcCompat="@drawable/ic_drag_handle"
+            android:tint="@color/colorSecondaryDark"
+            android:contentDescription="@string/drag_to_reorder"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -111,6 +111,7 @@ object ReikiRepositoryImpl: ReikiRepository {
 
     // Delete one Reiki in local and remote databases
     override fun deleteReiki(reikiId: String) {
+        Log.wtf("Reiki", "[ReikiRepositoryImpl]: deleteReiki, id is $reikiId")
         // Delete in local database
         DeleteReikiAsyncTask(reikiDao, reikiId).execute()
 

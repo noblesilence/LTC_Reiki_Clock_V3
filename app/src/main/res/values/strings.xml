@@ -5,6 +5,8 @@
     <string name="save">Save</string>
     <string name="edit">Edit</string>
     <string name="done">Done</string>
+    <string name="drag_to_reorder">Drag to reorder</string>
+    <string name="timer">Timer</string>
 
     <string name="add_reiki">Add Reiki</string>
     <string name="hint_title">Title</string>

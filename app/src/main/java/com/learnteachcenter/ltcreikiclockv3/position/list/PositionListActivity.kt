@@ -442,7 +442,7 @@ class PositionListActivity : AppCompatActivity() {
         startActivity(i)
     }
 
-    fun onDeletePosition(position: Position) {
+    private fun onDeletePosition(position: Position) {
         viewModel.deletePosition(reikiId, position.id)
     }
 

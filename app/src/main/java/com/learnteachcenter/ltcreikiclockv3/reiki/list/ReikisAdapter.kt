@@ -76,6 +76,7 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
     }
 
     fun removeItem(viewHolder: RecyclerView.ViewHolder) {
+        Log.wtf("Reiki", "[ReikisAdapter] (removeItem)")
         removedPosition = viewHolder.adapterPosition
         removedItem = reikis.get(viewHolder.adapterPosition)
 
@@ -92,6 +93,7 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
                 override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                     when(event) {
                         DISMISS_EVENT_TIMEOUT -> {
+                            Log.wtf("Reiki", "[ReikisAdapter] (removeItem) deleteListener")
                             deleteListener(removedItem)
                         }
                     }

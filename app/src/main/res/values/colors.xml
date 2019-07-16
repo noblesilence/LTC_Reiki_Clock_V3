@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorSecondary">#D162E4</color>
+    <color name="colorSecondary">#F43A97</color>
     <color name="colorSwipeBackground">#FF0000</color>
-    <color name="colorAccent">#D162E4</color>
-    <color name="colorHighlight">#EDE3F3</color>
+    <color name="colorAccent">#F43A97</color>
+    <color name="colorHighlight">#F4D9E0</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorBlack">#000000</color>
     <color name="colorLightGray">#F0EFEF</color>
