@@ -9,6 +9,5 @@ import com.learnteachcenter.ltcreikiclockv3.repositories.ReikiRepository
 class ReikisViewModel (val repository: ReikiRepository = Injection.provideReikiRepository()) : ViewModel() {
     var reikis: LiveData<Resource<List<Reiki>>> = repository.getReikis()
     fun updateReikis(vararg reikis: Reiki) = repository.updateReikis(*reikis)
-    fun deleteReikis() = repository.deleteAllReikis()
-    fun deleteReiki(reikiId: String) = repository.deleteReiki(reikiId)
+    fun deleteReikis(vararg reikis: Reiki) = repository.deleteReikis(*reikis)
 }

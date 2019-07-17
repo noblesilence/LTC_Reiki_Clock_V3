@@ -6,7 +6,7 @@ import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.api.ReikiApi
 import com.learnteachcenter.ltcreikiclockv3.api.responses.ApiResponse
 import com.learnteachcenter.ltcreikiclockv3.api.responses.Position.DeletePositionResponse
-import com.learnteachcenter.ltcreikiclockv3.api.responses.Reiki.DeleteReikiResponse
+import com.learnteachcenter.ltcreikiclockv3.api.responses.Reiki.DeleteReikisResponse
 import com.learnteachcenter.ltcreikiclockv3.api.responses.Reiki.ReikisResponse
 import com.learnteachcenter.ltcreikiclockv3.app.AppExecutors
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
@@ -96,35 +96,27 @@ object ReikiRepositoryImpl: ReikiRepository {
         }
     }
 
-    // Delete all Reikis
-    override fun deleteAllReikis() {
-        DeleteAllReikisAsyncTask(reikiDao).execute()
-    }
-
-    private class DeleteAllReikisAsyncTask internal constructor(private val dao: ReikiDao)
-        : AsyncTask<Void, Void, Void>() {
-        override fun doInBackground(vararg params: Void?): Void? {
-            dao.deleteAllReikis()
-            return null
-        }
-    }
-
     // Delete one Reiki in local and remote databases
-    override fun deleteReiki(reikiId: String) {
-        Log.wtf("Reiki", "[ReikiRepositoryImpl]: deleteReiki, id is $reikiId")
+    override fun deleteReikis(vararg reikis: Reiki) {
         // Delete in local database
-        DeleteReikiAsyncTask(reikiDao, reikiId).execute()
+        DeleteReikisAsyncTask().execute(*reikis)
 
         // Delete on the remote database
-        val call: Call<DeleteReikiResponse> = reikiApi.deleteReiki(reikiId)
+        val reikiIds = ArrayList<String>()
 
-        call.enqueue(object: Callback<DeleteReikiResponse> {
-            override fun onFailure(call: Call<DeleteReikiResponse>, t: Throwable) {
+        for(r in reikis) {
+            reikiIds.add(r.id)
+        }
+
+        val call: Call<DeleteReikisResponse> = reikiApi.deleteReikis(reikiIds)
+
+        call.enqueue(object: Callback<DeleteReikisResponse> {
+            override fun onFailure(call: Call<DeleteReikisResponse>, t: Throwable) {
                 Log.wtf("Reiki", "Delete error: ${t.message}")
             }
 
-            override fun onResponse(call: Call<DeleteReikiResponse>, response: Response<DeleteReikiResponse>) {
-                val deleteResponse: DeleteReikiResponse? = response.body()
+            override fun onResponse(call: Call<DeleteReikisResponse>, response: Response<DeleteReikisResponse>) {
+                val deleteResponse: DeleteReikisResponse? = response.body()
 
                 if(deleteResponse != null) {
                     if(deleteResponse.success) {
@@ -138,10 +130,9 @@ object ReikiRepositoryImpl: ReikiRepository {
         })
     }
 
-    private class DeleteReikiAsyncTask internal constructor(private val dao: ReikiDao, private val reikiId: String)
-        : AsyncTask<String, Void, Void>() {
-        override fun doInBackground(vararg params: String?): Void? {
-            dao.deleteReiki(reikiId)
+    private class DeleteReikisAsyncTask : AsyncTask<Reiki, Void, Void>() {
+        override fun doInBackground(vararg reikis: Reiki): Void? {
+            reikiDao.deleteReikis(*reikis)
             return null
         }
     }

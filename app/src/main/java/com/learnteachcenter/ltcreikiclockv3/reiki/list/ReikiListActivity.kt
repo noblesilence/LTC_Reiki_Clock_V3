@@ -2,9 +2,6 @@ package com.learnteachcenter.ltcreikiclockv3.reiki.list
 
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
-import android.graphics.Canvas
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -30,6 +27,7 @@ import com.learnteachcenter.ltcreikiclockv3.authentication.login.LoginActivity
 import com.learnteachcenter.ltcreikiclockv3.reiki.edit.EditReikiActivity
 import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
 import com.learnteachcenter.ltcreikiclockv3.reiki.add.AddReikiActivity
+import com.learnteachcenter.ltcreikiclockv3.util.ListViewMode
 import kotlinx.android.synthetic.main.activity_all_reikis.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.json.JSONObject
@@ -37,52 +35,53 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-
-// https://stackoverflow.com/questions/38340358/how-to-enable-and-disable-drag-and-drop-on-a-recyclerview
+import android.support.v7.view.ActionMode
+import kotlinx.android.synthetic.main.list_item_reiki.view.*
 
 class ReikiListActivity : AppCompatActivity() {
 
     private val TAG = "Reiki"
-    private var mode: Mode = Mode.VIEW
+    private var mode: ListViewMode = ListViewMode.VIEW
+    private val selectedItems: MutableList<Reiki> = mutableListOf()
     private lateinit var viewModel: ReikisViewModel
-    private lateinit var swipeBackground: ColorDrawable
-    private lateinit var deleteIcon: Drawable
     private var itemTouchHelper: ItemTouchHelper? = null
     private val reikiApi = Injection.provideReikiApi()
 
     private val adapter = ReikisAdapter(
         mutableListOf(),
-        Mode.VIEW,
+        ListViewMode.VIEW,
+        selectListener = { reiki, itemIndex -> onSelectReiki(reiki, itemIndex) },
         clickListener = { reiki -> reikiItemClicked(reiki) },
         editListener = { reiki -> onEditReiki(reiki) },
-        deleteListener = { reiki -> onDeleteReiki(reiki) },
         dragListener = { viewHolder -> onDragReiki(viewHolder) }
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_reikis)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        toolbar_title.text = getString(R.string.app_name).toUpperCase()
+
+        configureUI()
 
         viewModel = ViewModelProviders.of(this).get(ReikisViewModel::class.java)
-
-        swipeBackground = ColorDrawable(ContextCompat.getColor(this, R.color.colorSwipeBackground))
-        deleteIcon = ContextCompat.getDrawable(this, R.drawable.ic_delete)!!
 
         initRecyclerView()
         subscribeObservers()
 
         // Show/hide Add button based on internet connectivity
         if(NetworkUtil.isConnected(this)) {
-            fab.setOnClickListener {
+            fab_add_reiki.setOnClickListener {
                 startActivity(Intent(this, AddReikiActivity::class.java))
             }
         } else {
-            fab.hide()
+            fab_add_reiki.hide()
         }
+    }
+
+    private fun configureUI() {
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        toolbar_title.text = getString(R.string.app_name).toUpperCase()
     }
 
     private fun initRecyclerView() {
@@ -140,24 +139,134 @@ class ReikiListActivity : AppCompatActivity() {
         val reikisToUpdate = Arrays.copyOfRange(reikis.toTypedArray(), 0, reikis.size)
         viewModel.updateReikis(*reikisToUpdate)
 
-        adapter.updateViewMode(Mode.VIEW)
+        adapter.updateViewMode(ListViewMode.VIEW)
         adapter.notifyDataSetChanged()
     }
 
     private fun changeToViewUI() {
+        adapter.updateViewMode(ListViewMode.VIEW)
+        adapter.notifyDataSetChanged()
+
         if(itemTouchHelper != null) {
             itemTouchHelper!!.attachToRecyclerView(null)
         }
+
+        fab_add_reiki.show()
     }
 
     private fun changeToEditUI() {
-
-        adapter.updateViewMode(Mode.EDIT)
+        adapter.updateViewMode(ListViewMode.EDIT)
         adapter.notifyDataSetChanged()
 
+        fab_add_reiki.hide()
+
+        val actionModeCallbacks: ActionMode.Callback = object: ActionMode.Callback {
+            override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+                val menuInflater = menuInflater
+                menuInflater.inflate(R.menu.toolbar_cab_edit, menu)
+                return true
+            }
+
+            override fun onPrepareActionMode(p0: ActionMode?, p1: Menu?): Boolean {
+                return false
+            }
+
+            override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+                return false
+            }
+
+            override fun onDestroyActionMode(p0: ActionMode?) {
+                changeToViewUI()
+            }
+        }
+
+        startSupportActionMode(actionModeCallbacks)
+    }
+
+    private fun changeToDeleteUI() {
+        adapter.updateViewMode(ListViewMode.DELETE)
+        adapter.notifyDataSetChanged()
+
+        fab_add_reiki.hide()
+
+        val actionModeCallbacks: ActionMode.Callback = object: ActionMode.Callback {
+            override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+                val menuInflater = menuInflater
+                menuInflater.inflate(R.menu.toolbar_cab_delete, menu)
+                return true
+            }
+
+            override fun onPrepareActionMode(p0: ActionMode?, p1: Menu?): Boolean {
+                return false
+            }
+
+            override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+
+                Log.wtf("Reiki", "[ReikiListActivity] (changeToDeleteUI) onActionItemClicked")
+
+                onDeleteReikis(*selectedItems.toTypedArray())
+
+                mode?.finish()
+
+                return false
+            }
+
+            override fun onDestroyActionMode(p0: ActionMode?) {
+                changeToViewUI()
+            }
+        }
+
+        startSupportActionMode(actionModeCallbacks)
+    }
+
+    private fun onSelectReiki(reiki: Reiki, itemIndex: Int) {
+        if (selectedItems.contains(reiki)) {
+            selectedItems.remove(reiki)
+            unhighlightItem(itemIndex)
+        } else {
+            selectedItems.add(reiki)
+            highlightItem(itemIndex)
+        }
+    }
+
+    private fun highlightItem(itemIndex: Int) {
+        val color = ContextCompat.getColor(this, R.color.colorHighlight)
+
+        try {
+            val holder: ReikisAdapter.ViewHolder =
+                reikisRecyclerView.findViewHolderForAdapterPosition(itemIndex)
+                        as ReikisAdapter.ViewHolder
+
+            holder.itemView.cardview.setCardBackgroundColor(color)
+            holder.itemView.ckb_delete.isChecked = true
+        } catch(exception: Exception) {
+
+        }
+    }
+
+    private fun unhighlightItem(itemIndex: Int) {
+        val color = ContextCompat.getColor(this, R.color.colorWhite)
+
+        try {
+            val holder: ReikisAdapter.ViewHolder =
+                reikisRecyclerView.findViewHolderForAdapterPosition(itemIndex)
+                        as ReikisAdapter.ViewHolder
+
+            holder.itemView.cardview.setCardBackgroundColor(color)
+            holder.itemView.ckb_delete.isChecked = false
+        } catch(exception: Exception) {
+
+        }
+    }
+
+    private fun changeToReorderUI() {
+        adapter.updateViewMode(ListViewMode.REORDER)
+        adapter.notifyDataSetChanged()
+
+        fab_add_reiki.hide()
+
         val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback (
-            UP or DOWN or START or END,
-            LEFT or RIGHT) {
+            UP or DOWN or START or END, 0) {
 
             override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
                 super.onSelectedChanged(viewHolder, actionState)
@@ -166,6 +275,8 @@ class ReikiListActivity : AppCompatActivity() {
                     viewHolder?.itemView?.alpha = 0.5f
                 }
             }
+
+            override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {}
 
             override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
                 super.clearView(recyclerView, viewHolder)
@@ -181,63 +292,35 @@ class ReikiListActivity : AppCompatActivity() {
 
                 return true
             }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
-                adapter.removeItem(viewHolder)
-            }
-
-            override fun onChildDraw(
-                c: Canvas,
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                dX: Float,
-                dY: Float,
-                actionState: Int,
-                isCurrentlyActive: Boolean
-            ) {
-                val itemView = viewHolder.itemView
-
-                val iconMargin = (itemView.height - deleteIcon.intrinsicHeight) / 2
-
-                if(dX > 0) {
-                    swipeBackground.setBounds(itemView.left, itemView.top, dX.toInt(), itemView.bottom)
-                    deleteIcon.setBounds(
-                        itemView.left + iconMargin,
-                        itemView.top + iconMargin,
-                        itemView.left + iconMargin + deleteIcon.intrinsicWidth,
-                        itemView.bottom - iconMargin )
-                } else {
-                    swipeBackground.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
-                    deleteIcon.setBounds(
-                        itemView.right - iconMargin - deleteIcon.intrinsicWidth,
-                        itemView.top + iconMargin,
-                        itemView.right - iconMargin,
-                        itemView.bottom - iconMargin )
-                }
-
-                c.save()
-
-                swipeBackground.draw(c)
-
-                if(dX > 0) {
-                    c.clipRect(itemView.left, itemView.top, dX.toInt(), itemView.bottom)
-                } else {
-                    c.clipRect(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
-                }
-
-                deleteIcon.draw(c)
-
-                c.restore()
-
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-            }
         }
 
         itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
         itemTouchHelper!!.attachToRecyclerView(reikisRecyclerView)
+
+        val actionModeCallbacks: ActionMode.Callback = object: ActionMode.Callback {
+            override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+                val menuInflater = menuInflater
+                menuInflater.inflate(R.menu.toolbar_cab_reorder, menu)
+                return true
+            }
+
+            override fun onPrepareActionMode(p0: ActionMode?, p1: Menu?): Boolean {
+                return false
+            }
+
+            override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+                return false
+            }
+
+            override fun onDestroyActionMode(p0: ActionMode?) {
+                changeToViewUI()
+            }
+        }
+
+        startSupportActionMode(actionModeCallbacks)
     }
 
-    fun onDragReiki(viewHolder: RecyclerView.ViewHolder) {
+    private fun onDragReiki(viewHolder: RecyclerView.ViewHolder) {
         itemTouchHelper?.startDrag(viewHolder)
     }
 
@@ -275,22 +358,12 @@ class ReikiListActivity : AppCompatActivity() {
         startActivity(i)
     }
 
-    fun onDeleteReiki(reiki: Reiki) {
-        viewModel.deleteReiki(reiki.id)
+    fun onDeleteReikis(vararg reikis: Reiki) {
+        viewModel.deleteReikis(*reikis)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
-
-        if(mode == Mode.VIEW) {
-            menu.findItem(R.id.action_edit).setVisible(true)
-            menu.findItem(R.id.action_done).setVisible(false)
-        } else {
-            menu.findItem(R.id.action_edit).setVisible(false)
-            menu.findItem(R.id.action_done).setVisible(true)
-        }
-
         return true
     }
 
@@ -298,16 +371,18 @@ class ReikiListActivity : AppCompatActivity() {
         return when (item.itemId) {
 
             R.id.action_edit -> {
-                mode = Mode.EDIT
-                invalidateOptionsMenu()
+                mode = ListViewMode.EDIT
                 changeToEditUI()
                 true
             }
-            R.id.action_done -> {
-                mode = Mode.VIEW
-                invalidateOptionsMenu()
-                reorderReikis()
-                changeToViewUI()
+            R.id.action_delete -> {
+                mode = ListViewMode.DELETE
+                changeToDeleteUI()
+                true
+            }
+            R.id.action_reorder -> {
+                mode = ListViewMode.REORDER
+                changeToReorderUI()
                 true
             }
             R.id.action_logout -> {
@@ -317,6 +392,10 @@ class ReikiListActivity : AppCompatActivity() {
                 finish()
                 true
             }
+            R.id.action_clear_cache -> {
+                viewModel.deleteReikis()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -324,9 +403,5 @@ class ReikiListActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
-    }
-
-    enum class Mode {
-        VIEW, EDIT
     }
 }

@@ -12,8 +12,7 @@ interface ReikiRepository {
     fun getReikis(): LiveData<Resource<List<Reiki>>>
     fun getReiki(reikiId: String): LiveData<ReikiAndAllPositions>   // Get one Reiki from the database
     fun updateReikis(vararg reikis: Reiki) // Update the list of Reikis (from reordering operation)
-    fun deleteAllReikis()   // Delete all Reikis
-    fun deleteReiki(reikiId: String)    // Delete one Reiki in local and remote databases
+    fun deleteReikis(vararg reikis: Reiki)   // Delete the list of Reikis
 
     fun insertPosition(position: Position)  // Insert 1 Position
     fun updatePosition(position: Position)  // Update 1 Position

@@ -29,8 +29,8 @@ interface ReikiDao {
     @Update(onConflict = REPLACE)
     fun updateReikis(vararg reikis: Reiki): Int
 
-    @Query("DELETE FROM reikis WHERE id = :reikiId")
-    fun deleteReiki(reikiId: String)
+    @Delete
+    fun deleteReikis(vararg reikis: Reiki)
 
     @Query("DELETE FROM reikis")
     fun deleteAllReikis()

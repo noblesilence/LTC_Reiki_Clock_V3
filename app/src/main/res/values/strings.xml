@@ -4,6 +4,8 @@
     <string name="logout">Log Out</string>
     <string name="save">Save</string>
     <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="reorder">Reorder</string>
     <string name="done">Done</string>
     <string name="drag_to_reorder">Drag to reorder</string>
     <string name="timer">Timer</string>

@@ -453,14 +453,6 @@ class PositionListActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
 
-        if(mode == Mode.VIEW) {
-            menu.findItem(R.id.action_edit).setVisible(true)
-            menu.findItem(R.id.action_done).setVisible(false)
-        } else {
-            menu.findItem(R.id.action_edit).setVisible(false)
-            menu.findItem(R.id.action_done).setVisible(true)
-        }
-
         menu.findItem(R.id.action_logout).setVisible(false)
 
         return true
@@ -475,13 +467,13 @@ class PositionListActivity : AppCompatActivity() {
                 changeToEditUI()
                 true
             }
-            R.id.action_done -> {
-                mode = Mode.VIEW
-                invalidateOptionsMenu()
-                reorderPositions()
-                changeToViewUI()
-                true
-            }
+//            R.id.action_done -> {
+//                mode = Mode.VIEW
+//                invalidateOptionsMenu()
+//                reorderPositions()
+//                changeToViewUI()
+//                true
+//            }
             R.id.home -> {
                 onBackPressed()
                 true

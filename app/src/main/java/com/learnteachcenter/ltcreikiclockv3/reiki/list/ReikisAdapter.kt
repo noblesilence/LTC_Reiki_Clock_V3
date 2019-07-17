@@ -1,6 +1,6 @@
 package com.learnteachcenter.ltcreikiclockv3.reiki.list
 
-import android.support.design.widget.Snackbar
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
@@ -8,27 +8,25 @@ import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.app.inflate
 import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
 import kotlinx.android.synthetic.main.list_item_reiki.view.*
-import android.util.Log
 import android.view.MotionEvent
+import com.learnteachcenter.ltcreikiclockv3.util.ListViewMode
+import com.learnteachcenter.ltcreikiclockv3.util.ListViewMode.*
 import java.util.*
 
 // https://www.andreasjakl.com/recyclerview-kotlin-style-click-listener-android/
 
 class ReikisAdapter(private val reikis: MutableList<Reiki>,
-                    private var mode: ReikiListActivity.Mode,
+                    private var mode: ListViewMode,
+                    private val selectListener: (Reiki, Int) -> Unit,
                     private val clickListener: (Reiki) -> Unit,
                     private val editListener: (Reiki) -> Unit,
-                    private val deleteListener: (Reiki) -> Unit,
                     private val dragListener: (RecyclerView.ViewHolder) -> Unit
 ) : RecyclerView.Adapter<ReikisAdapter.ViewHolder>(){
-
-    private lateinit var removedItem: Reiki
-    private var removedPosition: Int = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val viewHolder = ViewHolder(parent.inflate(R.layout.list_item_reiki))
 
-        if(mode == ReikiListActivity.Mode.EDIT) {
+        if(mode == EDIT) {
             viewHolder.itemView.imv_drag_handle.setOnTouchListener {
                     _, event ->
 
@@ -46,12 +44,12 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(reikis[position], clickListener, editListener, mode)
+        holder.bind(reikis[position], selectListener, clickListener, editListener, mode)
     }
 
     override fun getItemCount(): Int = reikis.size
 
-    fun updateViewMode(newMode: ReikiListActivity.Mode) {
+    fun updateViewMode(newMode: ListViewMode) {
         mode = newMode
     }
 
@@ -68,81 +66,101 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
 
         for(i in 0..reikis.size - 1) {
             reikis[i].seqNo = i
-
-            Log.wtf("Reiki", "title: ${reikis[i].title}, seqNo: ${reikis[i].seqNo}")
         }
 
         notifyItemMoved(from, to)
     }
 
-    fun removeItem(viewHolder: RecyclerView.ViewHolder) {
-        Log.wtf("Reiki", "[ReikisAdapter] (removeItem)")
-        removedPosition = viewHolder.adapterPosition
-        removedItem = reikis.get(viewHolder.adapterPosition)
-
-        reikis.removeAt(viewHolder.adapterPosition)
-        notifyItemRemoved(viewHolder.adapterPosition)
-
-        Snackbar
-            .make(viewHolder.itemView, "${removedItem.title} deleted.", Snackbar.LENGTH_LONG)
-            .setAction("UNDO") {
-                    reikis.add(removedPosition, removedItem)
-                    notifyItemInserted(removedPosition)
-                }
-            .addCallback(object : Snackbar.Callback() {
-                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                    when(event) {
-                        DISMISS_EVENT_TIMEOUT -> {
-                            Log.wtf("Reiki", "[ReikisAdapter] (removeItem) deleteListener")
-                            deleteListener(removedItem)
-                        }
-                    }
-                    super.onDismissed(transientBottomBar, event)
-                }
-            })
-            .show()
-    }
+//    fun removeItem(viewHolder: RecyclerView.ViewHolder) {
+//        Log.wtf("Reiki", "[ReikisAdapter] (removeItem)")
+//        removedPosition = viewHolder.adapterPosition
+//        removedItem = reikis.get(viewHolder.adapterPosition)
+//
+//        reikis.removeAt(viewHolder.adapterPosition)
+//        notifyItemRemoved(viewHolder.adapterPosition)
+//
+//        Snackbar
+//            .make(viewHolder.itemView, "${removedItem.title} deleted.", Snackbar.LENGTH_LONG)
+//            .setAction("UNDO") {
+//                    reikis.add(removedPosition, removedItem)
+//                    notifyItemInserted(removedPosition)
+//                }
+//            .addCallback(object : Snackbar.Callback() {
+//                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+//                    when(event) {
+//                        DISMISS_EVENT_TIMEOUT -> {
+//                            Log.wtf("Reiki", "[ReikisAdapter] (removeItem) deleteListener")
+//                            deleteListener(removedItem)
+//                        }
+//                    }
+//                    super.onDismissed(transientBottomBar, event)
+//                }
+//            })
+//            .show()
+//    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private lateinit var reiki: Reiki
 
-        fun bind(reiki: Reiki,
-                 clickListener: (Reiki) -> Unit,
-                 editListener: (Reiki) -> Unit,
-                 mode: ReikiListActivity.Mode) {
+        fun bind(reiki: Reiki, selectListener: (Reiki, Int) -> Unit, clickListener: (Reiki) -> Unit, editListener: (Reiki) -> Unit, mode: ListViewMode) {
+
             this.reiki = reiki
 
             itemView.title.text = reiki.title
             itemView.description.text = reiki.description
 
-            if(mode == ReikiListActivity.Mode.VIEW) {
-                itemView.description.visibility = View.VISIBLE
-                itemView.imv_arrow_right.visibility = View.VISIBLE
+            when (mode) {
+                VIEW -> {
+                    itemView.description.visibility = View.VISIBLE
+                    itemView.imv_arrow_right.visibility = View.VISIBLE
 
-                itemView.imv_drag_handle.visibility = View.GONE
-                itemView.imv_edit.visibility = View.GONE
+                    itemView.imv_edit.visibility = View.GONE
+                    itemView.ckb_delete.visibility = View.GONE
+                    itemView.imv_drag_handle.visibility = View.GONE
 
-                // Remove Edit
-                itemView.imv_edit.setOnClickListener(null)
-
-                // Item Click
-                itemView.setOnClickListener { clickListener(reiki) }
-            } else {
-                itemView.description.visibility = View.GONE
-                itemView.imv_drag_handle.visibility = View.VISIBLE
-                itemView.imv_edit.visibility = View.VISIBLE
-
-                itemView.imv_arrow_right.visibility = View.GONE
-
-                // Edit
-                itemView.imv_edit.setOnClickListener {
-                    editListener(reiki)
-                    Log.wtf("Reiki", "Should edit Reiki")
+                    itemView.setOnClickListener { clickListener(reiki) }
                 }
+                EDIT -> {
+                    itemView.imv_edit.visibility = View.VISIBLE
+                    itemView.imv_edit.setOnClickListener {
+                        editListener(reiki)
+                    }
 
-                // remove the item onclick listener
-                itemView.setOnClickListener(null)
+                    itemView.description.visibility = View.GONE
+                    itemView.imv_arrow_right.visibility = View.GONE
+
+                    itemView.ckb_delete.visibility = View.GONE
+                    itemView.imv_drag_handle.visibility = View.GONE
+
+                    itemView.setOnClickListener(null)
+                }
+                DELETE -> {
+                    itemView.ckb_delete.visibility = View.VISIBLE
+                    itemView.ckb_delete.setOnClickListener {
+                        selectListener(reiki, adapterPosition)
+                    }
+                    itemView.description.visibility = View.GONE
+                    itemView.imv_arrow_right.visibility = View.GONE
+
+                    itemView.imv_edit.visibility = View.GONE
+                    itemView.imv_drag_handle.visibility = View.GONE
+
+                    itemView.setOnClickListener {
+                        selectListener(reiki, adapterPosition)
+                    }
+                }
+                REORDER -> {
+                    itemView.imv_drag_handle.visibility = View.VISIBLE
+
+                    itemView.description.visibility = View.GONE
+                    itemView.imv_arrow_right.visibility = View.GONE
+
+                    itemView.imv_edit.visibility = View.GONE
+                    itemView.ckb_delete.visibility = View.GONE
+
+                    itemView.setOnClickListener(null)
+                }
             }
         }
     }
