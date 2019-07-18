@@ -194,13 +194,19 @@ object ReikiRepositoryImpl: ReikiRepository {
         }
     }
 
-    // Delete 1 Position (local and remote)
-    override fun deletePosition(reikiId: String, positionId: String) {
+    // Delete Positions (local and remote)
+    override fun deletePositions(reikiId: String, vararg positions: Position) {
         // Delete in local database
-        DeletePositionAsyncTask(reikiDao, reikiId, positionId).execute()
+        DeletePositionsAsyncTask().execute(*positions)
 
         // Delete on remote database
-        val call: Call<DeletePositionResponse> = reikiApi.deletePosition(reikiId, positionId)
+        val positionIds = ArrayList<String>()
+
+        for(p in positions) {
+            positionIds.add(p.id)
+        }
+
+        val call: Call<DeletePositionResponse> = reikiApi.deletePositions(reikiId, positionIds)
 
         call.enqueue(object: Callback<DeletePositionResponse> {
             override fun onFailure(call: Call<DeletePositionResponse>, t: Throwable) {
@@ -220,14 +226,9 @@ object ReikiRepositoryImpl: ReikiRepository {
         })
     }
 
-    private class DeletePositionAsyncTask internal constructor(
-        private val dao: ReikiDao,
-        private val reikiId: String,
-        private val positionId: String
-    ) : AsyncTask<String, Void, Void>() {
-
-        override fun doInBackground(vararg params: String?): Void? {
-            val deletedCount: Int = dao.deletePosition(reikiId, positionId)
+    private class DeletePositionsAsyncTask : AsyncTask<Position, Void, Void>() {
+        override fun doInBackground(vararg positions: Position): Void? {
+            val deletedCount: Int = reikiDao.deletePositions(*positions)
             Log.d("Reiki", "[ReikiRepository] Deleted count is ${deletedCount}")
             return null
         }

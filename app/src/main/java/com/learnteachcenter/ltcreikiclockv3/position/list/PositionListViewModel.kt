@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 import com.learnteachcenter.ltcreikiclockv3.repositories.ReikiRepository
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
+import com.learnteachcenter.ltcreikiclockv3.position.Position
 import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiAndAllPositions
 import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession
 import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSessionImpl
@@ -48,7 +49,7 @@ class PositionListViewModel (private val reikiId: String) : ViewModel() {
         reikiSession.stop()
     }
 
-    fun deletePosition(reikiId: String, positionId: String) {
-        repository.deletePosition(reikiId, positionId)
+    fun deletePositions(reikiId: String, vararg positions: Position) {
+        repository.deletePositions(reikiId, *positions)
     }
 }

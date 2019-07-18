@@ -106,9 +106,9 @@ interface ReikiApi {
         @Field("duration") duration: String
     ): Call<UpdatePositionResponse>
 
-    @DELETE("reikis/position/{id}/{position_id}")
-    fun deletePosition(
+    @HTTP(method="DELETE", path="/reikis/{id}/positions/delete", hasBody = true)
+    fun deletePositions(
         @Path("id") reikiId: String,
-        @Path("position_id") positionId: String
+        @Body positions: ArrayList<String>
     ): Call<DeletePositionResponse>
 }

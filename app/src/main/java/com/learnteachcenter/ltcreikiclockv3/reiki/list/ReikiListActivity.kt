@@ -106,7 +106,6 @@ class ReikiListActivity : AppCompatActivity() {
         changeToViewUI()
     }
 
-    // TODO: this could be generic function
     private fun updateSeqNums(reikis: MutableList<Reiki>): MutableList<Reiki> {
 
         var updatedList = mutableListOf<Reiki>()
@@ -149,6 +148,7 @@ class ReikiListActivity : AppCompatActivity() {
         })
 
         // Local database
+        // TODO: move this to above network call
         val reikisToUpdate = Arrays.copyOfRange(reikis.toTypedArray(), 0, reikis.size)
         viewModel.updateReikis(*reikisToUpdate)
     }
@@ -223,6 +223,7 @@ class ReikiListActivity : AppCompatActivity() {
 
                 selectedItems.clear()
 
+                // TODO: do i really need this?
                 for(i in 0 until adapter.itemCount-1) {
                     unCheckItem(i)
                 }

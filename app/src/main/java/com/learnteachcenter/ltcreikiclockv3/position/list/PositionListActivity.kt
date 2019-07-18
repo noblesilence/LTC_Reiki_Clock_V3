@@ -3,12 +3,10 @@ package com.learnteachcenter.ltcreikiclockv3.position.list
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
-import android.graphics.Canvas
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v7.view.ActionMode
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -32,6 +30,8 @@ import com.learnteachcenter.ltcreikiclockv3.position.edit.EditPositionActivity
 import com.learnteachcenter.ltcreikiclockv3.position.Position
 import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiAndAllPositions
 import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession
+import com.learnteachcenter.ltcreikiclockv3.util.ListViewMode
+import com.learnteachcenter.ltcreikiclockv3.util.ListViewMode.*
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil
 import kotlinx.android.synthetic.main.activity_all_positions.*
 import kotlinx.android.synthetic.main.list_item_position.view.*
@@ -44,11 +44,9 @@ import java.util.*
 
 class PositionListActivity : AppCompatActivity() {
 
-    private var mode: Mode = Mode.VIEW
+    private var mode: ListViewMode = VIEW
+    private val selectedItems: MutableList<Position> = mutableListOf()
     private var itemTouchHelper: ItemTouchHelper? = null
-
-    private lateinit var swipeBackground: ColorDrawable
-    private lateinit var deleteIcon: Drawable
 
     private val reikiApi = Injection.provideReikiApi()
     private val repository = Injection.provideReikiRepository()
@@ -56,12 +54,15 @@ class PositionListActivity : AppCompatActivity() {
     private lateinit var reikiId: String
     private lateinit var reikiTitle: String
     private lateinit var viewModel: PositionListViewModel
+
+    private var shouldReorder = false
+
     private val adapter = PositionsAdapter(
         mutableListOf(),
-        Mode.VIEW,
+        VIEW,
         playListener = { position -> onPlayPosition(position) },
+        selectListener = { position, itemIndex -> onSelectPosition(position, itemIndex) },
         editListener = { position -> onEditPosition(position) },
-        deleteListener = { position -> onDeletePosition(position) },
         dragListener = { viewHolder -> onDragPosition(viewHolder) }
     )
 
@@ -81,9 +82,6 @@ class PositionListActivity : AppCompatActivity() {
             ).get(PositionListViewModel::class.java)
 
             configureUI()
-
-            swipeBackground = ColorDrawable(ContextCompat.getColor(this, R.color.colorSwipeBackground))
-            deleteIcon = ContextCompat.getDrawable(this, R.drawable.ic_delete)!!
 
             initRecyclerView()
             subscribeToReikiAndAllPositions()
@@ -297,12 +295,23 @@ class PositionListActivity : AppCompatActivity() {
         fab_play_pause.setImageResource(R.drawable.ic_pause)
     }
 
+    private fun updateSeqNums(positions: MutableList<Position>) : MutableList<Position> {
+        var updatedList = mutableListOf<Position>()
+
+        for(i in 0 until positions.size) {
+            val position = positions.get(i)
+            position.seqNo = i
+            updatedList.add(position)
+        }
+
+        return updatedList
+    }
+
     private fun reorderPositions() {
         // Update the Seq No's on the server and the local database
 
-        // TODO: update only if order is changed
-
-        val positions = adapter.getPositions()
+        var positions = adapter.getPositions()
+        positions = updateSeqNums(positions)
 
         // Update in local database
         val positionsToUpdate = Arrays.copyOfRange(positions.toTypedArray(), 0, positions.size)
@@ -329,25 +338,116 @@ class PositionListActivity : AppCompatActivity() {
                 }
             }
         })
-
-        adapter.updateViewMode(Mode.VIEW)
-        adapter.notifyDataSetChanged()
     }
 
     private fun changeToViewUI() {
+        adapter.updateViewMode(VIEW)
+        adapter.notifyDataSetChanged()
+
         if(itemTouchHelper != null) {
             itemTouchHelper!!.attachToRecyclerView(null)
         }
+
+        fab_add_position.show()
     }
 
     private fun changeToEditUI() {
-
-        adapter.updateViewMode(Mode.EDIT)
+        adapter.updateViewMode(EDIT)
         adapter.notifyDataSetChanged()
+        fab_add_position.hide()
+
+        val actionModeCallbacks: ActionMode.Callback = object: ActionMode.Callback {
+            override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+                val menuInflater = menuInflater
+                menuInflater.inflate(R.menu.toolbar_cab_edit, menu)
+                return true
+            }
+
+            override fun onPrepareActionMode(p0: ActionMode?, p1: Menu?): Boolean {
+                return false
+            }
+
+            override fun onActionItemClicked(p0: ActionMode?, p1: MenuItem?): Boolean {
+                return false
+            }
+
+            override fun onDestroyActionMode(p0: ActionMode?) {
+                changeToViewUI()
+            }
+        }
+
+        startSupportActionMode(actionModeCallbacks)
+    }
+
+    private fun changeToDeleteUI() {
+        adapter.updateViewMode(DELETE)
+        adapter.notifyDataSetChanged()
+        fab_add_position.hide()
+
+        val actionModeCallbacks: ActionMode.Callback = object: ActionMode.Callback {
+            override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+                val menuInflater = menuInflater
+                menuInflater.inflate(R.menu.toolbar_cab_delete, menu)
+                return true
+            }
+
+            override fun onPrepareActionMode(p0: ActionMode?, p1: Menu?): Boolean {
+                return false
+            }
+
+            override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+                onDeletePositions(*selectedItems.toTypedArray())
+                mode?.finish()
+                return true
+            }
+
+            override fun onDestroyActionMode(p0: ActionMode?) {
+                selectedItems.clear()
+                changeToViewUI()
+            }
+        }
+
+        startSupportActionMode(actionModeCallbacks)
+    }
+
+    private fun onSelectPosition(position: Position, itemIndex: Int) {
+        if(selectedItems.contains(position)) {
+            selectedItems.remove(position)
+            unCheckItem(itemIndex)
+        } else {
+            selectedItems.add(position)
+            checkItem(itemIndex)
+        }
+    }
+
+    private fun checkItem(itemIndex: Int) {
+        try {
+            val holder: PositionsAdapter.ViewHolder =
+                    positionsRecyclerView.findViewHolderForAdapterPosition(itemIndex)
+            as PositionsAdapter.ViewHolder
+
+            holder.itemView.ckb_delete.isChecked = true
+        } catch(exception: Exception) {}
+    }
+
+    private fun unCheckItem(itemIndex: Int) {
+        try {
+            val holder: PositionsAdapter.ViewHolder =
+                    positionsRecyclerView.findViewHolderForAdapterPosition(itemIndex)
+            as PositionsAdapter.ViewHolder
+
+            holder.itemView.ckb_delete.isChecked = false
+        } catch(exception: Exception) {}
+    }
+
+    private fun changeToReorderUI() {
+        adapter.updateViewMode(REORDER)
+        adapter.notifyDataSetChanged()
+        fab_add_position.hide()
 
         val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback (
             UP or DOWN or START or END,
-            LEFT or RIGHT) {
+            0) {
 
             override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
                 super.onSelectedChanged(viewHolder, actionState)
@@ -356,6 +456,8 @@ class PositionListActivity : AppCompatActivity() {
                     viewHolder?.itemView?.alpha = 0.5f
                 }
             }
+
+            override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {}
 
             override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
                 super.clearView(recyclerView, viewHolder)
@@ -369,62 +471,42 @@ class PositionListActivity : AppCompatActivity() {
 
                 adapter.swapItems(from, to)
 
+                shouldReorder = true
+
                 return true
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
-                adapter.removeItem(viewHolder)
-            }
-
-            override fun onChildDraw(
-                c: Canvas,
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                dX: Float,
-                dY: Float,
-                actionState: Int,
-                isCurrentlyActive: Boolean
-            ) {
-                val itemView = viewHolder.itemView
-
-                val iconMargin = (itemView.height - deleteIcon.intrinsicHeight) / 2
-
-                if(dX > 0) {
-                    swipeBackground.setBounds(itemView.left, itemView.top, dX.toInt(), itemView.bottom)
-                    deleteIcon.setBounds(
-                        itemView.left + iconMargin,
-                        itemView.top + iconMargin,
-                        itemView.left + iconMargin + deleteIcon.intrinsicWidth,
-                        itemView.bottom - iconMargin )
-                } else {
-                    swipeBackground.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
-                    deleteIcon.setBounds(
-                        itemView.right - iconMargin - deleteIcon.intrinsicWidth,
-                        itemView.top + iconMargin,
-                        itemView.right - iconMargin,
-                        itemView.bottom - iconMargin )
-                }
-
-                c.save()
-
-                swipeBackground.draw(c)
-
-                if(dX > 0) {
-                    c.clipRect(itemView.left, itemView.top, dX.toInt(), itemView.bottom)
-                } else {
-                    c.clipRect(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
-                }
-
-                deleteIcon.draw(c)
-
-                c.restore()
-
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             }
         }
 
         itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
         itemTouchHelper!!.attachToRecyclerView(positionsRecyclerView)
+
+        val actionModeCallbacks: ActionMode.Callback = object: ActionMode.Callback {
+            override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+                if(shouldReorder) {
+                    reorderPositions()
+                }
+
+                mode?.finish()
+                return true
+            }
+
+            override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+                val menuInflater = menuInflater
+                menuInflater.inflate(R.menu.toolbar_cab_reorder, menu)
+                return true
+            }
+
+            override fun onPrepareActionMode(p0: ActionMode?, p1: Menu?): Boolean {
+                return false
+            }
+
+            override fun onDestroyActionMode(p0: ActionMode?) {
+                shouldReorder = false
+                changeToViewUI()
+            }
+        }
+
+        startSupportActionMode(actionModeCallbacks)
     }
 
     private fun onPlayPosition(index: Int) {
@@ -442,8 +524,8 @@ class PositionListActivity : AppCompatActivity() {
         startActivity(i)
     }
 
-    private fun onDeletePosition(position: Position) {
-        viewModel.deletePosition(reikiId, position.id)
+    private fun onDeletePositions(vararg positions: Position) {
+        viewModel.deletePositions(reikiId, *positions)
     }
 
     private fun onDragPosition(viewHolder: RecyclerView.ViewHolder) {
@@ -452,9 +534,7 @@ class PositionListActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
-
         menu.findItem(R.id.action_logout).setVisible(false)
-
         return true
     }
 
@@ -462,18 +542,21 @@ class PositionListActivity : AppCompatActivity() {
         return when (item.itemId) {
 
             R.id.action_edit -> {
-                mode = Mode.EDIT
+                mode = EDIT
                 invalidateOptionsMenu()
                 changeToEditUI()
                 true
             }
-//            R.id.action_done -> {
-//                mode = Mode.VIEW
-//                invalidateOptionsMenu()
-//                reorderPositions()
-//                changeToViewUI()
-//                true
-//            }
+            R.id.action_delete -> {
+                mode = DELETE
+                changeToDeleteUI()
+                true
+            }
+            R.id.action_reorder -> {
+                mode = REORDER
+                changeToReorderUI()
+                true
+            }
             R.id.home -> {
                 onBackPressed()
                 true
@@ -485,9 +568,5 @@ class PositionListActivity : AppCompatActivity() {
     override fun onBackPressed() {
         viewModel.stopSession()
         super.onBackPressed()
-    }
-
-    enum class Mode {
-        VIEW, EDIT
     }
 }

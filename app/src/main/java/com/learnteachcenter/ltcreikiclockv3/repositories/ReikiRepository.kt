@@ -18,5 +18,5 @@ interface ReikiRepository {
     fun insertPosition(position: Position)  // Insert 1 Position
     fun updatePosition(position: Position)  // Update 1 Position
     fun updatePositions(vararg positions: Position) // Update a list of Positions (reorder operation)
-    fun deletePosition(reikiId: String, positionId: String) // Delete 1 Position (local and remote)
+    fun deletePositions(reikiId: String, vararg positions: Position) // Delete 1 Position (local and remote)
 }

@@ -48,6 +48,6 @@ interface ReikiDao {
     @Update(onConflict = REPLACE)
     fun updatePositions(vararg positions: Position): Int
 
-    @Query("DELETE FROM positions WHERE reikiId = :reikiId AND id = :positionId")
-    fun deletePosition(reikiId: String, positionId: String): Int
+    @Delete
+    fun deletePositions(vararg positions: Position): Int
 }
