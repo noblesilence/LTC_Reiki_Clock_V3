@@ -2,6 +2,7 @@ package com.learnteachcenter.ltcreikiclockv3.reiki.list
 
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import com.learnteachcenter.ltcreikiclockv3.R
@@ -62,42 +63,9 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
     fun getReikis() = this.reikis
 
     fun swapItems(from: Int, to: Int) {
-        Collections.swap(reikis, from, to)
-
-        for(i in 0..reikis.size - 1) {
-            reikis[i].seqNo = i
-        }
-
+        Collections.swap(this.reikis, from, to)
         notifyItemMoved(from, to)
     }
-
-//    fun removeItem(viewHolder: RecyclerView.ViewHolder) {
-//        Log.wtf("Reiki", "[ReikisAdapter] (removeItem)")
-//        removedPosition = viewHolder.adapterPosition
-//        removedItem = reikis.get(viewHolder.adapterPosition)
-//
-//        reikis.removeAt(viewHolder.adapterPosition)
-//        notifyItemRemoved(viewHolder.adapterPosition)
-//
-//        Snackbar
-//            .make(viewHolder.itemView, "${removedItem.title} deleted.", Snackbar.LENGTH_LONG)
-//            .setAction("UNDO") {
-//                    reikis.add(removedPosition, removedItem)
-//                    notifyItemInserted(removedPosition)
-//                }
-//            .addCallback(object : Snackbar.Callback() {
-//                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-//                    when(event) {
-//                        DISMISS_EVENT_TIMEOUT -> {
-//                            Log.wtf("Reiki", "[ReikisAdapter] (removeItem) deleteListener")
-//                            deleteListener(removedItem)
-//                        }
-//                    }
-//                    super.onDismissed(transientBottomBar, event)
-//                }
-//            })
-//            .show()
-//    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -112,7 +80,6 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
 
             when (mode) {
                 VIEW -> {
-                    itemView.description.visibility = View.VISIBLE
                     itemView.imv_arrow_right.visibility = View.VISIBLE
 
                     itemView.imv_edit.visibility = View.GONE
@@ -127,7 +94,6 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
                         editListener(reiki)
                     }
 
-                    itemView.description.visibility = View.GONE
                     itemView.imv_arrow_right.visibility = View.GONE
 
                     itemView.ckb_delete.visibility = View.GONE
@@ -140,7 +106,7 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
                     itemView.ckb_delete.setOnClickListener {
                         selectListener(reiki, adapterPosition)
                     }
-                    itemView.description.visibility = View.GONE
+
                     itemView.imv_arrow_right.visibility = View.GONE
 
                     itemView.imv_edit.visibility = View.GONE
@@ -153,7 +119,6 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
                 REORDER -> {
                     itemView.imv_drag_handle.visibility = View.VISIBLE
 
-                    itemView.description.visibility = View.GONE
                     itemView.imv_arrow_right.visibility = View.GONE
 
                     itemView.imv_edit.visibility = View.GONE

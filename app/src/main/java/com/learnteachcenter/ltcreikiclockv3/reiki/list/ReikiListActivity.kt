@@ -45,6 +45,7 @@ class ReikiListActivity : AppCompatActivity() {
     private lateinit var viewModel: ReikisViewModel
     private var itemTouchHelper: ItemTouchHelper? = null
     private val reikiApi = Injection.provideReikiApi()
+    private var shouldReorder = false
 
     private val adapter = ReikisAdapter(
         mutableListOf(),
@@ -105,12 +106,25 @@ class ReikiListActivity : AppCompatActivity() {
         changeToViewUI()
     }
 
+    // TODO: this could be generic function
+    private fun updateSeqNums(reikis: MutableList<Reiki>): MutableList<Reiki> {
+
+        var updatedList = mutableListOf<Reiki>()
+
+        for(i in 0 until reikis.size) {
+            val reiki = reikis.get(i)
+            reiki.seqNo = i
+            updatedList.add(reiki)
+        }
+
+        return updatedList
+    }
+
     private fun reorderReikis() {
         // Update the seq no's on the server and the local database
+        var reikis = adapter.getReikis()
 
-        // TODO: update only if user has reordered.
-
-        val reikis = adapter.getReikis()
+        reikis = updateSeqNums(reikis)
 
         // Server
 
@@ -137,9 +151,6 @@ class ReikiListActivity : AppCompatActivity() {
         // Local database
         val reikisToUpdate = Arrays.copyOfRange(reikis.toTypedArray(), 0, reikis.size)
         viewModel.updateReikis(*reikisToUpdate)
-
-        adapter.updateViewMode(ListViewMode.VIEW)
-        adapter.notifyDataSetChanged()
     }
 
     private fun changeToViewUI() {
@@ -201,8 +212,6 @@ class ReikiListActivity : AppCompatActivity() {
 
             override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
 
-                Log.wtf("Reiki", "[ReikiListActivity] (changeToDeleteUI) onActionItemClicked")
-
                 onDeleteReikis(*selectedItems.toTypedArray())
 
                 mode?.finish()
@@ -211,9 +220,6 @@ class ReikiListActivity : AppCompatActivity() {
             }
 
             override fun onDestroyActionMode(p0: ActionMode?) {
-                // unhighlight items and clear the array
-                // TODO:
-                // newly added item is highlighted in View mode
 
                 selectedItems.clear()
 
@@ -293,6 +299,8 @@ class ReikiListActivity : AppCompatActivity() {
 
                 adapter.swapItems(from, to)
 
+                shouldReorder = true
+
                 return true
             }
         }
@@ -312,10 +320,18 @@ class ReikiListActivity : AppCompatActivity() {
             }
 
             override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
-                return false
+                if(shouldReorder) {
+                    reorderReikis()
+                }
+
+                mode?.finish()
+
+                return true
             }
 
             override fun onDestroyActionMode(p0: ActionMode?) {
+                shouldReorder = false
+                Log.wtf("Reiki", "Reset shouldReorder to false")
                 changeToViewUI()
             }
         }
