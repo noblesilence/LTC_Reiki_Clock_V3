@@ -4,7 +4,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -208,10 +207,20 @@ class ReikiListActivity : AppCompatActivity() {
 
                 mode?.finish()
 
-                return false
+                return true
             }
 
             override fun onDestroyActionMode(p0: ActionMode?) {
+                // unhighlight items and clear the array
+                // TODO:
+                // newly added item is highlighted in View mode
+
+                selectedItems.clear()
+
+                for(i in 0 until adapter.itemCount-1) {
+                    unCheckItem(i)
+                }
+
                 changeToViewUI()
             }
         }
@@ -222,37 +231,31 @@ class ReikiListActivity : AppCompatActivity() {
     private fun onSelectReiki(reiki: Reiki, itemIndex: Int) {
         if (selectedItems.contains(reiki)) {
             selectedItems.remove(reiki)
-            unhighlightItem(itemIndex)
+            unCheckItem(itemIndex)
         } else {
             selectedItems.add(reiki)
-            highlightItem(itemIndex)
+            checkItem(itemIndex)
         }
     }
 
-    private fun highlightItem(itemIndex: Int) {
-        val color = ContextCompat.getColor(this, R.color.colorHighlight)
-
+    private fun checkItem(itemIndex: Int) {
         try {
             val holder: ReikisAdapter.ViewHolder =
                 reikisRecyclerView.findViewHolderForAdapterPosition(itemIndex)
                         as ReikisAdapter.ViewHolder
 
-            holder.itemView.cardview.setCardBackgroundColor(color)
             holder.itemView.ckb_delete.isChecked = true
         } catch(exception: Exception) {
 
         }
     }
 
-    private fun unhighlightItem(itemIndex: Int) {
-        val color = ContextCompat.getColor(this, R.color.colorWhite)
-
+    private fun unCheckItem(itemIndex: Int) {
         try {
             val holder: ReikisAdapter.ViewHolder =
                 reikisRecyclerView.findViewHolderForAdapterPosition(itemIndex)
                         as ReikisAdapter.ViewHolder
 
-            holder.itemView.cardview.setCardBackgroundColor(color)
             holder.itemView.ckb_delete.isChecked = false
         } catch(exception: Exception) {
 
@@ -387,13 +390,13 @@ class ReikiListActivity : AppCompatActivity() {
             }
             R.id.action_logout -> {
                 AuthenticationPrefs.clearAuthToken()
-                viewModel.deleteReikis()
+                viewModel.clearLocalDatabase()
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
                 true
             }
             R.id.action_clear_cache -> {
-                viewModel.deleteReikis()
+                viewModel.clearLocalDatabase()
                 true
             }
             else -> super.onOptionsItemSelected(item)

@@ -10,4 +10,5 @@ class ReikisViewModel (val repository: ReikiRepository = Injection.provideReikiR
     var reikis: LiveData<Resource<List<Reiki>>> = repository.getReikis()
     fun updateReikis(vararg reikis: Reiki) = repository.updateReikis(*reikis)
     fun deleteReikis(vararg reikis: Reiki) = repository.deleteReikis(*reikis)
+    fun clearLocalDatabase() = repository.clearLocalDatabase()
 }

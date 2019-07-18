@@ -37,7 +37,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:gravity="start|top"
-                android:inputType="textMultiLine|textCapSentences"
+                android:inputType="textCapSentences"
                 android:hint="@string/hint_description_optional"
                 android:text=""/>
         <CheckBox

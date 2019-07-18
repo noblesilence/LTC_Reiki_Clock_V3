@@ -123,8 +123,13 @@ object ReikiRepositoryImpl: ReikiRepository {
                         Log.wtf("Reiki", "Delete success!")
                     }
                 } else {
-                    val jObjError = JSONObject(response.errorBody()!!.string())
-                    Log.wtf("Reiki", jObjError.toString())
+                    if(response.errorBody()!!.string() == "Unauthorized") {
+
+                    }
+                    else {
+                        val jObjError = JSONObject(response.errorBody()!!.string())
+                        Log.wtf("Reiki", jObjError.toString())
+                    }
                 }
             }
         })
@@ -133,6 +138,17 @@ object ReikiRepositoryImpl: ReikiRepository {
     private class DeleteReikisAsyncTask : AsyncTask<Reiki, Void, Void>() {
         override fun doInBackground(vararg reikis: Reiki): Void? {
             reikiDao.deleteReikis(*reikis)
+            return null
+        }
+    }
+
+    override fun clearLocalDatabase() {
+        ClearLocalDatabaseAsyncTask().execute()
+    }
+
+    private class ClearLocalDatabaseAsyncTask : AsyncTask<Void, Void, Void>() {
+        override fun doInBackground(vararg params: Void?): Void? {
+            reikiDao.deleteAllReikis()
             return null
         }
     }

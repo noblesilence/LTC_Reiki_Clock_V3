@@ -38,7 +38,7 @@
             app:layout_constraintTop_toBottomOf="@+id/et_position_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:inputType="textCapWords"
+            android:inputType="time"
             android:autofillHints="@string/hint_duration"
             android:hint="@string/hint_duration"/>
     <Button

@@ -25,10 +25,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".authentication.signup.SignUpActivity">
+        <activity android:name=".authentication.signup.SignUpActivity"
+                  android:windowSoftInputMode="stateVisible">
         </activity>
 
-        <activity android:name=".authentication.login.LoginActivity">
+        <activity android:name=".authentication.login.LoginActivity"
+                  android:windowSoftInputMode="stateVisible">
         </activity>
 
         <activity
