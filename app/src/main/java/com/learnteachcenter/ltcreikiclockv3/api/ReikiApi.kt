@@ -80,7 +80,7 @@ interface ReikiApi {
     ): Call<UpdatePositionsOrderResponse>
 
     // Delete Reiki
-    @HTTP(method = "DELETE", path = "/reikis/delete", hasBody = true)
+    @HTTP(method = "DELETE", path = "reikis/delete", hasBody = true)
     fun deleteReikis(
         @Body reikis: ArrayList<String>
     ): Call<DeleteReikisResponse>
@@ -106,7 +106,7 @@ interface ReikiApi {
         @Field("duration") duration: String
     ): Call<UpdatePositionResponse>
 
-    @HTTP(method="DELETE", path="/reikis/{id}/positions/delete", hasBody = true)
+    @HTTP(method="DELETE", path="reikis/{id}/positions/delete", hasBody = true)
     fun deletePositions(
         @Path("id") reikiId: String,
         @Body positions: ArrayList<String>
