@@ -45,7 +45,12 @@ import java.util.*
 
 class PositionListActivity : AppCompatActivity() {
 
+    companion object {
+        var mActionMode: ActionMode? = null
+    }
+
     private var mode: ListViewMode = VIEW
+
     private val selectedItems: MutableList<Position> = mutableListOf()
     private var itemTouchHelper: ItemTouchHelper? = null
 
@@ -361,6 +366,7 @@ class PositionListActivity : AppCompatActivity() {
             override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
                 val menuInflater = menuInflater
                 menuInflater.inflate(R.menu.toolbar_cab_edit, menu)
+                mActionMode = mode
                 return true
             }
 
@@ -373,6 +379,7 @@ class PositionListActivity : AppCompatActivity() {
             }
 
             override fun onDestroyActionMode(p0: ActionMode?) {
+                mActionMode = null
                 changeToViewUI()
             }
         }
@@ -526,6 +533,11 @@ class PositionListActivity : AppCompatActivity() {
     }
 
     private fun onEditPosition(position: Position) {
+
+        if(mActionMode != null) {
+            mActionMode?.finish()
+        }
+
         val i = Intent(this, EditPositionActivity::class.java)
         i.putExtra(IntentExtraNames.EXTRA_POSITION_ID, position.id)
         i.putExtra(IntentExtraNames.EXTRA_POSITION_SEQ_NO, position.seqNo)

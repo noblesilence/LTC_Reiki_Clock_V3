@@ -41,6 +41,10 @@ import kotlinx.android.synthetic.main.list_item_reiki.view.*
 
 class ReikiListActivity : AppCompatActivity() {
 
+    companion object {
+        var mActionMode: ActionMode? = null
+    }
+
     private val TAG = "Reiki"
     private var mode: ListViewMode = ListViewMode.VIEW
     private val selectedItems: MutableList<Reiki> = mutableListOf()
@@ -176,6 +180,7 @@ class ReikiListActivity : AppCompatActivity() {
             override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
                 val menuInflater = menuInflater
                 menuInflater.inflate(R.menu.toolbar_cab_edit, menu)
+                mActionMode = mode
                 return true
             }
 
@@ -188,6 +193,7 @@ class ReikiListActivity : AppCompatActivity() {
             }
 
             override fun onDestroyActionMode(p0: ActionMode?) {
+                mActionMode = null
                 changeToViewUI()
             }
         }
@@ -379,6 +385,11 @@ class ReikiListActivity : AppCompatActivity() {
     }
 
     fun onEditReiki(reiki: Reiki) {
+
+        if(mActionMode != null) {
+            mActionMode?.finish()
+        }
+
         val i = Intent(this, EditReikiActivity::class.java)
         i.putExtra(IntentExtraNames.EXTRA_REIKI_ID, reiki.id)
         i.putExtra(IntentExtraNames.EXTRA_REIKI_SEQ_NO, reiki.seqNo)
