@@ -1,9 +1,11 @@
 package com.learnteachcenter.ltcreikiclockv3.reiki.list
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.DialogInterface
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -212,9 +214,18 @@ class ReikiListActivity : AppCompatActivity() {
 
             override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
 
-                onDeleteReikis(*selectedItems.toTypedArray())
-
-                mode?.finish()
+                AlertDialog.Builder(this@ReikiListActivity)
+                    .setTitle("Confirm Delete")
+                    .setMessage(getString(R.string.confirm_delete))
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(
+                        android.R.string.yes
+                    ) { _, _ ->
+                        onDeleteReikis(*selectedItems.toTypedArray())
+                        mode?.finish()
+                    }
+                    .setNegativeButton(android.R.string.no, null)
+                    .show()
 
                 return true
             }

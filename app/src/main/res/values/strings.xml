@@ -9,6 +9,7 @@
     <string name="done">Done</string>
     <string name="drag_to_reorder">Drag to reorder</string>
     <string name="timer">Timer</string>
+    <string name="confirm_delete">Are you sure you want to delete the selected item(s)? This cannot be undone.</string>
 
     <string name="add_reiki">Add Reiki</string>
     <string name="hint_title">Title</string>

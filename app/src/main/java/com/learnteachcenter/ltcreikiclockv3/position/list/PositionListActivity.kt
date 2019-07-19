@@ -6,6 +6,7 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.view.ActionMode
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -396,8 +397,19 @@ class PositionListActivity : AppCompatActivity() {
             }
 
             override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
-                onDeletePositions(*selectedItems.toTypedArray())
-                mode?.finish()
+                AlertDialog.Builder(this@PositionListActivity)
+                    .setTitle("Confirm Delete")
+                    .setMessage(getString(R.string.confirm_delete))
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(
+                        android.R.string.yes
+                    ) { _, _ ->
+                        onDeletePositions(*selectedItems.toTypedArray())
+                        mode?.finish()
+                    }
+                    .setNegativeButton(android.R.string.no, null)
+                    .show()
+
                 return true
             }
 
