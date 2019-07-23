@@ -84,6 +84,7 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
 
                     itemView.imv_edit.visibility = View.GONE
                     itemView.ckb_delete.visibility = View.GONE
+                    itemView.ckb_delete.isChecked = false
                     itemView.imv_drag_handle.visibility = View.GONE
 
                     itemView.setOnClickListener { clickListener(reiki) }
@@ -114,6 +115,7 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
 
                     itemView.setOnClickListener {
                         selectListener(reiki, adapterPosition)
+                        itemView.ckb_delete.isChecked = !itemView.ckb_delete.isChecked
                     }
                 }
                 REORDER -> {

@@ -1,7 +1,6 @@
 package com.learnteachcenter.ltcreikiclockv3.reiki.list
 
 import android.arch.lifecycle.ViewModelProviders
-import android.content.DialogInterface
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -131,8 +130,11 @@ class ReikiListActivity : AppCompatActivity() {
 
         reikis = updateSeqNums(reikis)
 
-        // Server
+        // Reorder Reikis in local database
+        val reikisToUpdate = Arrays.copyOfRange(reikis.toTypedArray(), 0, reikis.size)
+        viewModel.updateReikis(*reikisToUpdate)
 
+        // Reorder Reikis on the server
         val call: Call<UpdateReikisOrderResponse> = reikiApi.updateReikisOrder(reikis)
 
         call.enqueue(object: Callback<UpdateReikisOrderResponse>{
@@ -152,11 +154,6 @@ class ReikiListActivity : AppCompatActivity() {
                 }
             }
         })
-
-        // Local database
-        // TODO: move this to above network call
-        val reikisToUpdate = Arrays.copyOfRange(reikis.toTypedArray(), 0, reikis.size)
-        viewModel.updateReikis(*reikisToUpdate)
     }
 
     private fun changeToViewUI() {
@@ -237,14 +234,7 @@ class ReikiListActivity : AppCompatActivity() {
             }
 
             override fun onDestroyActionMode(p0: ActionMode?) {
-
                 selectedItems.clear()
-
-                // TODO: do i really need this?
-                for(i in 0 until adapter.itemCount-1) {
-                    unCheckItem(i)
-                }
-
                 changeToViewUI()
             }
         }
@@ -255,34 +245,8 @@ class ReikiListActivity : AppCompatActivity() {
     private fun onSelectReiki(reiki: Reiki, itemIndex: Int) {
         if (selectedItems.contains(reiki)) {
             selectedItems.remove(reiki)
-            unCheckItem(itemIndex)
         } else {
             selectedItems.add(reiki)
-            checkItem(itemIndex)
-        }
-    }
-
-    private fun checkItem(itemIndex: Int) {
-        try {
-            val holder: ReikisAdapter.ViewHolder =
-                reikisRecyclerView.findViewHolderForAdapterPosition(itemIndex)
-                        as ReikisAdapter.ViewHolder
-
-            holder.itemView.ckb_delete.isChecked = true
-        } catch(exception: Exception) {
-
-        }
-    }
-
-    private fun unCheckItem(itemIndex: Int) {
-        try {
-            val holder: ReikisAdapter.ViewHolder =
-                reikisRecyclerView.findViewHolderForAdapterPosition(itemIndex)
-                        as ReikisAdapter.ViewHolder
-
-            holder.itemView.ckb_delete.isChecked = false
-        } catch(exception: Exception) {
-
         }
     }
 
