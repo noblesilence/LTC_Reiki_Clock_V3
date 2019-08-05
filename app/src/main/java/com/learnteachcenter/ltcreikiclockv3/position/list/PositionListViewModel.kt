@@ -2,6 +2,7 @@ package com.learnteachcenter.ltcreikiclockv3.position.list
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
+import android.content.Context
 import com.learnteachcenter.ltcreikiclockv3.repositories.ReikiRepository
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
 import com.learnteachcenter.ltcreikiclockv3.position.Position
@@ -39,6 +40,14 @@ class PositionListViewModel (private val reikiId: String) : ViewModel() {
 
     fun pauseSession() {
         reikiSession.pause()
+    }
+
+    fun runInBackground(context: Context) {
+        reikiSession.runInBackground(context)
+    }
+
+    fun runInForeground(context: Context) {
+        reikiSession.runInForeground(context)
     }
 
     fun resumeSession() {

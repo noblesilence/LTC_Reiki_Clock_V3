@@ -87,14 +87,26 @@ class PositionListActivity : AppCompatActivity() {
                 PositionListViewModelFactory(reikiId)
             ).get(PositionListViewModel::class.java)
 
-            configureUI()
+            configureToolbar()
 
             initRecyclerView()
             subscribeToReikiAndAllPositions()
         }
     }
 
-    private fun configureUI() {
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.runInForeground(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        viewModel.runInBackground(this)
+    }
+
+    private fun configureToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
