@@ -94,18 +94,6 @@ class PositionListActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        viewModel.runInForeground(this)
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        viewModel.runInBackground(this)
-    }
-
     private fun configureToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)

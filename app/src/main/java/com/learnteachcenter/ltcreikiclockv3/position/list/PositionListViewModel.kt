@@ -42,14 +42,6 @@ class PositionListViewModel (private val reikiId: String) : ViewModel() {
         reikiSession.pause()
     }
 
-    fun runInBackground(context: Context) {
-        reikiSession.runInBackground(context)
-    }
-
-    fun runInForeground(context: Context) {
-        reikiSession.runInForeground(context)
-    }
-
     fun resumeSession() {
         reikiSession.resume()
     }

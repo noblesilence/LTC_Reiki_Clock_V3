@@ -1,28 +1,18 @@
 package com.learnteachcenter.ltcreikiclockv3.reikisession
 
-import android.annotation.TargetApi
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
-import android.content.Intent
 import android.media.MediaPlayer
 import android.os.CountDownTimer
-import android.support.v7.view.ActionMode
 import android.util.Log
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
-import com.learnteachcenter.ltcreikiclockv3.app.ReikiApplication
-import com.learnteachcenter.ltcreikiclockv3.position.list.TimerExpiredReceiver
 import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiAndAllPositions
 import com.learnteachcenter.ltcreikiclockv3.util.TimeFormatter
 import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession.ReikiSessionEvent
 import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession.State.RUNNING
 import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession.State.PAUSED
 import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession.State.STOPPED
-import com.learnteachcenter.ltcreikiclockv3.util.NotificationUtil
-import com.learnteachcenter.ltcreikiclockv3.util.PrefUtil
-import java.util.*
 
 class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
                         private val context: Context = Injection.provideContext()
@@ -46,31 +36,6 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
 
     override var eventLiveData = MutableLiveData<ReikiSessionEvent>().apply {
         value = ReikiSessionEvent.NONE
-    }
-
-    companion object {
-
-        @TargetApi(19)
-        fun setAlarm(context: Context, nowSeconds: Long, secondsRemaining: Long): Long {
-            val wakeUpTime = (nowSeconds + secondsRemaining) * 1000
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val intent = Intent(context, TimerExpiredReceiver::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, wakeUpTime, pendingIntent)
-            PrefUtil.setAlarmSetTime(nowSeconds, context)
-            return wakeUpTime
-        }
-
-        fun removeAlarm(context: Context) {
-            val intent = Intent(context, TimerExpiredReceiver::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            alarmManager.cancel(pendingIntent)
-            PrefUtil.setAlarmSetTime(0, context)
-        }
-
-        val nowSeconds: Long
-            get() = Calendar.getInstance().timeInMillis / 1000
     }
 
     // Override methods
@@ -97,48 +62,6 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
         pauseBackgroundSound()
 
         eventLiveData.value = ReikiSessionEvent.STATE_CHANGED
-    }
-
-    private fun initTimer(context: Context) {
-        state = PrefUtil.getTimerState(context)
-
-        secondsLeft = if(state == RUNNING || state == PAUSED) {
-            PrefUtil.getSecondsRemaining(context)
-        }
-        else
-            timerLengthSeconds
-
-        val alarmSetTime = PrefUtil.getAlarmSetTime(context)
-        if(alarmSetTime > 0)
-            secondsLeft -= nowSeconds - alarmSetTime
-
-        if(secondsLeft <= 0)
-            onTimerfinished()
-        else if(state == RUNNING)
-            start()
-    }
-
-    // App is visible
-    // Init the timer and remove the Alarm
-    override fun runInForeground(context: Context) {
-        initTimer(context)
-        removeAlarm(context)
-        NotificationUtil.hideTimerNotification(context)
-    }
-
-    // App is not visible
-    // Cancel the timer and set Alarm
-    override fun runInBackground(context: Context) {
-        if(state == RUNNING) {
-            countDownTimer!!.cancel()
-            val wakeUpTime = setAlarm(context, nowSeconds, secondsLeft)
-            NotificationUtil.showTimerRunning(context, wakeUpTime)
-        } else if(state == PAUSED) {
-            NotificationUtil.showTimerPaused(context)
-        }
-
-        PrefUtil.setSecondsRemaining(secondsLeft, context)
-        PrefUtil.setTimerState(state, context)
     }
 
     override fun resume() {
@@ -259,7 +182,20 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
             } catch (ex: Exception) {
                 Log.wtf("DEBUG", "Exception in playBackgroundSound: $ex")
             }
+        } else {
+            try {
+                if (bgMusicPlayer == null) {
+                    bgMusicPlayer = MediaPlayer.create(context, R.raw.background_sound)
+                    bgMusicPlayer?.setLooping(true)
+                    bgMusicPlayer?.setVolume(0.0f, 0.0f)
+                }
 
+                bgMusicPlayer?.start()
+
+                Log.d("Reiki", "[ReikiSession] playBackgroundSound")
+            } catch (ex: Exception) {
+                Log.wtf("DEBUG", "Exception in playBackgroundSound: $ex")
+            }
         }
     }
 

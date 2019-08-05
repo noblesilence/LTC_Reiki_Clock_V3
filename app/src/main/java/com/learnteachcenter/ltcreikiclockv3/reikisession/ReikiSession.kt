@@ -15,8 +15,6 @@ interface ReikiSession {
 
     fun start(index: Int)
     fun pause()
-    fun runInBackground(context: Context)
-    fun runInForeground(context: Context)
     fun resume()
     fun stop()
 
