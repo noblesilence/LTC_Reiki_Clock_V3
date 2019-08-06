@@ -1,6 +1,5 @@
 package com.learnteachcenter.ltcreikiclockv3.position.list
 
-import android.support.design.widget.Snackbar
 import android.support.v7.widget.RecyclerView
 import android.view.MotionEvent
 import android.view.View
@@ -8,6 +7,7 @@ import android.view.ViewGroup
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.app.inflate
 import com.learnteachcenter.ltcreikiclockv3.position.Position
+import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession
 import com.learnteachcenter.ltcreikiclockv3.util.ListViewMode
 import com.learnteachcenter.ltcreikiclockv3.util.ListViewMode.*
 import kotlinx.android.synthetic.main.list_item_position.view.*
@@ -90,6 +90,10 @@ class PositionsAdapter (private val positions: MutableList<Position>,
                     itemView.imv_edit.visibility = View.GONE
                     itemView.ckb_delete.visibility = View.GONE
                     itemView.imv_drag_handle.visibility = View.GONE
+
+                    itemView.icon_play_pause.setOnClickListener {
+                        playListener(adapterPosition)
+                    }
                 }
                 EDIT -> {
                     itemView.imv_edit.visibility = View.VISIBLE

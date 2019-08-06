@@ -10,7 +10,7 @@ import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiAndAllPositions
 import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession
 import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSessionImpl
 
-class PositionListViewModel (private val reikiId: String) : ViewModel() {
+class PositionListViewModel (reikiId: String) : ViewModel() {
 
     // Positions
 
@@ -29,9 +29,8 @@ class PositionListViewModel (private val reikiId: String) : ViewModel() {
     }
 
     fun initSession(reiki: ReikiAndAllPositions) {
-//        if(!::reikiSession.isInitialized) {
+//        if(!::reikiSession.isInitialized)
             reikiSession = ReikiSessionImpl(reiki)
-//        }
     }
 
     fun startSession(positionIndex: Int) {

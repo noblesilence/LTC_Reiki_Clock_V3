@@ -1,7 +1,6 @@
 package com.learnteachcenter.ltcreikiclockv3.reikisession
 
 import android.arch.lifecycle.MutableLiveData
-import android.content.Context
 
 interface ReikiSession {
 

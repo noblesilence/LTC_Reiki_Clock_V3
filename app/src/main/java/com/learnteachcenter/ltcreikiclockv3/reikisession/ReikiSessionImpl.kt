@@ -14,6 +14,8 @@ import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession.State.RUNN
 import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession.State.PAUSED
 import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession.State.STOPPED
 
+// This class actually run a Reiki session.
+
 class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
                         private val context: Context = Injection.provideContext()
 ): ReikiSession {

@@ -66,7 +66,7 @@ class PositionListActivity : AppCompatActivity() {
     private val adapter = PositionsAdapter(
         mutableListOf(),
         VIEW,
-        playListener = { position -> onPlayPosition(position) },
+        playListener = { index -> onPlayPosition(index) },
         selectListener = { position, itemIndex -> onSelectPosition(position, itemIndex) },
         editListener = { position -> onEditPosition(position) },
         dragListener = { viewHolder -> onDragPosition(viewHolder) }
@@ -124,6 +124,8 @@ class PositionListActivity : AppCompatActivity() {
         })
     }
 
+    // This function listens for event changes in ReikiSession
+    // and update the UI accordingly.
     private fun subscribeToReikiSession() {
 
         val reikiSession: ReikiSession? = viewModel.getReikiSession()
@@ -148,9 +150,12 @@ class PositionListActivity : AppCompatActivity() {
                             fab_stop.alpha = 0F
 
                             val previousIndex = reikiSession.getPreviousIndex()
-                            val previousDuration = reikiSession.getPreviousDuration()
+                            unhighlightPreviousItems(previousIndex)
 
-                            unhighlightItem(previousIndex, previousDuration)
+//                            val previousIndex = reikiSession.getPreviousIndex()
+//                            val previousDuration = reikiSession.getPreviousDuration()
+//
+//                            unhighlightItem(previousIndex, previousDuration)
                         }
                         State.RUNNING -> {
 
@@ -181,14 +186,17 @@ class PositionListActivity : AppCompatActivity() {
                 }
 
                 INDEX_CHANGED -> {
-                    // Highlight next, unhighlight current
-                    val previousIndex = reikiSession.getPreviousIndex()
-                    val previousDuration = reikiSession.getPreviousDuration()
+
+//                    val previousIndex = reikiSession.getPreviousIndex()
+//                    val previousDuration = reikiSession.getPreviousDuration()
+//                    unhighlightItem(previousIndex, previousDuration)
+
+                    // Highlight current, unhighlight previous items
                     val currentIndex = reikiSession.getCurrentIndex()
                     val currentDuration = reikiSession.getTimeLeft()
-
-                    unhighlightItem(previousIndex, previousDuration)
                     highlightItem(currentIndex, currentDuration)
+
+                    unhighlightPreviousItems(currentIndex)
                 }
 
                 TIME_LEFT_CHANGED -> {
@@ -197,6 +205,11 @@ class PositionListActivity : AppCompatActivity() {
 
                     highlightItem(currentIndex, currentDuration)
                     updateButtons(reikiSession.getState()) // Need to add this to handle screen rotation
+
+                    val previousIndex = reikiSession.getPreviousIndex()
+                    val previousDuration = reikiSession.getPreviousDuration()
+
+                    unhighlightItem(previousIndex, previousDuration)
                 }
 
                 NONE -> {
@@ -260,13 +273,12 @@ class PositionListActivity : AppCompatActivity() {
     }
 
     private fun highlightItem(itemIndex: Int, itemDuration: String) {
-        val color = ContextCompat.getColor(this, R.color.colorHighlight)
-        val image = ContextCompat.getDrawable(this, R.drawable.ic_pause)!!
-
         try {
             val holder: PositionsAdapter.ViewHolder =
                 positionsRecyclerView.findViewHolderForAdapterPosition(itemIndex)
                         as PositionsAdapter.ViewHolder
+            val color = ContextCompat.getColor(this, R.color.colorHighlight)
+            val image = ContextCompat.getDrawable(this, R.drawable.ic_pause)!!
 
             holder.itemView.setBackgroundColor(color)
             holder.itemView.icon_play_pause.setImageDrawable(image)
@@ -277,19 +289,29 @@ class PositionListActivity : AppCompatActivity() {
     }
 
     private fun unhighlightItem(itemIndex: Int, itemDuration: String) {
-        val color = 0
-        val image = ContextCompat.getDrawable(this, R.drawable.ic_play_circle)!!
-
         try {
             val holder: PositionsAdapter.ViewHolder =
                 positionsRecyclerView.findViewHolderForAdapterPosition(itemIndex)
                         as PositionsAdapter.ViewHolder
 
+            val color = 0
+            val image = ContextCompat.getDrawable(this, R.drawable.ic_play_circle)!!
+
             holder.itemView.setBackgroundColor(color)
             holder.itemView.icon_play_pause.setImageDrawable(image)
             holder.itemView.duration.text = itemDuration
         } catch(exception: Exception) {
-            Log.wtf("Reiki", "[PositionListActivity] highlightItem -> Exception: $exception")
+            Log.wtf("Reiki", "[PositionListActivity] unhighlightItem -> Exception: $exception")
+        }
+    }
+
+    private fun unhighlightPreviousItems(currentIndex: Int) {
+        lateinit var duration: String
+        var positions = viewModel.reikiAndAllPositions.value?.positions
+
+        for(i in 0 until currentIndex) {
+            duration = positions!![i].duration
+            unhighlightItem(i, duration)
         }
     }
 
