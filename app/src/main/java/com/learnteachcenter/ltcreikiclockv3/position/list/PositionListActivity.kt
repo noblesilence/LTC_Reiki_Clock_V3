@@ -150,12 +150,7 @@ class PositionListActivity : AppCompatActivity() {
                             fab_stop.alpha = 0F
 
                             val previousIndex = reikiSession.getPreviousIndex()
-                            unhighlightPreviousItems(previousIndex)
-
-//                            val previousIndex = reikiSession.getPreviousIndex()
-//                            val previousDuration = reikiSession.getPreviousDuration()
-//
-//                            unhighlightItem(previousIndex, previousDuration)
+                            unhighlightPreviousItems(previousIndex+1)
                         }
                         State.RUNNING -> {
 
@@ -186,11 +181,6 @@ class PositionListActivity : AppCompatActivity() {
                 }
 
                 INDEX_CHANGED -> {
-
-//                    val previousIndex = reikiSession.getPreviousIndex()
-//                    val previousDuration = reikiSession.getPreviousDuration()
-//                    unhighlightItem(previousIndex, previousDuration)
-
                     // Highlight current, unhighlight previous items
                     val currentIndex = reikiSession.getCurrentIndex()
                     val currentDuration = reikiSession.getTimeLeft()

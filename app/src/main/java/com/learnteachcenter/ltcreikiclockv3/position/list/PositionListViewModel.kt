@@ -29,7 +29,6 @@ class PositionListViewModel (reikiId: String) : ViewModel() {
     }
 
     fun initSession(reiki: ReikiAndAllPositions) {
-//        if(!::reikiSession.isInitialized)
             reikiSession = ReikiSessionImpl(reiki)
     }
 
