@@ -107,12 +107,10 @@ class ReikiListActivity : AppCompatActivity() {
 
     private fun showReikis(reikis: List<Reiki>) {
         adapter.setReikis(reikis)
-
         changeToViewUI()
     }
 
     private fun updateSeqNums(reikis: MutableList<Reiki>): MutableList<Reiki> {
-
         var updatedList = mutableListOf<Reiki>()
 
         for(i in 0 until reikis.size) {
@@ -124,6 +122,7 @@ class ReikiListActivity : AppCompatActivity() {
         return updatedList
     }
 
+    // TODO: move this logic to repository class
     private fun reorderReikis() {
         // Update the seq no's on the server and the local database
         var reikis = adapter.getReikis()

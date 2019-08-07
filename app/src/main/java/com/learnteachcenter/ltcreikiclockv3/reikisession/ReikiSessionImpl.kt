@@ -20,7 +20,10 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
                         private val context: Context = Injection.provideContext()
 ): ReikiSession {
 
-    // Private Variables
+    /*
+    * Private variables
+    * */
+
     private var state = STOPPED
     private var currentIndex = -1
     private var previousIndex = -1
@@ -40,7 +43,10 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
         value = ReikiSessionEvent.NONE
     }
 
-    // Override methods
+    /*
+    * Override methods
+    * */
+
     override fun start(index: Int) {
         state = RUNNING
 
@@ -94,7 +100,9 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
         eventLiveData.value = ReikiSessionEvent.STATE_CHANGED
     }
 
-    // Private methods
+    /*
+    * Private methods
+    * */
 
     private fun startCountDown(timerDuration: Long) {
         countDownTimer = object: CountDownTimer(timerDuration * 1000,
@@ -112,7 +120,6 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
     }
 
     private fun onCountDownFinish() {
-
         playReminderSound()
 
         val lastIndex = reikiAndAllPositions.positions.size - 1
@@ -146,7 +153,6 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
         if(reikiAndAllPositions.reiki!!.playMusic) {
 
             object: CountDownTimer(4000, 1000) {
-
                 override fun onTick(millisUntilFinished: Long) {
 
                     if(bgMusicPlayer != null) {
@@ -171,41 +177,32 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
     }
 
     private fun playBackgroundSound() {
-        if (reikiAndAllPositions.reiki!!.playMusic) {
-            try {
-                if (bgMusicPlayer == null) {
-                    bgMusicPlayer = MediaPlayer.create(context, R.raw.background_sound)
-                    bgMusicPlayer?.setLooping(true)
-                }
-
-                bgMusicPlayer?.start()
-
-                Log.d("Reiki", "[ReikiSession] playBackgroundSound")
-            } catch (ex: Exception) {
-                Log.wtf("DEBUG", "Exception in playBackgroundSound: $ex")
+        try {
+            if (bgMusicPlayer == null) {
+                bgMusicPlayer = MediaPlayer.create(context, R.raw.background_sound)
+                bgMusicPlayer?.setLooping(true)
             }
-        } else {
-            try {
-                if (bgMusicPlayer == null) {
-                    bgMusicPlayer = MediaPlayer.create(context, R.raw.background_sound)
-                    bgMusicPlayer?.setLooping(true)
-                    bgMusicPlayer?.setVolume(0.0f, 0.0f)
-                }
 
-                bgMusicPlayer?.start()
-
-                Log.d("Reiki", "[ReikiSession] playBackgroundSound")
-            } catch (ex: Exception) {
-                Log.wtf("DEBUG", "Exception in playBackgroundSound: $ex")
+            if (reikiAndAllPositions.reiki!!.playMusic) {
+                // TODO: get this from settings
+                bgMusicPlayer?.setVolume(1.0f, 1.0f)
+            } else {
+                // This is to prevent phone from sleeping
+                // so that countdown will continue and reminder sound will play
+                // even when screen is off.
+                bgMusicPlayer?.setVolume(0.0f, 0.0f)
             }
+
+            bgMusicPlayer?.start()
+
+        } catch(ex: Exception){
+            Log.wtf("DEBUG", "Exception in playBackgroundSound: $ex")
         }
     }
 
     private fun pauseBackgroundSound() {
         if (bgMusicPlayer != null) {
             bgMusicPlayer?.pause()
-
-            Log.d("Reiki", "[ReikiSession] pauseBackgroundSound")
         }
     }
 
@@ -218,8 +215,6 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
 
             bgMusicPlayer?.release()
             bgMusicPlayer = null
-
-            Log.d("Reiki", "[ReikiSession] stopBackgroundSound")
         }
     }
 }

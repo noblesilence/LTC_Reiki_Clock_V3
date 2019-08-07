@@ -11,9 +11,6 @@ import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSession
 import com.learnteachcenter.ltcreikiclockv3.reikisession.ReikiSessionImpl
 
 class PositionListViewModel (reikiId: String) : ViewModel() {
-
-    // Positions
-
     private val repository: ReikiRepository = Injection.provideReikiRepository()
     var reikiAndAllPositions: LiveData<ReikiAndAllPositions> = repository.getReiki(reikiId)
 
@@ -29,7 +26,7 @@ class PositionListViewModel (reikiId: String) : ViewModel() {
     }
 
     fun initSession(reiki: ReikiAndAllPositions) {
-            reikiSession = ReikiSessionImpl(reiki)
+        reikiSession = ReikiSessionImpl(reiki)
     }
 
     fun startSession(positionIndex: Int) {

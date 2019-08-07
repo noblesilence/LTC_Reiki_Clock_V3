@@ -1,8 +1,6 @@
 package com.learnteachcenter.ltcreikiclockv3.reiki.list
 
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import com.learnteachcenter.ltcreikiclockv3.R
@@ -68,13 +66,11 @@ class ReikisAdapter(private val reikis: MutableList<Reiki>,
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
         private lateinit var reiki: Reiki
 
         fun bind(reiki: Reiki, selectListener: (Reiki, Int) -> Unit, clickListener: (Reiki) -> Unit, editListener: (Reiki) -> Unit, mode: ListViewMode) {
 
             this.reiki = reiki
-
             itemView.title.text = reiki.title
             itemView.description.text = reiki.description
 
