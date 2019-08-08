@@ -366,7 +366,10 @@ class PositionListActivity : AppCompatActivity() {
             itemTouchHelper!!.attachToRecyclerView(null)
         }
 
-        fab_add_position.show()
+        if(NetworkUtil.isConnected(this)) {
+            fab_add_position.show()
+            invalidateOptionsMenu()
+        }
     }
 
     private fun changeToEditUI() {
@@ -571,6 +574,13 @@ class PositionListActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         menu.findItem(R.id.action_logout).setVisible(false)
+
+        if(!NetworkUtil.isConnected(this)) {
+            menu.findItem(R.id.action_edit).setVisible(false)
+            menu.findItem(R.id.action_delete).setVisible(false)
+            menu.findItem(R.id.action_reorder).setVisible(false)
+        }
+
         return true
     }
 

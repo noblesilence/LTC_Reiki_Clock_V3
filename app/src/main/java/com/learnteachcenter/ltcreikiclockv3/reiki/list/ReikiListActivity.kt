@@ -36,7 +36,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 import android.support.v7.view.ActionMode
-import kotlinx.android.synthetic.main.list_item_reiki.view.*
 
 class ReikiListActivity : AppCompatActivity() {
 
@@ -79,6 +78,7 @@ class ReikiListActivity : AppCompatActivity() {
             }
         } else {
             fab_add_reiki.hide()
+            invalidateOptionsMenu()
         }
     }
 
@@ -163,7 +163,10 @@ class ReikiListActivity : AppCompatActivity() {
             itemTouchHelper!!.attachToRecyclerView(null)
         }
 
-        fab_add_reiki.show()
+        if(NetworkUtil.isConnected(this)) {
+            fab_add_reiki.show()
+            invalidateOptionsMenu()
+        }
     }
 
     private fun changeToEditUI() {
@@ -369,6 +372,13 @@ class ReikiListActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
+
+        if(!NetworkUtil.isConnected(this)) {
+            menu.findItem(R.id.action_edit).setVisible(false)
+            menu.findItem(R.id.action_delete).setVisible(false)
+            menu.findItem(R.id.action_reorder).setVisible(false)
+        }
+
         return true
     }
 
