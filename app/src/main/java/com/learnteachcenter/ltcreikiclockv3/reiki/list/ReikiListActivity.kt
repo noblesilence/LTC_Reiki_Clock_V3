@@ -86,8 +86,10 @@ class ReikiListActivity : AppCompatActivity() {
         // Show/hide Add button based on internet connectivity
         if(NetworkUtil.isConnected(this)) {
             fab_add_reiki.show()
+            tvConnectivityNotice.visibility = GONE
         } else {
             fab_add_reiki.hide()
+            tvConnectivityNotice.visibility = VISIBLE
         }
 
         invalidateOptionsMenu()
@@ -180,7 +182,6 @@ class ReikiListActivity : AppCompatActivity() {
     private fun changeToEditUI() {
         adapter.updateViewMode(ListViewMode.EDIT)
         adapter.notifyDataSetChanged()
-
         fab_add_reiki.hide()
 
         val actionModeCallbacks: ActionMode.Callback = object: ActionMode.Callback {
@@ -211,7 +212,6 @@ class ReikiListActivity : AppCompatActivity() {
     private fun changeToDeleteUI() {
         adapter.updateViewMode(ListViewMode.DELETE)
         adapter.notifyDataSetChanged()
-
         fab_add_reiki.hide()
 
         val actionModeCallbacks: ActionMode.Callback = object: ActionMode.Callback {

@@ -47,4 +47,5 @@
     <string name="enter_valid_password">Enter valid password</string>
     <string name="enter_valid_email">Enter valid email</string>
     <string name="error_mismatch_passwords">The 2 passwords must be the same.</string>
+    <string name="offline_notice">No Internet. Limited functionality.</string>
 </resources>

@@ -17,6 +17,8 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.api.responses.Position.UpdatePositionsOrderResponse
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
@@ -91,7 +93,34 @@ class PositionListActivity : AppCompatActivity() {
 
             initRecyclerView()
             subscribeToReikiAndAllPositions()
+
+            fab_add_position.setOnClickListener {
+                fab_add_position.alpha = 1F
+                tvConnectivityNotice.visibility = GONE
+                val intent = Intent(this, AddPositionActivity::class.java)
+                intent.putExtra(IntentExtraNames.EXTRA_REIKI_ID, reikiId)
+                intent.putExtra(IntentExtraNames.EXTRA_REIKI_TITLE, reikiTitle)
+                startActivity(intent)
+            }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        changeModeBasedOnConnectivity()
+    }
+
+    private fun changeModeBasedOnConnectivity() {
+        if(NetworkUtil.isConnected(this)) {
+            fab_add_position.show()
+            tvConnectivityNotice.visibility = GONE
+        } else {
+            fab_add_position.hide()
+            tvConnectivityNotice.visibility = VISIBLE
+        }
+
+        invalidateOptionsMenu()
     }
 
     private fun configureToolbar() {
@@ -248,18 +277,6 @@ class PositionListActivity : AppCompatActivity() {
         fab_stop.setOnClickListener {
             viewModel.stopSession()
         }
-
-        if(NetworkUtil.isConnected(this)) {
-            fab_add_position.setOnClickListener {
-                fab_add_position.alpha = 1F
-                val intent = Intent(this, AddPositionActivity::class.java)
-                intent.putExtra(IntentExtraNames.EXTRA_REIKI_ID, reikiId)
-                intent.putExtra(IntentExtraNames.EXTRA_REIKI_TITLE, reikiTitle)
-                startActivity(intent)
-            }
-        } else {
-            fab_add_position.alpha = 0F
-        }
     }
 
     private fun highlightItem(itemIndex: Int, itemDuration: String) {
@@ -366,10 +383,7 @@ class PositionListActivity : AppCompatActivity() {
             itemTouchHelper!!.attachToRecyclerView(null)
         }
 
-        if(NetworkUtil.isConnected(this)) {
-            fab_add_position.show()
-            invalidateOptionsMenu()
-        }
+        changeModeBasedOnConnectivity()
     }
 
     private fun changeToEditUI() {
