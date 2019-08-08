@@ -71,15 +71,26 @@ class ReikiListActivity : AppCompatActivity() {
         initRecyclerView()
         subscribeObservers()
 
+        fab_add_reiki.setOnClickListener {
+            startActivity(Intent(this, AddReikiActivity::class.java))
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        changeModeBasedOnConnectivity()
+    }
+
+    private fun changeModeBasedOnConnectivity() {
         // Show/hide Add button based on internet connectivity
         if(NetworkUtil.isConnected(this)) {
-            fab_add_reiki.setOnClickListener {
-                startActivity(Intent(this, AddReikiActivity::class.java))
-            }
+            fab_add_reiki.show()
         } else {
             fab_add_reiki.hide()
-            invalidateOptionsMenu()
         }
+
+        invalidateOptionsMenu()
     }
 
     private fun configureUI() {
@@ -163,10 +174,7 @@ class ReikiListActivity : AppCompatActivity() {
             itemTouchHelper!!.attachToRecyclerView(null)
         }
 
-        if(NetworkUtil.isConnected(this)) {
-            fab_add_reiki.show()
-            invalidateOptionsMenu()
-        }
+        changeModeBasedOnConnectivity()
     }
 
     private fun changeToEditUI() {
