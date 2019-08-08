@@ -10,6 +10,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import com.google.gson.GsonBuilder
+import com.learnteachcenter.ltcreikiclockv3.api.ErrorInterceptor
 import com.learnteachcenter.ltcreikiclockv3.database.AuthenticationPrefs
 import com.learnteachcenter.ltcreikiclockv3.repositories.ReikiRepositoryImpl
 import com.learnteachcenter.ltcreikiclockv3.util.LiveDataCallAdapterFactory
@@ -56,6 +57,7 @@ object Injection {
     private fun provideOkHttpClient(): OkHttpClient {
         val httpClient = OkHttpClient.Builder()
         httpClient.addInterceptor(provideLoggingInterceptor())
+        httpClient.addInterceptor(ErrorInterceptor(provideContext()))
 
         httpClient.addInterceptor { chain ->
             val request = chain.request().newBuilder().addHeader("Authorization", AuthenticationPrefs.getAuthToken()!!).build()

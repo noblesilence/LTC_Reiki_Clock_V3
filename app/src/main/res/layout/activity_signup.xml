@@ -40,7 +40,7 @@
                           android:fontFamily="@font/lato_regular"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
-                          android:inputType="textPersonName"
+                          android:inputType="textCapWords"
                           android:hint="@string/lbl_name" />
             </android.support.design.widget.TextInputLayout>
 

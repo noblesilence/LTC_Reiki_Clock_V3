@@ -409,8 +409,8 @@ class ReikiListActivity : AppCompatActivity() {
                 true
             }
             R.id.action_logout -> {
-                AuthenticationPrefs.clearAuthToken()
-                viewModel.clearLocalDatabase()
+//                AuthenticationPrefs.clearAuthToken()
+//                viewModel.clearLocalDatabase()
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
                 true

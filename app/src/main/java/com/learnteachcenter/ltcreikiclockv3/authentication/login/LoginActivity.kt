@@ -1,5 +1,6 @@
 package com.learnteachcenter.ltcreikiclockv3.authentication.login
 
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -18,10 +19,15 @@ import org.json.JSONObject
 class LoginActivity : AppCompatActivity() {
 
     private var reikiApi = Injection.provideReikiApi()
+    private lateinit var viewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
+        viewModel.clearLocalDatabase()
+        AuthenticationPrefs.clearAuthToken()
 
         // If redirected after sign up, show sign up success message
         val message = intent.getStringExtra("MESSAGE")

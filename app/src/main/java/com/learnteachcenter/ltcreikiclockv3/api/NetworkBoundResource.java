@@ -1,4 +1,4 @@
-package com.learnteachcenter.ltcreikiclockv3.util;
+package com.learnteachcenter.ltcreikiclockv3.api;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
@@ -10,6 +10,7 @@ import android.support.annotation.WorkerThread;
 import android.util.Log;
 import com.learnteachcenter.ltcreikiclockv3.api.responses.ApiResponse;
 import com.learnteachcenter.ltcreikiclockv3.app.AppExecutors;
+import com.learnteachcenter.ltcreikiclockv3.util.Resource;
 
 // CacheObject: Type for the Resource data. (database cache)
 // RequestObject: Type for the API response. (network request)

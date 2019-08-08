@@ -14,7 +14,7 @@ import com.learnteachcenter.ltcreikiclockv3.database.ReikiDao
 import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
 import com.learnteachcenter.ltcreikiclockv3.position.Position
 import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiAndAllPositions
-import com.learnteachcenter.ltcreikiclockv3.util.NetworkBoundResource
+import com.learnteachcenter.ltcreikiclockv3.api.NetworkBoundResource
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil
 import com.learnteachcenter.ltcreikiclockv3.util.Resource
 import org.json.JSONObject
