@@ -37,6 +37,7 @@
     <string name="link_to_signup">No account yet? Create one</string>
     <string name="link_to_forgot_password">Forgot Password?</string>
     <string name="link_to_login">Already have an account? Log in</string>
+    <string name="lbl_reset_password">Send Reset Link</string>
     <string name="to_position_list">To Position List</string>
     <string name="lbl_name">Name</string>
     <string name="lbl_email">Email</string>

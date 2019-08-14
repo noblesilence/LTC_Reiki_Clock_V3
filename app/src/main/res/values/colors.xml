@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorInfo">#4CAF50</color>
     <color name="colorSecondary">#F43A97</color>
     <color name="colorSwipeBackground">#FF0000</color>
     <color name="colorAccent">#F43A97</color>

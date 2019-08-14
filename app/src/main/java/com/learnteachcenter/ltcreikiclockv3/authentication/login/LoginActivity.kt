@@ -10,6 +10,7 @@ import com.learnteachcenter.ltcreikiclockv3.database.AuthenticationPrefs
 import com.learnteachcenter.ltcreikiclockv3.reiki.list.ReikiListActivity
 import com.learnteachcenter.ltcreikiclockv3.authentication.signup.SignUpActivity
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
+import com.learnteachcenter.ltcreikiclockv3.authentication.forgotpassword.ForgotPasswordActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -79,6 +80,11 @@ class LoginActivity : AppCompatActivity() {
         link_signup.setOnClickListener {
             val signup = Intent(this@LoginActivity, SignUpActivity::class.java)
             startActivity(signup)
+        }
+
+        link_forgot_password.setOnClickListener {
+            val reset = Intent(this@LoginActivity, ForgotPasswordActivity::class.java)
+            startActivity(reset)
         }
     }
 

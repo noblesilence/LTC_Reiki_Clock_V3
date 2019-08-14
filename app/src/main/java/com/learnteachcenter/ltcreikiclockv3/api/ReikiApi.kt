@@ -7,6 +7,7 @@ import com.learnteachcenter.ltcreikiclockv3.api.responses.Position.DeletePositio
 import com.learnteachcenter.ltcreikiclockv3.api.responses.Position.UpdatePositionResponse
 import com.learnteachcenter.ltcreikiclockv3.api.responses.Position.UpdatePositionsOrderResponse
 import com.learnteachcenter.ltcreikiclockv3.api.responses.Reiki.*
+import com.learnteachcenter.ltcreikiclockv3.authentication.forgotpassword.ForgotPasswordResponse
 import com.learnteachcenter.ltcreikiclockv3.authentication.login.LoginResponse
 import com.learnteachcenter.ltcreikiclockv3.authentication.signup.SignUpResponse
 import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
@@ -37,6 +38,13 @@ interface ReikiApi {
         @Field("email") email: String,
         @Field("password") password: String
     ): Call<LoginResponse>
+
+    // Forgot password
+    @FormUrlEncoded
+    @POST("users/forgot-password")
+    fun forgotPassword(
+        @Field("email") email: String
+    ): Call<ForgotPasswordResponse>
 
     /*
     * Reikis
