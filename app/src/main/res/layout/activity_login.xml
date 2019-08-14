@@ -84,6 +84,15 @@
                   android:gravity="center"
                   android:textSize="16dip"/>
 
+        <TextView android:id="@+id/link_forgot_password"
+                  android:fontFamily="@font/lato_regular"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginBottom="24dp"
+                  android:text="@string/link_to_forgot_password"
+                  android:gravity="center"
+                  android:textSize="16dip"/>
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
