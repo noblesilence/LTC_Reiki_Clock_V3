@@ -1,5 +1,6 @@
 package com.learnteachcenter.ltcreikiclockv3.reiki.add
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -10,6 +11,8 @@ import android.widget.Toast
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.api.responses.Reiki.AddReikiResponse
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
+import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
+import com.learnteachcenter.ltcreikiclockv3.position.list.PositionListActivity
 import com.learnteachcenter.ltcreikiclockv3.reiki.ReikiGenerator
 import kotlinx.android.synthetic.main.activity_add_reiki.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -57,9 +60,20 @@ class AddReikiActivity : AppCompatActivity() {
                         if(addResponse != null) {
                             if(addResponse.id != "") {
                                 val reiki = generator.generateReiki(addResponse.id, addResponse.seqNo, addResponse.title, addResponse.description, addResponse.playMusic, addResponse.positions)
+
                                 // ID got back from the remote database. Add the Reiki to local database
                                 repository.addReiki(reiki)
+
                                 displayMessage("Add Success")
+
+                                // Redirect to PositionListActivity
+                                val i = Intent(this@AddReikiActivity, PositionListActivity::class.java)
+                                i.putExtra(IntentExtraNames.EXTRA_REIKI_ID, reiki.id)
+                                i.putExtra(IntentExtraNames.EXTRA_REIKI_TITLE, reiki.title)
+                                i.putExtra(IntentExtraNames.EXTRA_REIKI_DESCRIPTION, reiki.description)
+                                i.putExtra(IntentExtraNames.EXTRA_REIKI_PLAY_MUSIC, reiki.playMusic)
+                                startActivity(i)
+
                                 finish()
                             }
                         } else {
