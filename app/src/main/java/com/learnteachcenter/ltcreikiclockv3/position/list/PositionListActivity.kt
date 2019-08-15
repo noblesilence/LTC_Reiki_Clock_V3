@@ -62,6 +62,7 @@ class PositionListActivity : AppCompatActivity() {
     private lateinit var reikiId: String
     private lateinit var reikiTitle: String
     private lateinit var viewModel: PositionListViewModel
+    private var listIsEmpty = true
 
     private var shouldReorder = false
 
@@ -146,10 +147,27 @@ class PositionListActivity : AppCompatActivity() {
         viewModel.reikiAndAllPositions.observe(this, Observer<ReikiAndAllPositions> {
             // Sort the Positions by seq no
             val sortedPositions = it?.positions!!.sortedWith(compareBy({ it.seqNo }))
-            adapter.setPositions(sortedPositions)
-            viewModel.initSession(it)
-            subscribeToReikiSession()
-            setUpListeners()
+
+            if(sortedPositions.isEmpty()) {
+                fab_play_pause.hide()
+                fab_stop.hide()
+                positionsRecyclerView.visibility = GONE
+                lbl_position_prompt.visibility = VISIBLE
+                listIsEmpty = true
+            } else {
+                fab_play_pause.show()
+                fab_stop.show()
+                positionsRecyclerView.visibility = VISIBLE
+                lbl_position_prompt.visibility = GONE
+                adapter.setPositions(sortedPositions)
+                viewModel.initSession(it)
+                subscribeToReikiSession()
+                setUpListeners()
+                listIsEmpty = false
+            }
+
+            // Show/hide menu items based on whether or not the list is empty.
+            invalidateOptionsMenu()
         })
     }
 
@@ -353,9 +371,7 @@ class PositionListActivity : AppCompatActivity() {
         repository.updatePositions(*positionsToUpdate)
 
         // Update on the server
-
         val call: Call<UpdatePositionsOrderResponse> = reikiApi.updatePositionsOrder(reikiId, positions)
-
         call.enqueue(object: Callback<UpdatePositionsOrderResponse> {
             override fun onFailure(call: Call<UpdatePositionsOrderResponse>, t: Throwable) {
                 Log.wtf("Reiki", "Error updating on the server ${t.message}")
@@ -589,7 +605,7 @@ class PositionListActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_main, menu)
         menu.findItem(R.id.action_logout).setVisible(false)
 
-        if(!NetworkUtil.isConnected(this)) {
+        if(!NetworkUtil.isConnected(this) || listIsEmpty) {
             menu.findItem(R.id.action_edit).setVisible(false)
             menu.findItem(R.id.action_delete).setVisible(false)
             menu.findItem(R.id.action_reorder).setVisible(false)

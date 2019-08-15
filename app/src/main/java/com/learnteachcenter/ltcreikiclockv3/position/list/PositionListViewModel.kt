@@ -30,19 +30,27 @@ class PositionListViewModel (reikiId: String) : ViewModel() {
     }
 
     fun startSession(positionIndex: Int) {
-        reikiSession.start(positionIndex)
+        if(::reikiSession.isInitialized) {
+            reikiSession.start(positionIndex)
+        }
     }
 
     fun pauseSession() {
-        reikiSession.pause()
+        if(::reikiSession.isInitialized) {
+            reikiSession.pause()
+        }
     }
 
     fun resumeSession() {
-        reikiSession.resume()
+        if(::reikiSession.isInitialized) {
+            reikiSession.resume()
+        }
     }
 
     fun stopSession() {
-        reikiSession.stop()
+        if(::reikiSession.isInitialized) {
+            reikiSession.stop()
+        }
     }
 
     fun deletePositions(reikiId: String, vararg positions: Position) {

@@ -392,7 +392,6 @@ class ReikiListActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-
             R.id.action_edit -> {
                 mode = ListViewMode.EDIT
                 changeToEditUI()
@@ -409,14 +408,8 @@ class ReikiListActivity : AppCompatActivity() {
                 true
             }
             R.id.action_logout -> {
-//                AuthenticationPrefs.clearAuthToken()
-//                viewModel.clearLocalDatabase()
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
-                true
-            }
-            R.id.action_clear_cache -> {
-                viewModel.clearLocalDatabase()
                 true
             }
             else -> super.onOptionsItemSelected(item)
