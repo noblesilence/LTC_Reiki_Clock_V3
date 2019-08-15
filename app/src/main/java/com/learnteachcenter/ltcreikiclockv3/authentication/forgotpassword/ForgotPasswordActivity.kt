@@ -24,7 +24,6 @@ class ForgotPasswordActivity : AppCompatActivity() {
         setContentView(R.layout.activity_forgot_password)
 
         btn_reset.setOnClickListener {
-            // TODO: get the email and send to backend
 
             if(input_email.text.toString() == "") {
                 input_email.error = "Fill in your email."

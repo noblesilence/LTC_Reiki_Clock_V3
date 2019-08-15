@@ -184,7 +184,6 @@ class ReikiSessionImpl (private val reikiAndAllPositions: ReikiAndAllPositions,
             }
 
             if (reikiAndAllPositions.reiki!!.playMusic) {
-                // TODO: get this from settings
                 bgMusicPlayer?.setVolume(1.0f, 1.0f)
             } else {
                 // This is to prevent phone from sleeping
