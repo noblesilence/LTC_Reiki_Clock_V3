@@ -602,6 +602,7 @@ class PositionListActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
+        menu.findItem(R.id.action_contact).setVisible(false)
         menu.findItem(R.id.action_logout).setVisible(false)
 
         if(!NetworkUtil.isConnected(this) || listIsEmpty) {

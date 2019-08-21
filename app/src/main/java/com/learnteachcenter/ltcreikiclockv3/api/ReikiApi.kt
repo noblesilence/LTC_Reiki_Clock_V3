@@ -10,6 +10,7 @@ import com.learnteachcenter.ltcreikiclockv3.api.responses.Reiki.*
 import com.learnteachcenter.ltcreikiclockv3.authentication.forgotpassword.ForgotPasswordResponse
 import com.learnteachcenter.ltcreikiclockv3.authentication.login.LoginResponse
 import com.learnteachcenter.ltcreikiclockv3.authentication.signup.SignUpResponse
+import com.learnteachcenter.ltcreikiclockv3.contact.SendEmailResponse
 import com.learnteachcenter.ltcreikiclockv3.reiki.Reiki
 import com.learnteachcenter.ltcreikiclockv3.position.Position
 import retrofit2.Call
@@ -45,6 +46,16 @@ interface ReikiApi {
     fun forgotPassword(
         @Field("email") email: String
     ): Call<ForgotPasswordResponse>
+
+    // Send email
+    @FormUrlEncoded
+    @POST("users/send-email")
+    fun sendEmail(
+        @Field("name") name: String,
+        @Field("email") email: String,
+        @Field("subject") subject: String,
+        @Field("message") message: String
+    ): Call<SendEmailResponse>
 
     /*
     * Reikis

@@ -32,8 +32,13 @@
                 android:name=".authentication.login.LoginActivity"
                 android:windowSoftInputMode="stateVisible">
         </activity>
-        <activity android:name=".authentication.forgotpassword.ForgotPasswordActivity"
-                  android:windowSoftInputMode="stateVisible">
+        <activity
+                android:name=".authentication.forgotpassword.ForgotPasswordActivity"
+                android:windowSoftInputMode="stateVisible">
+        </activity>
+        <activity android:name=".contact.ContactActivity"
+                  android:windowSoftInputMode="stateVisible"
+                  android:launchMode="singleTask">
         </activity>
         <activity
                 android:name=".reiki.list.ReikiListActivity"

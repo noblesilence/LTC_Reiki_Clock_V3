@@ -10,17 +10,13 @@
     <string name="drag_to_reorder">Drag to reorder</string>
     <string name="timer">Timer</string>
     <string name="confirm_delete">Are you sure you want to delete the selected item(s)? This cannot be undone.</string>
-
     <string name="add_reiki">Add Reiki</string>
     <string name="hint_title">Title</string>
     <string name="hint_description_optional">Description (optional)</string>
     <string name="play_reiki_music">Play Reiki Music</string>
-
     <string name="edit_reiki">Edit Reiki</string>
-
     <string name="add_position">Add Position</string>
     <string name="hint_duration">Duration (mm:ss)</string>
-
     <string name="edit_position">Edit Position</string>
     <string name="reiki_saved">Reiki saved!</string>
     <string name="reiki_play_pause_button">Play/Pause Reiki</string>
@@ -43,6 +39,10 @@
     <string name="lbl_email">Email</string>
     <string name="lbl_password">Password</string>
     <string name="lbl_confirm_password">Confirm Password</string>
+    <string name="lbl_subject">Subject</string>
+    <string name="lbl_message">Message</string>
+    <string name="lbl_send">Send</string>
+    <string name="lbl_contact">Contact</string>
     <string name="enter_valid_name">Enter your name</string>
     <string name="enter_email">Enter email</string>
     <string name="enter_password">Enter password</string>

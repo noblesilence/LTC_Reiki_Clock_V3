@@ -3,24 +3,36 @@
   xmlns:tools="http://schemas.android.com/tools"
   tools:context="com.learnteachcenter.ltcreikiclockv3.reiki.list.ReikiListActivity">
 
-  <item
-    android:id="@+id/action_edit"
-    android:title="@string/edit"
-    android:icon="@drawable/ic_edit"
-    app:showAsAction="never"/>
-  <item
-    android:id="@+id/action_delete"
-    android:title="@string/delete"
-    android:icon="@drawable/ic_delete"
-    app:showAsAction="never"/>
-  <item
-    android:id="@+id/action_reorder"
-    android:title="@string/reorder"
-    android:icon="@drawable/ic_drag_handle"
-    app:showAsAction="never"/>
-  <item
-    android:id="@+id/action_logout"
-    android:title="@string/logout"
-    app:showAsAction="never"/>
+  <group android:id="@+id/list_actions">
+    <item
+            android:id="@+id/action_edit"
+            android:title="@string/edit"
+            android:icon="@drawable/ic_edit"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/action_delete"
+            android:title="@string/delete"
+            android:icon="@drawable/ic_delete"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/action_reorder"
+            android:title="@string/reorder"
+            android:icon="@drawable/ic_drag_handle"
+            app:showAsAction="never"/>
+  </group>
+
+  <group android:id="@+id/communicate">
+    <item android:id="@+id/action_contact"
+          android:title="@string/lbl_contact"
+          android:icon="@drawable/ic_email"
+          app:showAsAction="never"/>
+  </group>
+
+  <group android:id="@+id/user">
+    <item
+            android:id="@+id/action_logout"
+            android:title="@string/logout"
+            app:showAsAction="never"/>
+  </group>
 
 </menu>

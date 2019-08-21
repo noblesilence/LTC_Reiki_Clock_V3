@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.view.MenuCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -18,7 +19,6 @@ import android.view.View.VISIBLE
 import com.learnteachcenter.ltcreikiclockv3.R
 import com.learnteachcenter.ltcreikiclockv3.api.responses.Reiki.UpdateReikisOrderResponse
 import com.learnteachcenter.ltcreikiclockv3.app.Injection
-import com.learnteachcenter.ltcreikiclockv3.database.AuthenticationPrefs
 import com.learnteachcenter.ltcreikiclockv3.util.NetworkUtil
 import com.learnteachcenter.ltcreikiclockv3.app.IntentExtraNames
 import com.learnteachcenter.ltcreikiclockv3.util.ResourceObserver
@@ -36,6 +36,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 import android.support.v7.view.ActionMode
+import com.learnteachcenter.ltcreikiclockv3.contact.ContactActivity
 
 class ReikiListActivity : AppCompatActivity() {
 
@@ -381,6 +382,8 @@ class ReikiListActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
 
+        MenuCompat.setGroupDividerEnabled(menu, true)
+
         if(!NetworkUtil.isConnected(this)) {
             menu.findItem(R.id.action_edit).setVisible(false)
             menu.findItem(R.id.action_delete).setVisible(false)
@@ -405,6 +408,10 @@ class ReikiListActivity : AppCompatActivity() {
             R.id.action_reorder -> {
                 mode = ListViewMode.REORDER
                 changeToReorderUI()
+                true
+            }
+            R.id.action_contact -> {
+                startActivity(Intent(this, ContactActivity::class.java))
                 true
             }
             R.id.action_logout -> {
